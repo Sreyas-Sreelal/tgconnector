@@ -5,8 +5,20 @@
 
 #include "../include/tgconnector.inc"
 
-main() { }
+Test:TestInvalidToken() {
+    new TGBot:bot = TGConnect("");
+    ASSERT(bot == TGBot:-1);
+}
 
-Test:RunTest() {
-	
+Test:TestValidToken() {
+    new TGBot:bot = TGConnectFromEnv("SAMP_TG_BOT");
+    printf("id is %d",_:bot);
+    ASSERT(bot != TGBot:-1);
+}
+
+main(){
+
+}
+public OnTGMessage(TGBot:bot,const string[]){
+    printf("[%d] : %s",_:bot,string);
 }

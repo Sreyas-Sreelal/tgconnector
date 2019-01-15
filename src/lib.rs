@@ -1,8 +1,14 @@
 #[macro_use]
 extern crate samp_sdk;
+extern crate minihttp;
+extern crate serde_json;
+extern crate serde;
+#[macro_use]
+extern crate serde_derive;
 
 mod plugin;
 mod natives;
+mod telegram;
 
 use plugin::TgConnector;
 
