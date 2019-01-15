@@ -65,16 +65,17 @@ impl API {
     }
     
     fn get_updates(&self) {
-        log!("here");
         let mut method = self.end_point.clone();
-        method.push_str("/getUpdates?offset=");
         let mut offset = 0;
         let update_move = self.update_sender.clone();
-        log!("{:?}",method);
+
+        method.push_str("/getUpdates?offset=");
+        
         std::thread::spawn(move|| {
             loop {
                 let mut url = method.clone();
                 url.push_str(&(offset+1).to_string());
+                
                 match Request::new(&url) {
                     Ok(mut requests_obj) => {
                         match requests_obj.get().send() {
@@ -83,28 +84,32 @@ impl API {
                                     Ok(update) =>{
                                         let update:Update = update;
                                         let check_result = update.result.last();
+
                                         match check_result{
                                             Some(result) => {
                                                 offset = result.update_id;
                                                 update_move.as_ref().unwrap().send(update.clone()).unwrap();
                                             }
+
                                             None =>{
-                                                
                                             }
                                         }
                                         
                                     },
+
                                     Err(_) =>{
                                         continue;
                                     }
                                 };
                             },
+
                             Err(_) => {
                                 //NOTE: todo
                                 continue;
                             }
                         }
                     },
+                    
                     Err(_) => {
                         //NOTE: todo
                         continue;
