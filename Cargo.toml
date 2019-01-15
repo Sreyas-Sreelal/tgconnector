@@ -1,0 +1,11 @@
+[package]
+name = "tgconnector"
+version = "0.1.0"
+authors = ["Sreyas-Sreelal"]
+
+[lib]
+name = "tgconnector"
+crate-type = ["cdylib"]
+
+[dependencies]
+samp-sdk = "0.8.4"

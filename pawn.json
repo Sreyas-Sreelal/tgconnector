@@ -1,0 +1,32 @@
+{
+	"user": "Sreyas-Sreelal",
+	"repo": "tgconnector",
+	"entry": "pawn-tests/test.pwn",
+	"output": "test/gamemodes/test.amx",
+	"dependencies": ["sampctl/pawn-stdlib"],
+	"dev_dependencies": ["pawn-lang/YSI-Includes"],
+	"include_path": "include",
+	"builds": [
+		{
+			"name": "test",
+			"includes": ["./include"]
+		}
+	],
+	"runtime": {
+		"plugins": ["Sreyas-Sreelal/tgconnector"]
+	},
+	"resources": [
+		{
+			"name": "tgconnector-linux-x86.zip",
+			"platform": "linux",
+			"archive": true,
+			"plugins": ["plugins/tgconnector.so"]
+		},
+		{
+			"name": "tgconnector-windows-x86.zip",
+			"platform": "windows",
+			"archive": true,
+			"plugins": ["plugins/tgconnector.dll"]
+		}
+	]
+}

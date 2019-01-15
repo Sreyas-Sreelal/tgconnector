@@ -1,0 +1,37 @@
+language: rust
+dist: trusty
+
+matrix:
+  fast_finish: true
+  include:
+  - rust: nightly-i686
+    os: linux
+    addons:
+      apt:
+        packages:
+        - gcc-multilib
+        - libssl-dev:i386
+        - g++-multilib
+        - apt-transport-https
+
+before_install:
+- cd $HOME && curl -Ls https://github.com/Southclaws/sampctl/releases/download/1.8.37/sampctl_1.8.37_linux_amd64.tar.gz
+  -o ./bin/tmp.tar.gz
+- cd bin && tar xzf tmp.tar.gz && rm tmp.tar.gz
+- alias sampctl=$HOME/bin/sampctl
+- cd $HOME/build/Sreyas-Sreelal/tgconnector
+
+script:
+- make setup
+- make release
+- make run
+
+deploy:
+  on:
+    all_branches: true
+  provider: bintray
+  file: bintray.json
+  user: Sreyas-Sreelal
+  key:
+    secure: FP0gj3s7U3Trof5SsM+FOno4rJ2VO8dJDdeyc67dVfDmo7FEMoFErBzjU3AIIuaGua7VdaIfVbZ0ro24Hoi3mSGPHN6NTw2800wz02rBrQcclQtrqa/THRbqrD4bjqqcjxuVXdH2Bg76O8al+gq5ApJ4MxnH3A4tyELG7r96X/LcYVu55F67FR8lZhiTqRd9gi3syLmtRnupkl1MsgSoHgnHAV1V6EbF29SllrhS3g6n70grcvCvXHC26al9KR/yjtHZCeYUX07DRzcqPhvePjIowKIxy86UbROR2PuZMGuHRgpXcy+wYHLx4KbBHN5QWjUGL8CGUusNIZb53YpNtRhA5E3K2dqkr+uLZjLO9ozcxBZaLTSVi3+osJFaJrK/be/0zVwNpEvK7fCIe0zwIh1oe7N83CjJjpt+aZdKYIAtON+eMQD7Bg3ECvenyYr5r/Xcrru1twqS9TVfTokyFyC+IQRaxwd3/0nSp2TQRP00b9tW1l2Hi6LxMNpNit1nlIDK7cDtEnIROdQp5Egm5Ri6Lg48z116KBikLLZ35cl6vafhqN62MQqp/uytWaUG2oKD/we1zx9gLjBxXgFErK6mP51n7aOpX6PdaKhaTS0fRJWftogefhCIKumiRXVEVGak55Dvtyb4Ys7P6+YLnOkCXjLQ1CV8FY+h+F5N6W8=
+  skip_cleanup: true

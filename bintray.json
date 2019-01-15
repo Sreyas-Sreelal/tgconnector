@@ -1,0 +1,21 @@
+{
+    "package": {
+      "name": "builds",
+      "repo": "tgconnector",
+      "subject": "Sreyas-Sreelal"
+    },
+    "version": {
+      "name": "latest"
+    },
+    "files": [
+      {
+        "includePattern": "test/plugins/tgconnector.so",
+        "uploadPattern": "tgconnector.so",
+        "matrixParams": {
+          "override": 1
+        }
+      }
+    ],
+    "publish": true
+  }
+  
