@@ -1,7 +1,7 @@
 use samp_sdk::consts::*;
 use samp_sdk::types::Cell;
 use samp_sdk::amx::AMX;
-use telegram::API;
+use telegram::BOT;
 
 define_native!(bot_connect,token:String);
 define_native!(bot_connect_from_env,variable:String);
@@ -9,7 +9,7 @@ define_native!(bot_connect_from_env,variable:String);
 pub struct TgConnector{
 	//plugin_version: i32,
 	pub amx_list: Vec<usize>,
-	pub bots: std::collections::HashMap<usize,API>,
+	pub bots: std::collections::HashMap<usize,BOT>,
 	pub bot_context_id: usize,
 }
 
@@ -48,7 +48,7 @@ impl TgConnector {
 	pub fn process_tick(&self) {
 		for (id,bot) in &self.bots{
 			for update in bot.update_reciever.as_ref().unwrap().try_iter(){
-				let results = update.result;
+				let results = update.result.unwrap();
 
 				for result in results{
 					let message = result.message.text;

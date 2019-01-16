@@ -1,118 +1,79 @@
-use minihttp::request::Request;
 use std::sync::mpsc::{Sender,Receiver,channel};
-use serde_json::{Value};
+use types::*;
+use http::make_request;
 
-#[derive(Deserialize,Debug,Clone)]
-pub struct Update {
-    pub result: Vec<Result>,
+pub struct BOT {
+    pub api_requset_link: String,
+    pub update_reciever: Option<Receiver<APIResponse>>,
+    pub update_sender: Option<Sender<APIResponse>>
 }
 
-#[derive(Deserialize,Debug,Clone)]
-pub struct Result {
-    pub message: Message,
-    pub update_id: u64,
-}
-
-#[derive(Deserialize,Debug,Clone)]
-pub struct Message {
-    pub text: Option<String>
-}
-
-pub struct API {
-    end_point: String,
-    pub update_reciever: Option<Receiver<Update>>,
-    pub update_sender: Option<Sender<Update>>
-}
-
-impl API {
+impl BOT {
     pub fn new(bot_token:String) -> Self {
         let (update_sender,update_reciever) = channel();
 
-        API{
-            end_point: String::from("https://api.telegram.org/bot") + &bot_token,
+        BOT {
+            api_requset_link: String::from("https://api.telegram.org/bot") + &bot_token,
             update_reciever: Some(update_reciever),
             update_sender: Some(update_sender),
         }
     } 
 
-    pub fn connect(&self) -> bool {
-        let mut method = self.end_point.clone();
-        method.push_str("/getme");       
-        match Request::new(&method){
-            Ok(mut requests_obj) => {
-                match requests_obj.get().send() {
-                    Ok(data) =>{
-                        let data:Value = serde_json::from_str(&data.text()).unwrap();
-                        if data["ok"] == true {
-                            self.get_updates();
-                            true
-                        } else{
-                            log!("**[TGConnector] Error Invalid token is passed");
-                            false
-                        }
-                    },
-                    Err(err) =>{
-                        log!("**[TGConnector] Error sending request to telegram api \n {:?}",err);
-                        false
-                    }
+    pub fn connect(&self) -> bool {       
+        match make_request(self.api_requset_link.clone(),"getme",None) {
+            Ok(response) => {
+                if response.ok{
+                    log!("here came");
+                    self.get_updates();
+                    true
+                }else {
+                    log!("**[TGConnector] Error Invalid token is passed");
+                    false
                 }
-            },
-            Err(err) =>{
-                log!("**[TGConnector] Error building request to telegram api \n {:?}",err);
+            }
+            Err(err) => {
+                log!("{:?}",err);
                 false
             }
         }
     }
     
     fn get_updates(&self) {
-        let mut method = self.end_point.clone();
         let mut offset = 0;
         let update_move = self.update_sender.clone();
-
-        method.push_str("/getUpdates?offset=");
-        
+        let api_link = self.api_requset_link.clone();
         std::thread::spawn(move|| {
             loop {
-                let mut url = method.clone();
-                url.push_str(&(offset+1).to_string());
-                
-                match Request::new(&url) {
-                    Ok(mut requests_obj) => {
-                        match requests_obj.get().send() {
-                            Ok(data) => {
-                                match serde_json::from_str(&data.text()){
-                                    Ok(update) =>{
-                                        let update:Update = update;
-                                        let check_result = update.result.last();
+                let params = Some("offset=".to_string()+&(offset+1).to_string());
+                let api_link = api_link.clone();
+                match make_request(api_link,"getUpdates",params) {
+                    Ok(update) => {
+                        let check_result = update.result.clone();
+                        //let check_result = check_result.unwrap();
+                        
+                        let check_result = match check_result{
+                            None => {
+                                continue;
+                            }
+                            Some(check_result) => {
+                                check_result
+                            }
+                        };
+                        let check_result = check_result.last();
 
-                                        match check_result{
-                                            Some(result) => {
-                                                offset = result.update_id;
-                                                update_move.as_ref().unwrap().send(update.clone()).unwrap();
-                                            }
-
-                                            None =>{
-                                            }
-                                        }
-                                        
-                                    },
-
-                                    Err(_) =>{
-                                        continue;
-                                    }
-                                };
-                            },
-
-                            Err(_) => {
-                                //NOTE: todo
+                        match check_result {
+                            Some(result) => {
+                                offset = result.update_id;
+                                update_move.as_ref().unwrap().send(update.clone()).unwrap();
+                            }
+                            None => {
                                 continue;
                             }
                         }
-                    },
-                    
-                    Err(_) => {
-                        //NOTE: todo
-                        continue;
+                    }
+                    Err(err) => {
+                        log!("{:?}",err);
+                        continue;                       
                     }
                 }
             }

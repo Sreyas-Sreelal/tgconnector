@@ -1,11 +1,11 @@
 use samp_sdk::amx::AmxResult;
 use samp_sdk::types::Cell;
 use samp_sdk::amx::AMX;
-use telegram::API;
+use telegram::BOT;
 
 impl super::TgConnector{
 	pub fn bot_connect(&mut self,_amx:&AMX,token:String) -> AmxResult<Cell> {
-        let api = API::new(token);
+        let api = BOT::new(token);
         
         if api.connect() {
             self.bots.insert(self.bot_context_id,api);
@@ -24,7 +24,7 @@ impl super::TgConnector{
             Ok(-1)
         }else{
             let token = token.unwrap().into_string().unwrap();
-            let api = API::new(token);
+            let api = BOT::new(token);
 
             if api.connect() {
                 self.bots.insert(self.bot_context_id,api);

@@ -5,6 +5,8 @@ extern crate serde_json;
 extern crate serde;
 #[macro_use]
 extern crate serde_derive;
+mod types;
+mod http;
 
 mod plugin;
 mod natives;
