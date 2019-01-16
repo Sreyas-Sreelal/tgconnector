@@ -11,13 +11,12 @@ native TGBot:TGConnect(const token[]);
 
 native TGBot:TGConnectFromEnv(const variable[]);
 
-forward OnTGMessage(
-	TGBot:bot,
-	TGUser:fromid,
-	const TGChatid:chatid[],
-	const username[],
-	const chatname[],
-	const chattype[],
-	const message[]
-);
+forward OnTGMessage(TGBot:bot,TGUser:fromid);
 
+native TGSendMessage(TGBot:bot,const TGChatid:chatid[],const text[]);
+
+native TGGetUserName(str[],size=sizeof(str));
+native TGGetChatName(str[],size=sizeof(str));
+native TGGetChatType(str[],size=sizeof(str));
+native TGGetChatId(TGChatid:str[],size=sizeof(str));
+native TGGetMessage(str[],size=sizeof(str));

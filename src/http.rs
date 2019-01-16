@@ -3,6 +3,7 @@ use types::*;
 
 pub fn make_request(api_link:String,endpoint:&str,params:Option<String>) -> Result<APIResponse,String>{
     let mut method = api_link;
+    
     method.push('/');
     method.push_str(endpoint);
 
@@ -16,12 +17,14 @@ pub fn make_request(api_link:String,endpoint:&str,params:Option<String>) -> Resu
             match requests_obj.get().send() {
                 Ok(data) => {
                     let data:Result<APIResponse,serde_json::Error> = serde_json::from_str(&data.text());
+                    
                     match data {
                         Ok(data) => {
                             Ok(data)
                         },
-                        Err(err) => {
-                            log!("err is {:?}",err);
+
+                        Err(_err) => {
+                            //log!("err is {:?}",err);
                             Ok(
                                 APIResponse {
                                     ok:true,
@@ -32,13 +35,15 @@ pub fn make_request(api_link:String,endpoint:&str,params:Option<String>) -> Resu
                     }
                     
                 },
-                Err(_) => {
-                    Err("**[TGConnector] Error sending request to telegram api".to_string())
+
+                Err(err) => {
+                    Err(format!("**[TGConnector] Error sending request to telegram api\n{:?}",err))
                 }
             }
         },
-        Err(_) => {
-            Err("**[TGConnector] Error building request to telegram api".to_string())
+
+        Err(err) => {
+            Err(format!("**[TGConnector] Error building request to telegram api\n{:?}",err))
         }
     }
 }

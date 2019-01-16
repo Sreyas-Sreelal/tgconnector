@@ -11,6 +11,7 @@ pub struct BOT {
 impl BOT {
     pub fn new(bot_token:String) -> Self {
         let (update_sender,update_reciever) = channel();
+        
         BOT {
             api_requset_link: String::from("https://api.telegram.org/bot") + &bot_token,
             update_reciever: Some(update_reciever),
@@ -40,10 +41,12 @@ impl BOT {
         let mut offset = -2;
         let update_move = self.update_sender.clone();
         let api_link = self.api_requset_link.clone();
+        
         std::thread::spawn(move|| {
             loop {
                 let params = Some("offset=".to_string()+&(offset+1).to_string());
                 let api_link = api_link.clone();
+
                 match make_request(api_link,"getUpdates",params) {
                     Ok(update) => {
                         let check_result = update.result.clone();
@@ -56,7 +59,9 @@ impl BOT {
                                 check_result
                             }
                         };
+
                         let check_result = check_result.last();
+
                         match check_result {
                             Some(result) => {
                                 offset = result.update_id;
@@ -67,6 +72,7 @@ impl BOT {
                             }
                         }
                     }
+
                     Err(err) => {
                         log!("{:?}",err);
                         continue;                       
@@ -76,9 +82,22 @@ impl BOT {
         });
     }
 
-    /*NOTE:TODO
-    fn send_message(&self,id:String,text:String) {
-        
-    }*/
+    
+    pub fn send_message(&self,id:String,text:String) {
+        let api_link = self.api_requset_link.clone();
+        let params = Some(format!("chat_id={}&text={}",id,text));
+
+        std::thread::spawn(move || {
+            match make_request(api_link,"sendmessage",params) {
+                Ok(_response) => {
+                    //TODO
+                },
+
+                Err(err) => {
+                    log!("{:?}",err);
+                }
+            }
+        });
+    }
 }
 
