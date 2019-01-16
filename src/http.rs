@@ -13,7 +13,6 @@ pub fn make_request(api_link:String,endpoint:&str,params:Option<String>) -> Resu
 
     match Request::new(&method){
         Ok(mut requests_obj) => {
-            requests_obj.timeout(7);
             match requests_obj.get().send() {
                 Ok(data) => {
                     let data:Result<APIResponse,serde_json::Error> = serde_json::from_str(&data.text());

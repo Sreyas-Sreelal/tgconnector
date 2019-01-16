@@ -23,7 +23,6 @@ impl BOT {
         match make_request(self.api_requset_link.clone(),"getme",None) {
             Ok(response) => {
                 if response.ok{
-                    log!("here came");
                     self.get_updates();
                     true
                 }else {
@@ -39,7 +38,7 @@ impl BOT {
     }
     
     fn get_updates(&self) {
-        let mut offset = 0;
+        let mut offset = -2;
         let update_move = self.update_sender.clone();
         let api_link = self.api_requset_link.clone();
         std::thread::spawn(move|| {

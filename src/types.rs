@@ -7,7 +7,7 @@ pub struct APIResponse {
 #[derive(Deserialize,Debug,Clone)]
 pub struct APIResult {
     pub message: Message,
-    pub update_id: u64,
+    pub update_id: i64,
 }
 
 #[derive(Deserialize,Debug,Clone)]
