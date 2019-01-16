@@ -51,8 +51,6 @@ impl super::TgConnector {
         };
         
         let string = samp_sdk::cp1251::encode(&string).unwrap();
-
-		
         set_string!(string,dest,size);
         Ok(1)
     }
