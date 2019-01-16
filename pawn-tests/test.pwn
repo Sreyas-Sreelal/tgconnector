@@ -11,7 +11,7 @@ Test:TestInvalidToken() {
 }
 
 Test:TestValidToken() {
-    new TGBot:bot = TGConnectFromEnv("SAMP_TG_BOT");
+    new TGBot:bot = TGConnectFromEnv("CIRILLA_TOKEN");
     printf("id is %d",_:bot);
     ASSERT(bot != TGBot:-1);
 }
@@ -19,6 +19,14 @@ Test:TestValidToken() {
 main(){
 
 }
-public OnTGMessage(TGBot:bot,TGUser:fromid,const TGChatid:chatid[],const string[]){
-    printf("[%s] [%d] : %s",_:chatid,_:fromid,string);
+public OnTGMessage(
+	TGBot:bot,
+	TGUser:fromid,
+	const TGChatid:chatid[],
+	const username[],
+	const chatname[],
+	const chattype[],
+	const message[]
+) {
+    printf("[%s] [%s] : %s",chatname,username,message);
 }

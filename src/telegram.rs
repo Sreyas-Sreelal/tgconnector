@@ -75,6 +75,10 @@ impl BOT {
             }
         });
     }
-   
+
+    /*NOTE:TODO
+    fn send_message(&self,id:String,text:String) {
+        
+    }*/
 }
 

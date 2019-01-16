@@ -59,7 +59,29 @@ impl TgConnector {
 							let botid = id.clone();
 							let fromid = result.message.from.id.clone();
 							let chatid = result.message.chat.id.clone();
-							match exec_public!(amx,"OnTGMessage";botid,fromid,chatid => string,message => string) {
+							
+							let username = match result.message.from.username.clone() {
+								Some(username) => username,
+								None => String::from("")
+							};
+
+							let chatname = match result.message.chat.title.clone() {
+								Some(chatname) => chatname,
+								None => String::from("")
+							};
+							
+							let chattype =  result.message.chat.chat_type.clone();
+
+							match exec_public!(amx,"OnTGMessage";
+								botid,
+								fromid,
+								chatid => string,
+								username => string,
+								chatname => string,
+								chattype => string,
+								message => string
+							) {
+
 								Ok(_) =>{
 									executed = true;
 								},
