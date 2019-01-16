@@ -11,5 +11,5 @@ native TGBot:TGConnect(const token[]);
 
 native TGBot:TGConnectFromEnv(const variable[]);
 
-forward OnTGMessage(TGBot:bot,const string[]);
+forward OnTGMessage(TGBot:bot,TGUser:fromid,const TGChatid:chatid[],const string[]);
 

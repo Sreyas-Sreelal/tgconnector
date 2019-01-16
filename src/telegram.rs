@@ -11,7 +11,6 @@ pub struct BOT {
 impl BOT {
     pub fn new(bot_token:String) -> Self {
         let (update_sender,update_reciever) = channel();
-
         BOT {
             api_requset_link: String::from("https://api.telegram.org/bot") + &bot_token,
             update_reciever: Some(update_reciever),
@@ -49,7 +48,6 @@ impl BOT {
                     Ok(update) => {
                         let check_result = update.result.clone();
                         //let check_result = check_result.unwrap();
-                        
                         let check_result = match check_result{
                             None => {
                                 continue;
@@ -59,7 +57,6 @@ impl BOT {
                             }
                         };
                         let check_result = check_result.last();
-
                         match check_result {
                             Some(result) => {
                                 offset = result.update_id;

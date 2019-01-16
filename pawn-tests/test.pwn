@@ -19,6 +19,6 @@ Test:TestValidToken() {
 main(){
 
 }
-public OnTGMessage(TGBot:bot,const string[]){
-    printf("[%d] : %s",_:bot,string);
+public OnTGMessage(TGBot:bot,TGUser:fromid,const TGChatid:chatid[],const string[]){
+    printf("[%s] [%d] : %s",_:chatid,_:fromid,string);
 }

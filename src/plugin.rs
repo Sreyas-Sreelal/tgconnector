@@ -49,7 +49,6 @@ impl TgConnector {
 		for (id,bot) in &self.bots{
 			for update in bot.update_reciever.as_ref().unwrap().try_iter(){
 				let results = update.result.unwrap();
-
 				for result in results{
 					let message = result.message.text;
 					if  message != None{
@@ -58,7 +57,9 @@ impl TgConnector {
 							let amx = AMX::new(*amx as *mut _);
 							let mut executed;
 							let botid = id.clone();
-							match exec_public!(amx,"OnTGMessage";botid,message => string) {
+							let fromid = result.message.from.id.clone();
+							let chatid = result.message.chat.id.clone();
+							match exec_public!(amx,"OnTGMessage";botid,fromid,chatid => string,message => string) {
 								Ok(_) =>{
 									executed = true;
 								},
@@ -66,7 +67,6 @@ impl TgConnector {
 									continue;
 								}
 							}
-
 							if !executed {
 								log!("**[TGConnector] Error executing callback OnTGMessage");
 							}

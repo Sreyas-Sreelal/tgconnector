@@ -20,7 +20,8 @@ pub fn make_request(api_link:String,endpoint:&str,params:Option<String>) -> Resu
                         Ok(data) => {
                             Ok(data)
                         },
-                        Err(_) => {
+                        Err(err) => {
+                            log!("err is {:?}",err);
                             Ok(
                                 APIResponse {
                                     ok:true,
