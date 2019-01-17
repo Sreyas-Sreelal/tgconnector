@@ -48,7 +48,7 @@ impl super::TgConnector {
         let string = self.telegram_messages.front();
         
         if string != None {
-            match samp_sdk::cp1251::encode(string.unwrap()) {
+            match samp_sdk::cp1251::encode(&string.unwrap()) {
                 Ok(encoded) => {
                     set_string!(encoded,dest,size);
                     Ok(1)
@@ -68,7 +68,7 @@ impl super::TgConnector {
         let string = self.telegram_username.front();
         
         if string != None {
-            match samp_sdk::cp1251::encode(string.unwrap()) {
+            match samp_sdk::cp1251::encode(&string.unwrap()) {
                 Ok(encoded) => {
                     set_string!(encoded,dest,size);
                     Ok(1)
@@ -88,7 +88,7 @@ impl super::TgConnector {
         let string = self.telegram_chatid.front();
 
         if string != None {
-            match samp_sdk::cp1251::encode(string.unwrap()) {
+            match samp_sdk::cp1251::encode(&string.unwrap()) {
                 Ok(encoded) => {
                     set_string!(encoded,dest,size);
                     Ok(1)
@@ -107,7 +107,7 @@ impl super::TgConnector {
        let string =  self.telegram_chatname.front();
        
        if string != None {
-            match samp_sdk::cp1251::encode(string.unwrap()) {
+            match samp_sdk::cp1251::encode(&string.unwrap()) {
                 Ok(encoded) => {
                     set_string!(encoded,dest,size);
                     Ok(1)
@@ -126,7 +126,7 @@ impl super::TgConnector {
         let string = self.telegram_chattype.front();
         
         if string != None {
-            match samp_sdk::cp1251::encode(string.unwrap()) {
+            match samp_sdk::cp1251::encode(&string.unwrap()) {
                 Ok(encoded) => {
                     set_string!(encoded,dest,size);
                     Ok(1)

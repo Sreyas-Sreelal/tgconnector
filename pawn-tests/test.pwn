@@ -23,16 +23,16 @@ main(){
 public OnTGMessage(TGBot:bot,TGUser:fromid) {
 	new 
 		TGChatid:chatid[34],
-		message[25],
-		chattype[55],
+		message[128],
+		chattype[15],
 		username[24],
 		chatname[56];
 
 	TGGetChatId(chatid);
+	TGGetMessage(message);
 	TGGetUserName(username);
 	TGGetChatName(chatname);
 	TGGetChatType(chattype);
-	TGGetMessage(message);
 	
 	printf("chattid: %s chatname:%s chattype:%s username:%s message:%s",_:chatid,chatname,chattype,username,message);
 	
