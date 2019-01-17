@@ -10,9 +10,14 @@
 #define INVALID_MESSAGE_ID (TGMessage:-1)
 #define INVALID_BOT_ID (TGBot:-1)
 
+enum TGParseMode {
+	HTML,
+	MARKDOWN
+};
+
 native TGBot:TGConnect(const token[]);
 native TGBot:TGConnectFromEnv(const variable[]);
-native TGSendMessage(TGBot:bot,const TGChatid:chatid[],const text[],TGMessage:reply_id=INVALID_MESSAGE_ID);
+native TGSendMessage(TGBot:bot,const TGChatid:chatid[],const text[],TGMessage:reply_id=INVALID_MESSAGE_ID,TGParseMode:parse_mode=TGParseMode:-1);
 native TGGetUserName(str[],size=sizeof(str));
 native TGGetChatName(str[],size=sizeof(str));
 native TGGetChatType(str[],size=sizeof(str));
