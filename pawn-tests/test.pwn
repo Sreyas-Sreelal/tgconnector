@@ -11,7 +11,7 @@ Test:TestInvalidToken() {
 }
 
 Test:TestValidToken() {
-	new TGBot:bot = TGConnectFromEnv("CIRILLA_TOKEN");
+	new TGBot:bot = TGConnectFromEnv("SAMP_TG_BOT");
 	printf("id is %d",_:bot);
 	ASSERT(bot != TGBot:-1);
 }
