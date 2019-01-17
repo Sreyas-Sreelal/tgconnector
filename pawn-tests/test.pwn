@@ -6,14 +6,14 @@
 #include "../include/tgconnector.inc"
 
 Test:TestInvalidToken() {
-    new TGBot:bot = TGConnect("");
-    ASSERT(bot == TGBot:-1);
+	new TGBot:bot = TGConnect("");
+	ASSERT(bot == TGBot:-1);
 }
 
 Test:TestValidToken() {
-    new TGBot:bot = TGConnectFromEnv("SAMP_TG_BOT");
-    printf("id is %d",_:bot);
-    ASSERT(bot != TGBot:-1);
+	new TGBot:bot = TGConnectFromEnv("SAMP_TG_BOT");
+	printf("id is %d",_:bot);
+	ASSERT(bot != TGBot:-1);
 }
 
 main(){
