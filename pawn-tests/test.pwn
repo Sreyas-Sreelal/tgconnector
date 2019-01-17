@@ -13,7 +13,7 @@ Test:TestInvalidToken() {
 Test:TestValidToken() {
 	new TGBot:bot = TGConnectFromEnv("SAMP_TG_BOT");
 	printf("id is %d",_:bot);
-	TGSendMessage(bot,TGChatid:"562896556","`markdown text` ***bold*** *italic** 123",.parse_mode=MARKDOWN);
+	TGSendMessage(bot,TGChatid:"562896556","`markdown text` ***bold*** _italic_ 123",.parse_mode=MARKDOWN);
 	ASSERT(bot != INVALID_BOT_ID);
 }
 

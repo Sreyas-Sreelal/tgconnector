@@ -26,14 +26,14 @@ impl HttpRequest {
 						requests_obj.body_str(&body);
 						
 						let mut headers = std::collections::HashMap::new();
-						headers.insert("Content-Type".to_string(),"application/json; charset=utf-8".to_string());
+						headers.insert("Content-Type".to_string(),"application/json".to_string());
 						
 						requests_obj.headers(headers);
 						
 						requests_obj.post()
 					}
 				};
-
+				
 				match method.send() {
 					
 					Ok(data) => {

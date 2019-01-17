@@ -44,10 +44,10 @@ impl super::TgConnector {
 
         let parsemode:Option<&str> = match parse_mode {
             0 => Some("HTML"),
-            1 => Some("Markdown"),
+            1 => Some("markdown"),
             _ => None
         };
-
+        
         if !self.bots.contains_key(&botid) {
             log!("**[TGConnector] Error Invalid bot id {} passed",botid);
             Ok(0)

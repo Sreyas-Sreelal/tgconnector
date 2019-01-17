@@ -115,7 +115,7 @@ impl BOT {
 					method: HttpMethod::Post,
 					body: Some(serde_json::to_string(&send_message).unwrap()),
 			};
-
+			
 			match request.make_request() {
 				Ok(_response) => {
 					//TODO
