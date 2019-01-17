@@ -10,7 +10,6 @@ pub fn update_process(plugin: &mut super::TgConnector) {
 	for (id,bot) in &plugin.bots {
 		for update in bot.update_reciever.as_ref().unwrap().try_iter() {
 			let results = update.result.unwrap();
-
 			for result in results {
 				if result.message.text != None {
 					plugin.telegram_messages.push_front(result.message.text.unwrap());
@@ -25,7 +24,7 @@ pub fn update_process(plugin: &mut super::TgConnector) {
 
 						}
 					};
-
+					
 					match result.message.chat.title {
 						Some(chatname) => {
 							plugin.telegram_chatname.push_front(chatname);
@@ -39,6 +38,5 @@ pub fn update_process(plugin: &mut super::TgConnector) {
 				}
 			}
 		}
-			
-		}
+	}
 }

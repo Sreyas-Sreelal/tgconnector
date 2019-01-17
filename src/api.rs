@@ -47,10 +47,12 @@ impl BOT {
 	
 	fn get_updates(&self) {
 		let update_move = self.update_sender.clone();
+		let api_link = self.api_requset_link.clone();
+		
 		let mut getupdate = GetUpdates {
 				offset: -2,
-			};
-		let api_link = self.api_requset_link.clone();
+		};
+		
 
 		std::thread::spawn(move|| {
 			loop {

@@ -45,54 +45,100 @@ impl super::TgConnector {
     }
 
     pub fn get_message(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
-        let string = match self.telegram_messages.front() {
-            Some(string) => string.to_string(),
-            None => String::from("")
-        };
+        let string = self.telegram_messages.front();
         
-        let string = samp_sdk::cp1251::encode(&string).unwrap();
-        set_string!(string,dest,size);
-        Ok(1)
+        if string != None {
+            match samp_sdk::cp1251::encode(string.unwrap()) {
+                Ok(encoded) => {
+                    set_string!(encoded,dest,size);
+                    Ok(1)
+                },
+                Err(err) => {
+                    log!("**[TGConnector][get_message] Failed encoding {:?} \n {:?}",string.unwrap(),err);
+                    Ok(0)
+                }   
+            }
+        }else {
+             
+            Ok(0)
+        }
     }
 
     pub fn get_username(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
-        let string = match self.telegram_username.front(){
-            Some(string) => string.to_string(),
-            None => String::from("")
-        };
-        let string = samp_sdk::cp1251::encode(&string).unwrap();
-        set_string!(string,dest,size);
-        Ok(1)
+        let string = self.telegram_username.front();
+        
+        if string != None {
+            match samp_sdk::cp1251::encode(string.unwrap()) {
+                Ok(encoded) => {
+                    set_string!(encoded,dest,size);
+                    Ok(1)
+                },
+                Err(err) => {
+                    log!("**[TGConnector][get_username] Failed encoding {:?} \n {:?}",string.unwrap(),err);
+                    Ok(0)
+                }   
+            }
+        }else {   
+            Ok(0)
+        }
     }
+    
 
     pub fn get_chatid(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
-        let string = match self.telegram_chatid.front(){
-            Some(string) => string.to_string(),
-            None => String::from("")
-        };
+        let string = self.telegram_chatid.front();
 
-        let string = samp_sdk::cp1251::encode(&string).unwrap();
-        set_string!(string,dest,size);
-        Ok(1)
+        if string != None {
+            match samp_sdk::cp1251::encode(string.unwrap()) {
+                Ok(encoded) => {
+                    set_string!(encoded,dest,size);
+                    Ok(1)
+                },
+                Err(err) => {
+                    log!("**[TGConnector][get_chatid] Failed encoding {:?} \n {:?}",string.unwrap(),err);
+                    Ok(0)
+                }   
+            }
+        }else {   
+            Ok(0)
+        }
     }
 
     pub fn get_chatname(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
-        let string = match self.telegram_chatname.front(){
-            Some(string) => string.to_string(),
-            None => String::from("")
-        };
-        let string = samp_sdk::cp1251::encode(&string).unwrap();
-        set_string!(string,dest,size);
-        Ok(1)
+       let string =  self.telegram_chatname.front();
+       
+       if string != None {
+            match samp_sdk::cp1251::encode(string.unwrap()) {
+                Ok(encoded) => {
+                    set_string!(encoded,dest,size);
+                    Ok(1)
+                },
+                Err(err) => {
+                    log!("**[TGConnector][get_chatname] Failed encoding {:?} \n {:?}",string.unwrap(),err);
+                    Ok(0)
+                }   
+            }
+        }else {   
+            Ok(0)
+        }
     }
 
     pub fn get_chattype(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
-        let string = match self.telegram_chattype.front(){
-            Some(string) => string.to_string(),
-            None => String::from("")
-        };
-        let string = samp_sdk::cp1251::encode(&string).unwrap();
-        set_string!(string,dest,size);
-        Ok(1)
+        let string = self.telegram_chattype.front();
+        log!("chattype is {:?}",string);
+        if string != None {
+            match samp_sdk::cp1251::encode(string.unwrap()) {
+                Ok(encoded) => {
+                    log!("encoded chattype is {:?}",encoded);
+                    set_string!(encoded,dest,size);
+                    Ok(1)
+                },
+                Err(err) => {
+                    log!("**[TGConnector][get_chattype] Failed encoding {:?} \n {:?}",string.unwrap(),err);
+                    Ok(0)
+                }   
+            }
+        }else {   
+            Ok(0)
+        }
     }
 }
