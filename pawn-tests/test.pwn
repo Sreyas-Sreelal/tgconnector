@@ -38,7 +38,7 @@ public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 	printf("username:%s message:%s messageid:%d\n",username,message,_:messageid);
 	
 	if(!strcmp("562896556",_:chatid)){
-		TGSendMessage(bot,chatid,message);
+		TGSendMessage(bot,chatid,message,messageid);
 	}
 	
 }
