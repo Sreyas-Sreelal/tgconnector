@@ -8,6 +8,7 @@
 #define _tgconnector_included
 
 #define INVALID_MESSAGE_ID (TGMessage:-1)
+#define INVALID_BOT_ID (TGBot:-1)
 
 native TGBot:TGConnect(const token[]);
 native TGBot:TGConnectFromEnv(const variable[]);

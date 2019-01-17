@@ -7,13 +7,13 @@
 
 Test:TestInvalidToken() {
 	new TGBot:bot = TGConnect("");
-	ASSERT(bot == TGBot:-1);
+	ASSERT(bot == INVALID_BOT_ID);
 }
 
 Test:TestValidToken() {
 	new TGBot:bot = TGConnectFromEnv("SAMP_TG_BOT");
 	printf("id is %d",_:bot);
-	ASSERT(bot != TGBot:-1);
+	ASSERT(bot != INVALID_BOT_ID);
 }
 
 main(){
