@@ -98,12 +98,13 @@ impl BOT {
 	}
 
 	
-	pub fn send_message(&self,id:String,text:String) {
+	pub fn send_message(&self,id:String,text:String,reply_id:Option<i32>) {
 		let api_link = self.api_requset_link.clone();
-
+		
 		let send_message = SendMessage {
 				chat_id: id,
 				text: text,
+				reply_to_message_id: reply_id,
 		};
 
 		std::thread::spawn(move || {
