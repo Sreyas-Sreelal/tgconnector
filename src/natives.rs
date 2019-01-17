@@ -1,7 +1,7 @@
 use samp_sdk::amx::AmxResult;
 use samp_sdk::types::Cell;
 use samp_sdk::amx::AMX;
-use telegram::BOT;
+use api::BOT;
 
 impl super::TgConnector {
 	pub fn bot_connect(&mut self,_amx:&AMX,token:String) -> AmxResult<Cell> {

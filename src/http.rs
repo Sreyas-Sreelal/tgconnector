@@ -1,49 +1,73 @@
 use minihttp::request::Request;
 use types::*;
 
-pub fn make_request(api_link:String,endpoint:&str,params:Option<String>) -> Result<APIResponse,String>{
-    let mut method = api_link;
-    
-    method.push('/');
-    method.push_str(endpoint);
+pub enum HttpMethod {
+    Get,
+    Post,
+}
 
-    if params != None {
-        method.push('?');
-        method.push_str(&params.unwrap());
-    }
+pub struct HttpRequest {
+    pub url: String,
+    pub method: HttpMethod,
+    pub body: Option<String>
+}
 
-    match Request::new(&method){
-        Ok(mut requests_obj) => {
-            match requests_obj.get().send() {
-                Ok(data) => {
-                    let data:Result<APIResponse,serde_json::Error> = serde_json::from_str(&data.text());
+impl HttpRequest {
+    pub fn make_request(&self) -> Result<APIResponse,String> {      
+        match Request::new(&self.url) {
+            Ok(mut requests_obj) => {
+                let method = match self.method {
+                    HttpMethod::Get => {
+                        requests_obj.get()
+                    },
                     
-                    match data {
-                        Ok(data) => {
-                            Ok(data)
-                        },
-
-                        Err(_err) => {
-                            //log!("err is {:?}",err);
-                            Ok(
-                                APIResponse {
-                                    ok:true,
-                                    result:None
-                                }
-                            )
-                        }
+                    HttpMethod::Post => {
+                        let body = &self.body.clone().unwrap();
+                        requests_obj.body_str(&body);
+                        
+                        let mut headers = std::collections::HashMap::new();
+                        headers.insert("Content-Type".to_string(),"application/json; charset=utf-8".to_string());
+                        
+                        requests_obj.headers(headers);
+                        
+                        requests_obj.post()
                     }
+                };
+
+                
+
+                match method.send() {
                     
-                },
+                    Ok(data) => {
+                        let data:Result<APIResponse,serde_json::Error> = serde_json::from_str(&data.text());
+                        
+                        match data {
+                            Ok(data) => {
+                                Ok(data)
+                            },
 
-                Err(err) => {
-                    Err(format!("**[TGConnector] Error sending request to telegram api\n{:?}",err))
+                            Err(_err) => {
+                                //log!("err is {:?}",err);
+                                Ok(
+                                    APIResponse {
+                                        ok: true,
+                                        result: None
+                                    }
+                                )
+                            }
+                        }
+                        
+                    },
+
+                    Err(err) => {
+                        Err(format!("**[TGConnector] Error sending request to telegram api\n{:?}",err))
+                    }
                 }
-            }
-        },
+            },
 
-        Err(err) => {
-            Err(format!("**[TGConnector] Error building request to telegram api\n{:?}",err))
+            Err(err) => {
+                Err(format!("**[TGConnector] Error building request to telegram api\n{:?}",err))
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 use std::sync::mpsc::{Sender,Receiver,channel};
 use types::*;
-use http::make_request;
+use http::{HttpRequest,HttpMethod};
+use functions::*;
 
 pub struct BOT {
     pub api_requset_link: String,
@@ -19,10 +20,17 @@ impl BOT {
         }
     } 
 
-    pub fn connect(&self) -> bool {       
-        match make_request(self.api_requset_link.clone(),"getme",None) {
+    pub fn connect(&self) -> bool {
+
+        let request = HttpRequest {
+            url: format!("{}/getme",self.api_requset_link),
+            method: HttpMethod::Get,
+            body: None,
+        };
+               
+        match request.make_request() {
             Ok(response) => {
-                if response.ok{
+                if response.ok {
                     self.get_updates();
                     true
                 }else {
@@ -38,20 +46,24 @@ impl BOT {
     }
     
     fn get_updates(&self) {
-        let mut offset = -2;
         let update_move = self.update_sender.clone();
+        let mut getupdate = GetUpdates {
+                offset: -2,
+            };
         let api_link = self.api_requset_link.clone();
-        
+
         std::thread::spawn(move|| {
             loop {
-                let params = Some("offset=".to_string()+&(offset+1).to_string());
-                let api_link = api_link.clone();
-
-                match make_request(api_link,"getUpdates",params) {
+                let request = HttpRequest {
+                    url: format!("{}/getUpdates",api_link),
+                    method: HttpMethod::Post,
+                    body: Some(serde_json::to_string(&getupdate).unwrap()),
+                };
+            
+                match request.make_request() {
                     Ok(update) => {
-                        let check_result = update.result.clone();
-                        //let check_result = check_result.unwrap();
-                        let check_result = match check_result{
+                        
+                        let check_result = match update.result.clone() {
                             None => {
                                 continue;
                             }
@@ -60,13 +72,14 @@ impl BOT {
                             }
                         };
 
-                        let check_result = check_result.last();
+                        let last_update = check_result.last();
 
-                        match check_result {
+                        match last_update {
                             Some(result) => {
-                                offset = result.update_id;
+                                getupdate.offset = result.update_id+1;
                                 update_move.as_ref().unwrap().send(update.clone()).unwrap();
                             }
+
                             None => {
                                 continue;
                             }
@@ -85,10 +98,21 @@ impl BOT {
     
     pub fn send_message(&self,id:String,text:String) {
         let api_link = self.api_requset_link.clone();
-        let params = Some(format!("chat_id={}&text={}",id,text));
+
+        let send_message = SendMessage {
+                chat_id: id,
+                text: text,
+        };
 
         std::thread::spawn(move || {
-            match make_request(api_link,"sendmessage",params) {
+
+            let request = HttpRequest {
+                    url: format!("{}/sendmessage",api_link),
+                    method: HttpMethod::Post,
+                    body: Some(serde_json::to_string(&send_message).unwrap()),
+            };
+
+            match request.make_request() {
                 Ok(_response) => {
                     //TODO
                 },

@@ -11,7 +11,8 @@ mod types;
 mod http;
 mod plugin;
 mod natives;
-mod telegram;
+mod api;
+mod functions;
 
 use plugin::TgConnector;
 

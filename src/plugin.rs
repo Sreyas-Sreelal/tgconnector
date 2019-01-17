@@ -1,7 +1,7 @@
 use samp_sdk::consts::*;
 use samp_sdk::types::Cell;
 use samp_sdk::amx::AMX;
-use telegram::BOT;
+use api::BOT;
 
 define_native!(bot_connect,token:String);
 define_native!(bot_connect_from_env,variable:String);
