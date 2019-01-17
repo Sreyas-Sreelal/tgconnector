@@ -16,4 +16,4 @@ native TGGetChatType(str[],size=sizeof(str));
 native TGGetChatId(TGChatid:str[],size=sizeof(str));
 native TGGetMessage(str[],size=sizeof(str));
 
-forward OnTGMessage(TGBot:bot,TGUser:fromid);
+forward OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid);

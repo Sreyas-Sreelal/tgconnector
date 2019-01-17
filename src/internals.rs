@@ -34,7 +34,7 @@ pub fn update_process(plugin: &mut super::TgConnector) {
 						}
 					};                     
 
-					callbacks::on_tg_message(plugin,id.clone(), result.message.from.id.clone());
+					callbacks::on_tg_message(plugin,id.clone(), result.message.from.id.clone(),result.message.message_id.clone());
 				}
 			}
 		}

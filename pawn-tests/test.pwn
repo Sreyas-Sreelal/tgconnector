@@ -20,7 +20,7 @@ main(){
 
 }
 
-public OnTGMessage(TGBot:bot,TGUser:fromid) {
+public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 	new 
 		TGChatid:chatid[34],
 		message[128],
@@ -34,7 +34,8 @@ public OnTGMessage(TGBot:bot,TGUser:fromid) {
 	TGGetChatName(chatname);
 	TGGetChatType(chattype);
 	
-	printf("chattid: %s chatname:%s chattype:%s username:%s message:%s",_:chatid,chatname,chattype,username,message);
+	printf("chattid: %s chatname:%s chattype:%s",_:chatid,chatname,chattype);
+	printf("username:%s message:%s messageid:%d\n",username,message,_:messageid);
 	
 	if(!strcmp("562896556",_:chatid)){
 		TGSendMessage(bot,chatid,message);
