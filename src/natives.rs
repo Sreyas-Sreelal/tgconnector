@@ -124,11 +124,10 @@ impl super::TgConnector {
 
     pub fn get_chattype(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
         let string = self.telegram_chattype.front();
-        log!("chattype is {:?}",string);
+        
         if string != None {
             match samp_sdk::cp1251::encode(string.unwrap()) {
                 Ok(encoded) => {
-                    log!("encoded chattype is {:?}",encoded);
                     set_string!(encoded,dest,size);
                     Ok(1)
                 },
