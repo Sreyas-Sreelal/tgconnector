@@ -34,20 +34,25 @@ impl super::TgConnector {
         }
     }
 
-    pub fn bot_send_message(&mut self,_amx:&AMX,botid:usize,chatid:String,text:String,reply_id:i32) -> AmxResult<Cell> {
+    pub fn bot_send_message(&mut self,_amx:&AMX,botid:usize,chatid:String,text:String,reply_id:i32,parse_mode:i32) -> AmxResult<Cell> {
         let reply: Option<i32>;
-        
         if reply_id == -1 {
             reply = None;
         }else {
             reply = Some(reply_id);
         }
 
+        let parsemode:Option<&str> = match parse_mode {
+            0 => Some("HTML"),
+            1 => Some("Markdown"),
+            _ => None
+        };
+
         if !self.bots.contains_key(&botid) {
             log!("**[TGConnector] Error Invalid bot id {} passed",botid);
             Ok(0)
         }else {
-            self.bots[&botid].send_message(chatid,text,reply);
+            self.bots[&botid].send_message(chatid,text,reply,parsemode);
             Ok(1)
         }
     }

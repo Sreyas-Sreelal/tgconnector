@@ -34,8 +34,6 @@ impl HttpRequest {
 					}
 				};
 
-				
-
 				match method.send() {
 					
 					Ok(data) => {

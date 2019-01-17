@@ -7,5 +7,6 @@ pub struct GetUpdates {
 pub struct SendMessage {
 	pub chat_id: String,
 	pub text: String,
-	pub reply_to_message_id: Option<i32>,	
+	pub reply_to_message_id: Option<i32>,
+	pub parse_mode: Option<&'static str>,	
 }
