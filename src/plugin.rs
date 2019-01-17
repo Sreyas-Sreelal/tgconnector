@@ -2,6 +2,7 @@ use samp_sdk::consts::*;
 use samp_sdk::types::Cell;
 use samp_sdk::amx::AMX;
 use api::BOT;
+use internals;
 
 define_native!(bot_connect,token:String);
 define_native!(bot_connect_from_env,variable:String);
@@ -64,88 +65,13 @@ impl TgConnector {
 	}
 
 	pub fn process_tick(&mut self) {
+		internals::update_process(self);
 		
-		if !self.telegram_messages.is_empty() {
-			self.telegram_messages.clear();
-		}
-
-		if !self.telegram_chattype.is_empty() {
-			self.telegram_chattype.clear();
-		}
-
-		if !self.telegram_chatname.is_empty() {	
-			self.telegram_chatname.clear();
-		}
-
-		if !self.telegram_chatid.is_empty() {	
-			self.telegram_chatid.clear();
-		}
-
-		if !self.telegram_username.is_empty() {	
-			self.telegram_username.clear();
-		}
-
-		//log!("process tick");
-		for (id,bot) in &self.bots {
-			for update in bot.update_reciever.as_ref().unwrap().try_iter() {
-				let results = update.result.unwrap();
-
-				for result in results {
-					let message = result.message.text;
-
-					if  message != None {
-						self.telegram_messages.push_front(message.clone().unwrap());
-						
-						for amx in &self.amx_list{
-							let amx = AMX::new(*amx as *mut _);
-							let mut executed;
-							let botid = id.clone();
-							let fromid = result.message.from.id.clone();
-
-							self.telegram_chatid.push_front(result.message.chat.id.clone());
-							
-							let username = match result.message.from.username.clone() {
-								Some(username) => Some(username),
-								None => None
-							};
-
-							if username != None{
-								self.telegram_username.push_front(username.unwrap());
-							}
-
-							let chatname:Option<String> = match result.message.chat.title.clone() {
-								Some(chatname) => Some(chatname),
-								None => None
-							};
-
-							if chatname != None{
-								self.telegram_chatname.push_front(chatname.unwrap());
-							}
-							
-							self.telegram_chattype.push_front(result.message.chat.chat_type.clone());
-
-							match exec_public!(amx,"OnTGMessage";botid,fromid) {
-								Ok(_) => {
-									executed = true;
-								},
-
-								Err(_err) => {
-									continue;
-								}
-							}
-
-							
-							if !executed {
-								log!("**[TGConnector] Error executing callback OnTGMessage");
-							}
-						}
-					}
-				}
-			}
-			
-		}
-
-		
+		internals::clear_caches(&mut self.telegram_chatname);
+		internals::clear_caches(&mut self.telegram_messages);
+		internals::clear_caches(&mut self.telegram_username);
+		internals::clear_caches(&mut self.telegram_chattype);
+		internals::clear_caches(&mut self.telegram_chatid);
 	}
 }
 

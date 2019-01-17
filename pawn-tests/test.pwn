@@ -22,8 +22,10 @@ main(){
 
 public OnTGMessage(TGBot:bot,TGUser:fromid) {
 	new TGChatid:chatid[34],message[24];
+
 	TGGetChatId(chatid);
 	TGGetMessage(message);
+	
 	if(!strcmp("562896556",_:chatid)){
 		TGSendMessage(bot,chatid,message);
 	}

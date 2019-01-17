@@ -13,6 +13,8 @@ mod plugin;
 mod natives;
 mod api;
 mod functions;
+mod internals;
+mod callbacks;
 
 use plugin::TgConnector;
 
