@@ -17,3 +17,12 @@ pub struct DeleteMessage {
 	pub chat_id: String,
 	pub message_id: i32,
 }
+
+#[derive(Serialize,Debug,Clone)]
+pub struct EditMessageText {
+	pub chat_id: String,
+	pub message_id: i32,
+	pub text: String,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub parse_mode: Option<&'static str>,
+}

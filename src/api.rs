@@ -144,5 +144,30 @@ impl BOT {
 			}
 		});
 	}
+
+	pub fn edit_message(&self,edit_message_obj:EditMessageText) {
+		let api_link = self.api_requset_link.clone();
+
+		std::thread::spawn(move || {
+
+			let request = HttpRequest {
+					url: format!("{}/editmessagetext",api_link),
+					method: HttpMethod::Post,
+					body: Some(serde_json::to_string(&edit_message_obj).unwrap()),
+			};
+			
+			match request.make_request() {
+				Ok(response) => {
+					if !response.ok {
+						log!("**[TGConnector] Error Message {:?} in chat {:?} couldn't edit (Check bot permissions!)",edit_message_obj.message_id,edit_message_obj.chat_id);
+					}
+				},
+
+				Err(err) => {
+					log!("{:?}",err);
+				}
+			}
+		});
+	}
 }
 

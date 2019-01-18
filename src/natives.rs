@@ -78,7 +78,29 @@ impl super::TgConnector {
             Ok(1)
         }
     }
-    
+
+    pub fn bot_edit_message(&mut self,_amx:&AMX,botid:usize,chatid:String,messageid:i32,text:String,parse_mode:i32)-> AmxResult<Cell> {
+        let parsemode:Option<&str> = match parse_mode {
+            0 => Some("HTML"),
+            1 => Some("markdown"),
+            _ => None
+        };
+
+        if !self.bots.contains_key(&botid) {
+            log!("**[TGConnector] Error Invalid bot id {} passed",botid);
+            Ok(0)
+        }else {
+            let edit_message_obj = EditMessageText {
+				chat_id: chatid,
+				text: text,
+                message_id: messageid,
+				parse_mode: parsemode
+		    };
+            self.bots[&botid].edit_message(edit_message_obj);
+            Ok(1)
+        }
+    }
+
     pub fn get_message(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
         let string = self.telegram_messages.front();
 
@@ -118,7 +140,6 @@ impl super::TgConnector {
         }
     }
     
-
     pub fn get_chatid(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
         let string = self.telegram_chatid.front();
 

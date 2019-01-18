@@ -38,6 +38,7 @@ public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 	printf("chattid: %s chatname:%s chattype:%s",_:chatid,chatname,chattype);
 	printf("username:%s message:%s messageid:%d\n",username,message,_:messageid);
 	
-	TGDeleteMessage(bot,chatid,messageid);
+	//TGDeleteMessage(bot,chatid,messageid);
 	TGSendMessage(bot,chatid,message,messageid);
+	TGEditMessage(bot,chatid,messageid+1,"***edited message***");
 }
