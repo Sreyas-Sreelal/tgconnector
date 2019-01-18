@@ -13,3 +13,4 @@ minihttp = {git = "https://github.com/Sreyas-Sreelal/minihttp"}
 serde_json = "1.0"
 serde = "*"
 serde_derive = "*"
+encoding = "*"
