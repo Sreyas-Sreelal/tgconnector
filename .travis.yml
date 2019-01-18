@@ -1,6 +1,5 @@
 language: rust
 dist: trusty
-
 matrix:
   fast_finish: true
   include:
@@ -13,19 +12,16 @@ matrix:
         - libssl-dev:i386
         - g++-multilib
         - apt-transport-https
-
 before_install:
 - cd $HOME && curl -Ls https://github.com/Southclaws/sampctl/releases/download/1.8.37/sampctl_1.8.37_linux_amd64.tar.gz
   -o ./bin/tmp.tar.gz
 - cd bin && tar xzf tmp.tar.gz && rm tmp.tar.gz
 - alias sampctl=$HOME/bin/sampctl
 - cd $HOME/build/Sreyas-Sreelal/tgconnector
-
 script:
 - make setup
 - make release
 - make run
-
 deploy:
   on:
     all_branches: true
@@ -33,5 +29,5 @@ deploy:
   file: bintray.json
   user: Sreyas-Sreelal
   key:
-    secure: FP0gj3s7U3Trof5SsM+FOno4rJ2VO8dJDdeyc67dVfDmo7FEMoFErBzjU3AIIuaGua7VdaIfVbZ0ro24Hoi3mSGPHN6NTw2800wz02rBrQcclQtrqa/THRbqrD4bjqqcjxuVXdH2Bg76O8al+gq5ApJ4MxnH3A4tyELG7r96X/LcYVu55F67FR8lZhiTqRd9gi3syLmtRnupkl1MsgSoHgnHAV1V6EbF29SllrhS3g6n70grcvCvXHC26al9KR/yjtHZCeYUX07DRzcqPhvePjIowKIxy86UbROR2PuZMGuHRgpXcy+wYHLx4KbBHN5QWjUGL8CGUusNIZb53YpNtRhA5E3K2dqkr+uLZjLO9ozcxBZaLTSVi3+osJFaJrK/be/0zVwNpEvK7fCIe0zwIh1oe7N83CjJjpt+aZdKYIAtON+eMQD7Bg3ECvenyYr5r/Xcrru1twqS9TVfTokyFyC+IQRaxwd3/0nSp2TQRP00b9tW1l2Hi6LxMNpNit1nlIDK7cDtEnIROdQp5Egm5Ri6Lg48z116KBikLLZ35cl6vafhqN62MQqp/uytWaUG2oKD/we1zx9gLjBxXgFErK6mP51n7aOpX6PdaKhaTS0fRJWftogefhCIKumiRXVEVGak55Dvtyb4Ys7P6+YLnOkCXjLQ1CV8FY+h+F5N6W8=
+    secure: MPt5AkV7odW/9i4gUG+Alr7Bgerhz6MWGRKWge8XF+r62ykosUzdSSuOalOapBzO5CkN5OzwMEyij8qsfbkXMBM1IR4d8Px8zicL1y5VyiEDrFK6WWAldvQCF+kAFuATxavXjKh5BEUV+eKD3p/4kt64+JzOsCAON3qHue0yse1ofzpb8Eqe9EccwiLSelEU+iOgZYce4KEXZahW/sVbq7YduySkMja8vq/UqygKXn55yJtJPge6vd02kHyokqcRRYfQU6xIMoiBCjuKoKKj/K1CR5VXdgcHSdzu7v92jKDi3/goaXBZQX9/JcbZ15Cm1zl+J6kJLQ+jS8gRJ+W47hlKH2F5w/fXLsWbB6nzGwxgdN+OVwynWduCpB8B2ci8OBZt97mgRGU9eYP+ApU82vGrtDxiad/nmXZqqqXLI5W3rVJDxqxdlSI8mnk5eKLuMAo95UqdU8LPC+RK37x2XZtGu+deipAN5lhrnrdqqhLZTNg55ol2BKUex9PwgCrgj4xr320k556+DSBjjD8whq63fZgnK+/jswud+4qV3VQd+whf2rClrnhu9c8DfYVyRwAv/f8OM4GXW8/wj7bkfZ8ERVwwwKJes2PlrQlJKNMoH4L6u33kok2TTW36J6vepOJCJEmUaGjR9EhVqJfD9/y/yV/CmqZxql3AOq8ZzZo=
   skip_cleanup: true
