@@ -12,6 +12,7 @@ define_native!(get_username,dest:ref Cell,size:usize);
 define_native!(get_chatid,dest:ref Cell,size:usize);
 define_native!(get_chattype,dest:ref Cell,size:usize);
 define_native!(get_chatname,dest:ref Cell,size:usize);
+define_native!(bot_delete_message,botid:usize,chatid:String,messageid:i32);
 
 pub struct TgConnector {
 	//plugin_version: i32,
@@ -46,7 +47,8 @@ impl TgConnector {
 			"TGGetUserName" => get_username,
 			"TGGetChatId" => get_chatid,
 			"TGGetChatType" => get_chattype,
-			"TGGetChatName" => get_chatname
+			"TGGetChatName" => get_chatname,
+			"TGDeleteMessage" => bot_delete_message
 		};
 
 		match amx.register(&natives) {

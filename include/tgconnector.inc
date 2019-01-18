@@ -23,5 +23,6 @@ native TGGetChatName(str[],size=sizeof(str));
 native TGGetChatType(str[],size=sizeof(str));
 native TGGetChatId(TGChatid:str[],size=sizeof(str));
 native TGGetMessage(str[],size=sizeof(str));
+native TGDeleteMessage(TGBot:bot,TGChatid:chatid[],TGMessage:messageid);
 
 forward OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid);

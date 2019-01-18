@@ -65,9 +65,23 @@ impl super::TgConnector {
         }
     }
 
+    pub fn bot_delete_message(&mut self,_amx:&AMX,botid:usize,chatid:String,messageid:i32) -> AmxResult<Cell> {
+        if !self.bots.contains_key(&botid) {
+            log!("**[TGConnector] Error Invalid bot id {} passed",botid);
+            Ok(0)
+        }else {
+            let delete_message_obj = DeleteMessage {
+				chat_id: chatid,
+				message_id: messageid,
+		    };
+            self.bots[&botid].delete_message(delete_message_obj);
+            Ok(1)
+        }
+    }
+    
     pub fn get_message(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
         let string = self.telegram_messages.front();
-        
+
         if string != None {
             match encode_replace(&string.unwrap()) {
                 Ok(encoded) => {

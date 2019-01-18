@@ -119,5 +119,30 @@ impl BOT {
 			}
 		});
 	}
+
+	pub fn delete_message(&self,delete_message_obj:DeleteMessage) {
+		let api_link = self.api_requset_link.clone();
+
+		std::thread::spawn(move || {
+
+			let request = HttpRequest {
+					url: format!("{}/deletemessage",api_link),
+					method: HttpMethod::Post,
+					body: Some(serde_json::to_string(&delete_message_obj).unwrap()),
+			};
+			
+			match request.make_request() {
+				Ok(response) => {
+					if !response.ok {
+						log!("**[TGConnector] Error Message {:?} in chat {:?} couldn't delete (Check bot permissions!)",delete_message_obj.message_id,delete_message_obj.chat_id);
+					}
+				},
+
+				Err(err) => {
+					log!("{:?}",err);
+				}
+			}
+		});
+	}
 }
 

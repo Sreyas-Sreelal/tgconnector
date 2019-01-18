@@ -38,8 +38,6 @@ public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 	printf("chattid: %s chatname:%s chattype:%s",_:chatid,chatname,chattype);
 	printf("username:%s message:%s messageid:%d\n",username,message,_:messageid);
 	
-	if(!strcmp("562896556",_:chatid)){
-		TGSendMessage(bot,chatid,message,messageid);
-	}
-	
+	TGDeleteMessage(bot,chatid,messageid);
+	TGSendMessage(bot,chatid,message,messageid);
 }
