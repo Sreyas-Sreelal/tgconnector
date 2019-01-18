@@ -3,6 +3,7 @@ use samp_sdk::types::Cell;
 use samp_sdk::amx::AMX;
 use api::BOT;
 use encode::encode_replace;
+use functions::*;
 
 impl super::TgConnector {
 	pub fn bot_connect(&mut self,_amx:&AMX,token:String) -> AmxResult<Cell> {
@@ -53,7 +54,13 @@ impl super::TgConnector {
             log!("**[TGConnector] Error Invalid bot id {} passed",botid);
             Ok(0)
         }else {
-            self.bots[&botid].send_message(chatid,text,reply,parsemode);
+            let send_message_obj = SendMessage {
+				chat_id: chatid,
+				text: text,
+				reply_to_message_id: reply,
+				parse_mode: parsemode
+		    };
+            self.bots[&botid].send_message(send_message_obj);
             Ok(1)
         }
     }

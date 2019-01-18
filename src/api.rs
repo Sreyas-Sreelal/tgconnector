@@ -97,22 +97,15 @@ impl BOT {
 		});
 	}
 
-	pub fn send_message(&self,id:String,text:String,reply_id:Option<i32>,parse_mode:Option<&'static str>) {
+	pub fn send_message(&self,send_message_obj:SendMessage) {
 		let api_link = self.api_requset_link.clone();
-		
-		let send_message = SendMessage {
-				chat_id: id,
-				text: text,
-				reply_to_message_id: reply_id,
-				parse_mode: parse_mode
-		};
 
 		std::thread::spawn(move || {
 
 			let request = HttpRequest {
 					url: format!("{}/sendmessage",api_link),
 					method: HttpMethod::Post,
-					body: Some(serde_json::to_string(&send_message).unwrap()),
+					body: Some(serde_json::to_string(&send_message_obj).unwrap()),
 			};
 			
 			match request.make_request() {
