@@ -17,7 +17,6 @@ Test:TestValidToken() {
 	ASSERT(bot != INVALID_BOT_ID);
 }
 
-
 main(){
 
 }

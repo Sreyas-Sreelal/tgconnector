@@ -97,7 +97,6 @@ impl BOT {
 		});
 	}
 
-	
 	pub fn send_message(&self,id:String,text:String,reply_id:Option<i32>,parse_mode:Option<&'static str>) {
 		let api_link = self.api_requset_link.clone();
 		

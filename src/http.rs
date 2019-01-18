@@ -24,10 +24,9 @@ impl HttpRequest {
 					HttpMethod::Post => {
 						let body = &self.body.clone().unwrap();
 						requests_obj.body_str(&body);
-						
+						log!("body is {:?}",body);
 						let mut headers = std::collections::HashMap::new();
 						headers.insert("Content-Type".to_string(),"application/json".to_string());
-						
 						requests_obj.headers(headers);
 						
 						requests_obj.post()

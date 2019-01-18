@@ -2,6 +2,7 @@ use samp_sdk::amx::AmxResult;
 use samp_sdk::types::Cell;
 use samp_sdk::amx::AMX;
 use api::BOT;
+use encode::encode_replace;
 
 impl super::TgConnector {
 	pub fn bot_connect(&mut self,_amx:&AMX,token:String) -> AmxResult<Cell> {
@@ -61,7 +62,7 @@ impl super::TgConnector {
         let string = self.telegram_messages.front();
         
         if string != None {
-            match samp_sdk::cp1251::encode(&string.unwrap()) {
+            match encode_replace(&string.unwrap()) {
                 Ok(encoded) => {
                     set_string!(encoded,dest,size);
                     Ok(1)
@@ -81,7 +82,7 @@ impl super::TgConnector {
         let string = self.telegram_username.front();
         
         if string != None {
-            match samp_sdk::cp1251::encode(&string.unwrap()) {
+            match encode_replace(&string.unwrap()) {
                 Ok(encoded) => {
                     set_string!(encoded,dest,size);
                     Ok(1)
@@ -101,7 +102,7 @@ impl super::TgConnector {
         let string = self.telegram_chatid.front();
 
         if string != None {
-            match samp_sdk::cp1251::encode(&string.unwrap()) {
+            match encode_replace(&string.unwrap()) {
                 Ok(encoded) => {
                     set_string!(encoded,dest,size);
                     Ok(1)
@@ -120,7 +121,7 @@ impl super::TgConnector {
        let string =  self.telegram_chatname.front();
        
        if string != None {
-            match samp_sdk::cp1251::encode(&string.unwrap()) {
+            match encode_replace(&string.unwrap()) {
                 Ok(encoded) => {
                     set_string!(encoded,dest,size);
                     Ok(1)
@@ -139,7 +140,7 @@ impl super::TgConnector {
         let string = self.telegram_chattype.front();
         
         if string != None {
-            match samp_sdk::cp1251::encode(&string.unwrap()) {
+            match encode_replace(&string.unwrap()) {
                 Ok(encoded) => {
                     set_string!(encoded,dest,size);
                     Ok(1)

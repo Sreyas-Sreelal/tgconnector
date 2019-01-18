@@ -3,6 +3,7 @@ extern crate samp_sdk;
 extern crate minihttp;
 extern crate serde_json;
 extern crate serde;
+extern crate encoding;
 
 #[macro_use]
 extern crate serde_derive;
@@ -15,6 +16,7 @@ mod api;
 mod functions;
 mod internals;
 mod callbacks;
+mod encode;
 
 use plugin::TgConnector;
 
