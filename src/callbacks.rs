@@ -65,3 +65,25 @@ pub fn ong_tg_user_joined(plugin: &super::TgConnector,botid:&usize,userid:i32) {
 		}
 	}
 }
+
+pub fn ong_tg_user_left(plugin: &super::TgConnector,botid:&usize,userid:i32) {
+	for amx in &plugin.amx_list{
+		let amx = AMX::new(*amx as *mut _);
+		let mut executed;
+	   	let botid:usize = *botid;
+
+		match exec_public!(amx,"OnTgUserLeft";botid,userid) {
+			Ok(_) => {
+				executed = true;
+			},
+
+			Err(_err) => {
+				continue;
+			}
+		}
+		
+		if !executed {
+			log!("**[TGConnector] Error executing callback OnTgUserLeft");
+		}
+	}
+}

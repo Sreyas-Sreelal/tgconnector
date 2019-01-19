@@ -62,6 +62,27 @@ pub fn update_process(plugin: &mut super::TgConnector) {
 
 				UpdateType::UserLeft => {
 
+					match update.message.chat.title {
+							Some(chatname) => {
+								plugin.telegram_chatname.push_front(chatname);
+							}
+							None => {
+								
+							}
+					};
+					
+					plugin.telegram_chatid.push_front(update.message.chat.id);
+
+					let user = update.message.left_chat_member.unwrap();
+					match user.username {
+						Some(username) => {
+							plugin.telegram_username.push_front(username);
+						}
+						None => {
+						}
+					};
+					callbacks::ong_tg_user_left(plugin,id,user.id);	
+					
 				}
 			}	
 			

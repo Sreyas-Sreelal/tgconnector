@@ -28,3 +28,4 @@ native TGEditMessage(TGBot:bot,TGChatid:chatid[],TGMessage:messageid,text[],TGPa
 
 forward OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid);
 forward OnTgUserJoined(TGBot:bot,TGUser:userid);
+forward OnTgUserLeft(TGBot:bot,TGUser:userid);

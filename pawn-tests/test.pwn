@@ -58,5 +58,19 @@ public OnTgUserJoined(TGBot:bot,TGUser:userid) {
 	TGGetUserName(username);
 	TGGetChatId(chatid);
 	TGGetChatName(chatname);
+
 	printf("User %s(%d) joined %s(%s)",username,_:userid,chatname,_:chatid);
+}
+
+public OnTgUserLeft(TGBot:bot,TGUser:userid) {
+	new 
+		TGChatid:chatid[23],
+		username[24],
+		chatname[129];
+	
+	TGGetUserName(username);
+	TGGetChatId(chatid);
+	TGGetChatName(chatname);
+
+	printf("User %s(%d) left %s(%s)",username,_:userid,chatname,_:chatid);
 }
