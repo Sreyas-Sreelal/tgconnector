@@ -2,6 +2,7 @@ use std::sync::mpsc::{Sender,Receiver,channel};
 use types::*;
 use http::{HttpRequest,HttpMethod};
 use functions::*;
+use std::collections::VecDeque;
 
 pub struct BOT {
 	pub api_requset_link: String,
@@ -71,23 +72,23 @@ impl BOT {
 			
 				match request.make_request() {
 					Ok(response) => {
-						let update:APIResponse<Vec<Update>> = serde_json::from_str(&response).unwrap();
+						let update:APIResponse<VecDeque<Update>> = serde_json::from_str(&response).unwrap();
 						
-						let check_result:&Vec<Update> = match &update.result {
+						let mut check_result:VecDeque<Update> = match update.result {
 							None => {
 								continue;
 							}
 							Some(check_result) => {
-								&check_result
+								check_result
 							}
 						};
 
-						let first_update = &check_result.first();
+						let first_update = check_result.pop_front();
 
 						match first_update {
 							Some(result) => {
 								getupdate.offset = result.update_id+1;
-								update_move.as_ref().unwrap().send(first_update.unwrap().clone()).unwrap();
+								update_move.as_ref().unwrap().send(result).unwrap();
 							}
 
 							None => {

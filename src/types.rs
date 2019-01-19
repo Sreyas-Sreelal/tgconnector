@@ -24,7 +24,7 @@ pub struct Message {
 	pub from:User,
 	pub chat:Chat,
 	pub message_id:i32,
-	pub new_chat_members:Option<Vec<User>>,
+	pub new_chat_members:Option<std::collections::VecDeque<User>>,
 	pub left_chat_member: Option<User>,
 }
 
