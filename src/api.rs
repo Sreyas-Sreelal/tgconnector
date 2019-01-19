@@ -5,10 +5,10 @@ use functions::*;
 
 pub struct BOT {
 	pub api_requset_link: String,
-	pub update_reciever: Option<Receiver<APIResponse<Vec<Update>>>>,
-	pub update_sender: Option<Sender<APIResponse<Vec<Update>>>>,
-	pub send_message_reciever: Option<Receiver<(APIResponse<Message>,String)>>,
-	pub send_message_sender: Option<Sender<(APIResponse<Message>,String)>>,
+	pub update_reciever: Option<Receiver<Update>>,
+	pub update_sender: Option<Sender<Update>>,
+	pub send_message_reciever: Option<Receiver<(Message,String)>>,
+	pub send_message_sender: Option<Sender<(Message,String)>>,
 }
 
 impl BOT {
@@ -73,21 +73,21 @@ impl BOT {
 					Ok(response) => {
 						let update:APIResponse<Vec<Update>> = serde_json::from_str(&response).unwrap();
 						
-						let check_result:Vec<Update> = match update.result.clone() {
+						let check_result:&Vec<Update> = match &update.result {
 							None => {
 								continue;
 							}
 							Some(check_result) => {
-								check_result
+								&check_result
 							}
 						};
 
-						let last_update = check_result.last();
+						let last_update = &check_result.last();
 
 						match last_update {
 							Some(result) => {
 								getupdate.offset = result.update_id+1;
-								update_move.as_ref().unwrap().send(update.clone()).unwrap();
+								update_move.as_ref().unwrap().send(last_update.unwrap().clone()).unwrap();
 							}
 
 							None => {
@@ -121,7 +121,7 @@ impl BOT {
 				Ok(response) => {
 					let response:APIResponse<Message> = serde_json::from_str(&response).unwrap();
 					if callback != None && response.ok {
-						send_message_move.as_ref().unwrap().send((response.clone(),callback.unwrap())).unwrap();
+						send_message_move.as_ref().unwrap().send((response.result.unwrap(),callback.unwrap())).unwrap();
 					}
 				},
 

@@ -63,7 +63,7 @@ impl TgConnector {
 
 	pub fn amx_unload(&mut self, amx: &mut AMX) -> Cell {
 		let raw = amx.amx as usize;
-		let index = self.amx_list.iter().position(|x| *x == raw).unwrap().clone();
+		let index = self.amx_list.iter().position(|x| *x == raw).unwrap();
 		self.amx_list.remove(index);
 		AMX_ERR_NONE
 	}
