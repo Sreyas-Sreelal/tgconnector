@@ -5,21 +5,28 @@
 
 #include "../include/tgconnector.inc"
 
+new TGBot:g_bot;
+
 Test:TestInvalidToken() {
-	new TGBot:bot = TGConnect("");
-	ASSERT(bot == INVALID_BOT_ID);
+	new TGBot:invalidbot = TGConnect("");
+	ASSERT(invalidbot == INVALID_BOT_ID);
+}
+main() {
+	g_bot = TGConnectFromEnv("SAMP_TG_BOT");
 }
 
 Test:TestValidToken() {
-	new TGBot:bot = TGConnectFromEnv("SAMP_TG_BOT");
-	printf("id is %d",_:bot);
-	TGSendMessage(bot,TGChatid:"562896556","`markdown text` ***bold*** _italic_ 123",.parse_mode=MARKDOWN,.callback="SendingMessage");
-	ASSERT(bot != INVALID_BOT_ID);
+	printf("id is %d",_:g_bot);
+	TGSendMessage(g_bot,TGChatid:"562896556","`markdown text` ***bold*** _italic_ 123",.parse_mode=MARKDOWN,.callback="SendingMessage");
+	ASSERT(g_bot != INVALID_BOT_ID);
 }
 
-main(){
-
+Test:TGGetUserGroupStatus() {
+	new TGUserStatus:status = TGGetUserGroupStatus(g_bot,TGUser:562896556,TGChatid:"-1001445898764");
+	printf("status %d",_:status);
+	ASSERT(status == TG_CREATOR);
 }
+
 
 public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 	new 

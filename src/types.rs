@@ -10,6 +10,7 @@ pub enum UpdateType{
 pub struct APIResponse<T> {
 	pub ok: bool,
 	pub result: Option<T>,
+	pub description: Option<String>,
 }
 
 #[derive(Deserialize,Debug,Clone)]
@@ -43,6 +44,12 @@ pub struct Chat {
 	#[serde(rename = "type")]
 	pub chat_type:String,
 	pub title:Option<String>,
+}
+
+#[derive(Deserialize,Debug,Clone)]
+pub struct ChatMember {
+	pub user: User,
+	pub status:String,
 }
 
 fn de_from_int<'de, D>(deserializer: D) -> Result<String, D::Error>

@@ -197,8 +197,39 @@ impl super::TgConnector {
 					Ok(0)
 				}   
 			}
-		}else {   
+		}else {    
 			Ok(0)
+		}
+	}
+
+	pub fn get_user_status(&mut self,_amx:&AMX,botid:usize,userid:i32,chatid:String) -> AmxResult<Cell> {
+		if !self.bots.contains_key(&botid) {
+			log!("**[TGConnector] Error Invalid bot id {} passed",botid);
+			Ok(0)
+
+		}else {
+			let getchatmember = GetChatMember {
+				user_id: userid,
+				chat_id: chatid,
+			};
+			let chatmember = self.bots[&botid].get_chat_member(getchatmember);
+
+			if chatmember.is_none() {
+				Ok(0)
+			} else {
+				let chatmember = chatmember.unwrap();
+				
+				match chatmember.status.as_ref() {
+					"creator" => Ok(1),
+					"adminstrator" => Ok(2),
+					"member" => Ok(3),
+					"restricted" => Ok(4),
+					"left" => Ok(5),
+					"kicked" => Ok(6),
+					_ => Ok(0)
+				}
+				
+			}
 		}
 	}
 }

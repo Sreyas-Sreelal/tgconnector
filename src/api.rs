@@ -184,5 +184,30 @@ impl BOT {
 			}
 		});
 	}
+
+	pub fn get_chat_member(&self,getchatmember:GetChatMember) -> Option<ChatMember> {
+		let request = HttpRequest {
+			url: format!("{}/getchatmember",self.api_requset_link),
+			method: HttpMethod::Post,
+			body: Some(serde_json::to_string(&getchatmember).unwrap()),
+		};
+
+		match request.make_request() {
+			Ok(response) => {
+				let response:APIResponse<ChatMember> = serde_json::from_str(&response).unwrap();
+				if response.ok {
+					response.result
+				} else {
+					log!("**[TGConnector] Error get_chat_member {}",response.description.unwrap());
+					None
+				}
+			},
+			
+			Err(err) => {
+				log!("{:?}",err);
+				None
+			}
+		}
+	}
 }
 

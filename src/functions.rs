@@ -26,3 +26,9 @@ pub struct EditMessageText {
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub parse_mode: Option<&'static str>,
 }
+
+#[derive(Serialize,Debug,Clone)]
+pub struct GetChatMember {
+	pub chat_id: String,
+	pub user_id: i32,
+}
