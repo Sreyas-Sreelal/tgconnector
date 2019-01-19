@@ -34,24 +34,6 @@ impl HttpRequest {
 					
 					Ok(data) => {
 						Ok(data.text())
-						//let data:Result<APIResponse<T>,serde_json::Error> = serde_json::from_str(&data.text());
-						
-						/*match data {
-							Ok(data) => {
-								Ok(data)
-							},
-
-							Err(_err) => {
-								//log!("err is {:?}",err);
-								Ok(
-									APIResponse {
-										ok: true,
-										result: None
-									}
-								)
-							}
-						}*/
-						
 					},
 
 					Err(err) => {
