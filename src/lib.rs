@@ -8,6 +8,9 @@ extern crate encoding;
 #[macro_use]
 extern crate serde_derive;
 
+#[macro_use]
+mod macros;
+
 mod types;
 mod http;
 mod plugin;

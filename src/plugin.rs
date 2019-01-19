@@ -6,7 +6,7 @@ use internals;
 
 define_native!(bot_connect,token:String);
 define_native!(bot_connect_from_env,variable:String);
-define_native!(bot_send_message,botid:usize,chatid:String,text:String,reply_id:i32,parse_mode:i32);
+define_native!(bot_send_message,botid:usize,chatid:String,text:String,reply_id:i32,parse_mode:i32,callback:String);
 define_native!(get_message,dest:ref Cell,size:usize);
 define_native!(get_username,dest:ref Cell,size:usize);
 define_native!(get_chatid,dest:ref Cell,size:usize);
@@ -70,6 +70,7 @@ impl TgConnector {
 
 	pub fn process_tick(&mut self) {
 		internals::update_process(self);
+		internals::on_send_message_process(self);
 		
 		internals::clear_caches(&mut self.telegram_chatname);
 		internals::clear_caches(&mut self.telegram_messages);

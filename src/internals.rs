@@ -40,3 +40,17 @@ pub fn update_process(plugin: &mut super::TgConnector) {
 		}
 	}
 }
+
+pub fn on_send_message_process(plugin: &mut super::TgConnector) {
+	for (id,bot) in &plugin.bots {
+		for (response,callback) in bot.send_message_reciever.as_ref().unwrap().try_iter() {
+			let result = response.result.unwrap();
+
+			if result.text != None {
+				plugin.telegram_messages.push_front(result.text.unwrap());
+				plugin.telegram_chatid.push_front(result.chat.id);
+				callbacks::on_tg_send_message(plugin,callback,id.clone(),result.message_id);
+			}
+		}
+	}
+}

@@ -1,13 +1,13 @@
 use serde::{Deserializer,Deserialize};
 
 #[derive(Deserialize,Debug,Clone)]
-pub struct APIResponse {
+pub struct APIResponse<T> {
 	pub ok: bool,
-	pub result: Option<Vec<APIResult>>,
+	pub result: Option<T>,
 }
 
 #[derive(Deserialize,Debug,Clone)]
-pub struct APIResult {
+pub struct Update {
 	pub message: Message,
 	pub update_id: i32,
 }

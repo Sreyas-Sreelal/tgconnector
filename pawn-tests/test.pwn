@@ -13,7 +13,7 @@ Test:TestInvalidToken() {
 Test:TestValidToken() {
 	new TGBot:bot = TGConnectFromEnv("SAMP_TG_BOT");
 	printf("id is %d",_:bot);
-	TGSendMessage(bot,TGChatid:"562896556","`markdown text` ***bold*** _italic_ 123",.parse_mode=MARKDOWN);
+	TGSendMessage(bot,TGChatid:"562896556","`markdown text` ***bold*** _italic_ 123",.parse_mode=MARKDOWN,.callback="SendingMessage");
 	ASSERT(bot != INVALID_BOT_ID);
 }
 
@@ -39,6 +39,12 @@ public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 	printf("username:%s message:%s messageid:%d\n",username,message,_:messageid);
 	
 	//TGDeleteMessage(bot,chatid,messageid);
-	TGSendMessage(bot,chatid,message,messageid);
-	TGEditMessage(bot,chatid,messageid+1,"***edited message***");
+	TGSendMessage(bot,chatid,message,messageid,.callback="SendingMessage");
+}
+
+forward SendingMessage(TGBot:bot,TGMessage:messageid);
+public SendingMessage(TGBot:bot,TGMessage:messageid) {
+	new TGChatid:chatid[52];
+	TGGetChatId(chatid);
+	TGEditMessage(bot,chatid,messageid,"***edited message***");
 }

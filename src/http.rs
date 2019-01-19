@@ -1,5 +1,4 @@
 use minihttp::request::Request;
-use types::*;
 
 pub enum HttpMethod {
 	Get,
@@ -13,7 +12,7 @@ pub struct HttpRequest {
 }
 
 impl HttpRequest {
-	pub fn make_request(&self) -> Result<APIResponse,String> {      
+	pub fn make_request(&self) -> Result<String,String>{      
 		match Request::new(&self.url) {
 			Ok(mut requests_obj) => {
 				let method = match self.method {
@@ -34,9 +33,10 @@ impl HttpRequest {
 				match method.send() {
 					
 					Ok(data) => {
-						let data:Result<APIResponse,serde_json::Error> = serde_json::from_str(&data.text());
+						Ok(data.text())
+						//let data:Result<APIResponse<T>,serde_json::Error> = serde_json::from_str(&data.text());
 						
-						match data {
+						/*match data {
 							Ok(data) => {
 								Ok(data)
 							},
@@ -50,7 +50,7 @@ impl HttpRequest {
 									}
 								)
 							}
-						}
+						}*/
 						
 					},
 

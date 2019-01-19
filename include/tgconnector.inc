@@ -17,7 +17,7 @@ enum TGParseMode {
 
 native TGBot:TGConnect(const token[]);
 native TGBot:TGConnectFromEnv(const variable[]);
-native TGSendMessage(TGBot:bot,const TGChatid:chatid[],const text[],TGMessage:reply_id=INVALID_MESSAGE_ID,TGParseMode:parse_mode=TGParseMode:-1);
+native TGSendMessage(TGBot:bot,const TGChatid:chatid[],const text[],TGMessage:reply_id=INVALID_MESSAGE_ID,TGParseMode:parse_mode=TGParseMode:-1,callback[]="");
 native TGGetUserName(str[],size=sizeof(str));
 native TGGetChatName(str[],size=sizeof(str));
 native TGGetChatType(str[],size=sizeof(str));

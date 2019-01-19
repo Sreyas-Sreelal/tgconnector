@@ -5,18 +5,23 @@ use functions::*;
 
 pub struct BOT {
 	pub api_requset_link: String,
-	pub update_reciever: Option<Receiver<APIResponse>>,
-	pub update_sender: Option<Sender<APIResponse>>
+	pub update_reciever: Option<Receiver<APIResponse<Vec<Update>>>>,
+	pub update_sender: Option<Sender<APIResponse<Vec<Update>>>>,
+	pub send_message_reciever: Option<Receiver<(APIResponse<Message>,String)>>,
+	pub send_message_sender: Option<Sender<(APIResponse<Message>,String)>>,
 }
 
 impl BOT {
 	pub fn new(bot_token:String) -> Self {
 		let (update_sender,update_reciever) = channel();
+		let (send_message_sender,send_message_reciever) = channel();
 		
 		BOT {
 			api_requset_link: String::from("https://api.telegram.org/bot") + &bot_token,
 			update_reciever: Some(update_reciever),
 			update_sender: Some(update_sender),
+			send_message_reciever: Some(send_message_reciever),
+			send_message_sender: Some(send_message_sender),
 		}
 	} 
 
@@ -30,6 +35,8 @@ impl BOT {
 			   
 		match request.make_request() {
 			Ok(response) => {
+				let response:APIResponse<User> = serde_json::from_str(&response).unwrap();
+				
 				if response.ok {
 					self.get_updates();
 					true
@@ -63,9 +70,10 @@ impl BOT {
 				};
 			
 				match request.make_request() {
-					Ok(update) => {
+					Ok(response) => {
+						let update:APIResponse<Vec<Update>> = serde_json::from_str(&response).unwrap();
 						
-						let check_result = match update.result.clone() {
+						let check_result:Vec<Update> = match update.result.clone() {
 							None => {
 								continue;
 							}
@@ -97,7 +105,8 @@ impl BOT {
 		});
 	}
 
-	pub fn send_message(&self,send_message_obj:SendMessage) {
+	pub fn send_message(&self,send_message_obj:SendMessage,callback:Option<String>) {
+		let send_message_move = self.send_message_sender.clone();
 		let api_link = self.api_requset_link.clone();
 
 		std::thread::spawn(move || {
@@ -109,8 +118,11 @@ impl BOT {
 			};
 			
 			match request.make_request() {
-				Ok(_response) => {
-					//TODO
+				Ok(response) => {
+					let response:APIResponse<Message> = serde_json::from_str(&response).unwrap();
+					if callback != None && response.ok {
+						send_message_move.as_ref().unwrap().send((response.clone(),callback.unwrap())).unwrap();
+					}
 				},
 
 				Err(err) => {
@@ -133,6 +145,7 @@ impl BOT {
 			
 			match request.make_request() {
 				Ok(response) => {
+					let response:APIResponse<Message> = serde_json::from_str(&response).unwrap();
 					if !response.ok {
 						log!("**[TGConnector] Error Message {:?} in chat {:?} couldn't delete (Check bot permissions!)",delete_message_obj.message_id,delete_message_obj.chat_id);
 					}
@@ -158,6 +171,7 @@ impl BOT {
 			
 			match request.make_request() {
 				Ok(response) => {
+					let response:APIResponse<Message> = serde_json::from_str(&response).unwrap();
 					if !response.ok {
 						log!("**[TGConnector] Error Message {:?} in chat {:?} couldn't edit (Check bot permissions!)",edit_message_obj.message_id,edit_message_obj.chat_id);
 					}

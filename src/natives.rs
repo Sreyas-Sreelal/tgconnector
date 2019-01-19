@@ -36,7 +36,7 @@ impl super::TgConnector {
         }
     }
 
-    pub fn bot_send_message(&mut self,_amx:&AMX,botid:usize,chatid:String,text:String,reply_id:i32,parse_mode:i32) -> AmxResult<Cell> {
+    pub fn bot_send_message(&mut self,_amx:&AMX,botid:usize,chatid:String,text:String,reply_id:i32,parse_mode:i32,callback:String) -> AmxResult<Cell> {
         let reply: Option<i32>;
         if reply_id == -1 {
             reply = None;
@@ -49,7 +49,12 @@ impl super::TgConnector {
             1 => Some("markdown"),
             _ => None
         };
-        
+
+        let callback:Option<String> = match callback.is_empty() {
+            true => None,
+            false => Some(callback),
+        };
+
         if !self.bots.contains_key(&botid) {
             log!("**[TGConnector] Error Invalid bot id {} passed",botid);
             Ok(0)
@@ -60,7 +65,7 @@ impl super::TgConnector {
 				reply_to_message_id: reply,
 				parse_mode: parsemode
 		    };
-            self.bots[&botid].send_message(send_message_obj);
+            self.bots[&botid].send_message(send_message_obj,callback);
             Ok(1)
         }
     }
