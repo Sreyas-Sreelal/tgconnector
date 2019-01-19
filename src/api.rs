@@ -146,7 +146,7 @@ impl BOT {
 			
 			match request.make_request() {
 				Ok(response) => {
-					let response:APIResponse<Message> = serde_json::from_str(&response).unwrap();
+					let response:APIResponse<bool> = serde_json::from_str(&response).unwrap();
 					if !response.ok {
 						log!("**[TGConnector] Error Message {:?} in chat {:?} couldn't delete (Check bot permissions!)",delete_message_obj.message_id,delete_message_obj.chat_id);
 					}
