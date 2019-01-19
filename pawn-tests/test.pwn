@@ -48,3 +48,15 @@ public SendingMessage(TGBot:bot,TGMessage:messageid) {
 	TGGetChatId(chatid);
 	TGEditMessage(bot,chatid,messageid,"***edited message***");
 }
+
+public OnTgUserJoined(TGBot:bot,TGUser:userid) {
+	new 
+		TGChatid:chatid[23],
+		username[24],
+		chatname[129];
+	
+	TGGetUserName(username);
+	TGGetChatId(chatid);
+	TGGetChatName(chatname);
+	printf("User %s(%d) joined %s(%s)",username,_:userid,chatname,_:chatid);
+}

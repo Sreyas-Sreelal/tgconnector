@@ -1,5 +1,11 @@
 use serde::{Deserializer,Deserialize};
 
+pub enum UpdateType{
+	Message,
+	UserJoined,
+	UserLeft,
+}
+
 #[derive(Deserialize,Debug,Clone)]
 pub struct APIResponse<T> {
 	pub ok: bool,
@@ -18,6 +24,8 @@ pub struct Message {
 	pub from:User,
 	pub chat:Chat,
 	pub message_id:i32,
+	pub new_chat_members:Option<Vec<User>>,
+	pub left_chat_member: Option<User>,
 }
 
 #[derive(Deserialize,Debug,Clone)]
