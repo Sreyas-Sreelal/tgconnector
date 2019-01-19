@@ -82,12 +82,12 @@ impl BOT {
 							}
 						};
 
-						let last_update = &check_result.last();
+						let first_update = &check_result.first();
 
-						match last_update {
+						match first_update {
 							Some(result) => {
 								getupdate.offset = result.update_id+1;
-								update_move.as_ref().unwrap().send(last_update.unwrap().clone()).unwrap();
+								update_move.as_ref().unwrap().send(first_update.unwrap().clone()).unwrap();
 							}
 
 							None => {
