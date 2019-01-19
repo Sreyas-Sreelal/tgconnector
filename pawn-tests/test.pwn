@@ -38,7 +38,7 @@ public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 	printf("chattid: %s chatname:%s chattype:%s",_:chatid,chatname,chattype);
 	printf("username:%s message:%s messageid:%d\n",username,message,_:messageid);
 	
-	//TGDeleteMessage(bot,chatid,messageid);
+	TGDeleteMessage(bot,chatid,messageid);
 	TGSendMessage(bot,chatid,message,messageid,.callback="SendingMessage");
 }
 
@@ -46,7 +46,7 @@ forward SendingMessage(TGBot:bot,TGMessage:messageid);
 public SendingMessage(TGBot:bot,TGMessage:messageid) {
 	new TGChatid:chatid[52];
 	TGGetChatId(chatid);
-	TGEditMessage(bot,chatid,messageid,"***edited message***");
+	TGEditMessage(bot,chatid,messageid,"***edited message***",.parse_mode=MARKDOWN);
 }
 
 public OnTgUserJoined(TGBot:bot,TGUser:userid) {
