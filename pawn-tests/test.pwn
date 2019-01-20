@@ -34,6 +34,15 @@ Test:TGGetUserNameFromId() {
 	new check = !strcmp("SyS45",username) && username[0] != '\0';
 	ASSERT(check == 1);
 }
+
+Test:TGGetDisplayNameFromId() {
+	new displayname[32];
+	TGGetDisplayNameFromId(g_bot,TGUser:562896556,TGChatid:"562896556",displayname);
+	printf("displayname : %s",displayname);
+	new check = !strcmp("__SyS",displayname) && displayname[0] != '\0';
+	ASSERT(check == 1);
+}
+
 public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 	new 
 		TGChatid:chatid[34],

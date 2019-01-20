@@ -30,8 +30,11 @@ native TGBot:TGConnectFromEnv(const variable[]);
 native TGSendMessage(TGBot:bot,const TGChatid:chatid[],const text[],TGMessage:reply_id=INVALID_MESSAGE_ID,TGParseMode:parse_mode=TGParseMode:-1,callback[]="");
 native TGDeleteMessage(TGBot:bot,TGChatid:chatid[],TGMessage:messageid);
 native TGEditMessage(TGBot:bot,TGChatid:chatid[],TGMessage:messageid,text[],TGParseMode:parse_mode=TGParseMode:-1);
+
+//user
 native TGUserStatus:TGGetUserGroupStatus(TGBot:bot,TGUser:userid,TGChatid:chatid[]);
 native TGGetUserNameFromId(TGBot:bot,TGUser:userid,TGChatid:chatid[],username[],size=sizeof(username));
+native TGGetDisplayNameFromId(TGBot:bot,TGUser:userid,TGChatid:chatid[],displayname[],size=sizeof(displayname));
 
 //cache functions
 native TGCacheGetUserFirstName(str[],size=sizeof(str));

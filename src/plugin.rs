@@ -18,6 +18,7 @@ define_native!(bot_delete_message,botid:usize,chatid:String,messageid:i32);
 define_native!(bot_edit_message,botid:usize,chatid:String,messageid:i32,text:String,parse_mode:i32);
 define_native!(get_user_status,botid:usize,userid:i32,chatid:String);
 define_native!(get_username_from_id,botid:usize,userid:i32,chatid:String,dest:ref Cell,size:usize);
+define_native!(get_display_name_from_id,botid:usize,userid:i32,chatid:String,dest:ref Cell,size:usize);
 
 pub struct TgConnector {
 	//plugin_version: i32,
@@ -60,7 +61,8 @@ impl TgConnector {
 			"TGDeleteMessage" => bot_delete_message,
 			"TGEditMessage" => bot_edit_message,
 			"TGGetUserGroupStatus" => get_user_status,
-			"TGGetUserNameFromId" => get_username_from_id
+			"TGGetUserNameFromId" => get_username_from_id,
+			"TGGetDisplayNameFromId" => get_display_name_from_id
 		};
 
 		match amx.register(&natives) {

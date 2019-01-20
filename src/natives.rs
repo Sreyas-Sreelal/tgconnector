@@ -304,4 +304,39 @@ impl super::TgConnector {
 			}
 		}
 	}
+
+	pub fn get_display_name_from_id(&mut self,_amx:&AMX,botid:usize,userid:i32,chatid:String,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
+		if !self.bots.contains_key(&botid) {
+			log!("**[TGConnector] Error Invalid bot id {} passed",botid);
+			Ok(0)
+
+		}else {
+			let getchatmember = GetChatMember {
+				user_id: userid,
+				chat_id: chatid,
+			};
+			let chatmember = self.bots[&botid].get_chat_member(getchatmember);
+
+			if chatmember.is_none() {
+				Ok(0)
+			} else {
+				let chatmember = chatmember.unwrap();
+				let displayname  = match &chatmember.user.last_name {
+					None => chatmember.user.first_name,
+					Some(lastname) =>  chatmember.user.first_name+ " " + lastname
+				};
+				
+				match encode_replace(&displayname) {
+					Ok(encoded) => {
+						set_string!(encoded,dest,size);
+						Ok(1)
+					},
+					Err(err) => {
+						log!("**[TGConnector][get_display_name_from_id] Failed encoding {:?} \n {:?}",displayname,err);
+						Ok(0)
+					}
+				}
+			}
+		}
+	}
 }
