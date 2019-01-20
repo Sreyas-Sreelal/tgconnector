@@ -5,7 +5,7 @@ use functions::*;
 use std::collections::VecDeque;
 
 pub struct BOT {
-	pub api_requset_link: String,
+	pub api_request_link: String,
 	pub update_reciever: Option<Receiver<Update>>,
 	pub update_sender: Option<Sender<Update>>,
 	pub send_message_reciever: Option<Receiver<(Message,String)>>,
@@ -18,7 +18,7 @@ impl BOT {
 		let (send_message_sender,send_message_reciever) = channel();
 		
 		BOT {
-			api_requset_link: String::from("https://api.telegram.org/bot") + &bot_token,
+			api_request_link: String::from("https://api.telegram.org/bot") + &bot_token,
 			update_reciever: Some(update_reciever),
 			update_sender: Some(update_sender),
 			send_message_reciever: Some(send_message_reciever),
@@ -29,7 +29,7 @@ impl BOT {
 	pub fn connect(&self) -> bool {
 
 		let request = HttpRequest {
-			url: format!("{}/getme",self.api_requset_link),
+			url: format!("{}/getme",self.api_request_link),
 			method: HttpMethod::Get,
 			body: None,
 		};
@@ -55,7 +55,7 @@ impl BOT {
 	
 	fn get_updates(&self) {
 		let update_move = self.update_sender.clone();
-		let api_link = self.api_requset_link.clone();
+		let api_link = self.api_request_link.clone();
 		
 		let mut getupdate = GetUpdates {
 				offset: -2,
@@ -108,7 +108,7 @@ impl BOT {
 
 	pub fn send_message(&self,send_message_obj:SendMessage,callback:Option<String>) {
 		let send_message_move = self.send_message_sender.clone();
-		let api_link = self.api_requset_link.clone();
+		let api_link = self.api_request_link.clone();
 
 		std::thread::spawn(move || {
 
@@ -136,7 +136,7 @@ impl BOT {
 	}
 
 	pub fn delete_message(&self,delete_message_obj:DeleteMessage) {
-		let api_link = self.api_requset_link.clone();
+		let api_link = self.api_request_link.clone();
 
 		std::thread::spawn(move || {
 
@@ -162,7 +162,7 @@ impl BOT {
 	}
 
 	pub fn edit_message(&self,edit_message_obj:EditMessageText) {
-		let api_link = self.api_requset_link.clone();
+		let api_link = self.api_request_link.clone();
 
 		std::thread::spawn(move || {
 
@@ -189,7 +189,7 @@ impl BOT {
 
 	pub fn get_chat_member(&self,getchatmember:GetChatMember) -> Option<ChatMember> {
 		let request = HttpRequest {
-			url: format!("{}/getchatmember",self.api_requset_link),
+			url: format!("{}/getchatmember",self.api_request_link),
 			method: HttpMethod::Post,
 			body: Some(serde_json::to_string(&getchatmember).unwrap()),
 		};
@@ -214,7 +214,7 @@ impl BOT {
 
 	pub fn get_chat_members_count(&self,getchatmemberscount:GetChatMembersCount) -> Option<i32> {
 		let request = HttpRequest {
-			url: format!("{}/getchatmemberscount",self.api_requset_link),
+			url: format!("{}/getchatmemberscount",self.api_request_link),
 			method: HttpMethod::Post,
 			body: Some(serde_json::to_string(&getchatmemberscount).unwrap()),
 		};
@@ -239,7 +239,7 @@ impl BOT {
 
 	pub fn get_chat(&self,getchat:GetChat) -> Option<Chat> {
 		let request = HttpRequest {
-			url: format!("{}/getchat",self.api_requset_link),
+			url: format!("{}/getchat",self.api_request_link),
 			method: HttpMethod::Post,
 			body: Some(serde_json::to_string(&getchat).unwrap()),
 		};
