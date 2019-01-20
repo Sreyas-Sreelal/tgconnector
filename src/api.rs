@@ -236,5 +236,30 @@ impl BOT {
 			}
 		} 
 	}
+
+	pub fn get_chat(&self,getchat:GetChat) -> Option<Chat> {
+		let request = HttpRequest {
+			url: format!("{}/getchat",self.api_requset_link),
+			method: HttpMethod::Post,
+			body: Some(serde_json::to_string(&getchat).unwrap()),
+		};
+
+		match request.make_request() {
+			Ok(response) => {
+				let response:APIResponse<Chat> = serde_json::from_str(&response).unwrap();
+				if response.ok {
+					response.result
+				} else {
+					log!("**[TGConnector] Error get_chat.{}",response.description.unwrap());
+					None
+				}
+			},
+			
+			Err(err) => {
+				log!("{:?}",err);
+				None
+			}
+		} 
+	}
 }
 

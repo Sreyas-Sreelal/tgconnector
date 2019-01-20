@@ -20,6 +20,8 @@ define_native!(get_user_status,botid:usize,userid:i32,chatid:String);
 define_native!(get_username_from_id,botid:usize,userid:i32,chatid:String,dest:ref Cell,size:usize);
 define_native!(get_display_name_from_id,botid:usize,userid:i32,chatid:String,dest:ref Cell,size:usize);
 define_native!(get_chat_members_count,botid:usize,chatid:String);
+define_native!(get_chat_title,botid:usize,chatid:String,title:ref Cell,size:usize);
+define_native!(get_chat_description,botid:usize,chatid:String,description:ref Cell,size:usize);
 
 pub struct TgConnector {
 	//plugin_version: i32,
@@ -64,7 +66,9 @@ impl TgConnector {
 			"TGGetUserChatStatus" => get_user_status,
 			"TGGetUserNameFromId" => get_username_from_id,
 			"TGGetDisplayNameFromId" => get_display_name_from_id,
-			"TGGetChatMembersCount" => get_chat_members_count
+			"TGGetChatMembersCount" => get_chat_members_count,
+			"TGGetChatTitle" => get_chat_title,
+			"TGGetChatDescription" => get_chat_description
 		};
 
 		match amx.register(&natives) {

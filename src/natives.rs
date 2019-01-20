@@ -354,4 +354,72 @@ impl super::TgConnector {
 			}
 		}
 	}
+
+	pub fn get_chat_title(&mut self,_amx:&AMX,botid:usize,chatid:String,title:&mut Cell,size:usize) -> AmxResult<Cell> {
+		if !self.bots.contains_key(&botid) {
+			log!("**[TGConnector] Error Invalid bot id {} passed",botid);
+			Ok(0)
+		} else {
+			let getchat = GetChat {
+				chat_id: chatid,
+			};
+			
+			let chat = self.bots[&botid].get_chat(getchat);
+			if chat.is_none() {
+				Ok(0)
+			} else {
+				match chat.unwrap().title {
+					Some(chat_title) => {
+						match encode_replace(&chat_title) {
+							Ok(encoded) => {
+								set_string!(encoded,title,size);
+								Ok(1)
+							},
+							Err(err) => {
+								log!("**[TGConnector][get_chat_title] Failed encoding {:?} \n {:?}",chat_title,err);
+								Ok(0)
+							}
+						}
+					},
+					None => {
+						Ok(0)
+					}
+				}
+			}
+		}
+	}
+
+	pub fn get_chat_description(&mut self,_amx:&AMX,botid:usize,chatid:String,description:&mut Cell,size:usize) -> AmxResult<Cell> {
+		if !self.bots.contains_key(&botid) {
+			log!("**[TGConnector] Error Invalid bot id {} passed",botid);
+			Ok(0)
+		} else {
+			let getchat = GetChat {
+				chat_id: chatid,
+			};
+			
+			let chat = self.bots[&botid].get_chat(getchat);
+			if chat.is_none() {
+				Ok(0)
+			} else {
+				match chat.unwrap().description {
+					Some(chat_description) => {
+						match encode_replace(&chat_description) {
+							Ok(encoded) => {
+								set_string!(encoded,description,size);
+								Ok(1)
+							},
+							Err(err) => {
+								log!("**[TGConnector][get_chat_description] Failed encoding {:?} \n {:?}",chat_description,err);
+								Ok(0)
+							}
+						}
+					},
+					None => {
+						Ok(0)
+					}
+				}
+			}
+		}
+	}
 }

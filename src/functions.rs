@@ -28,6 +28,11 @@ pub struct EditMessageText {
 }
 
 #[derive(Serialize,Debug,Clone)]
+pub struct GetChat {
+	pub chat_id: String,
+}
+
+#[derive(Serialize,Debug,Clone)]
 pub struct GetChatMember {
 	pub chat_id: String,
 	pub user_id: i32,
@@ -37,3 +42,4 @@ pub struct GetChatMember {
 pub struct GetChatMembersCount {
 	pub chat_id: String,
 }
+

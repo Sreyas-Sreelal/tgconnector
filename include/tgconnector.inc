@@ -38,6 +38,8 @@ native TGGetDisplayNameFromId(TGBot:bot,TGUser:userid,TGChatid:chatid[],displayn
 
 //chat 
 native TGGetChatMembersCount(TGBot:bot,TGChatid:chatid[]);
+native TGGetChatTitle(TGBot:bot,TGChatid:chatid[],title[],size=sizeof(title));
+native TGGetChatDescription(TGBot:bot,TGChatid:chatid[],description[],size=sizeof(description));
 
 //cache functions
 native TGCacheGetUserFirstName(str[],size=sizeof(str));

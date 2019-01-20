@@ -43,8 +43,23 @@ Test:TGGetUserNameFromId() {
 Test:TGGetDisplayNameFromId() {
 	new displayname[32];
 	TGGetDisplayNameFromId(g_bot,TGUser:562896556,TGChatid:"562896556",displayname);
-	printf("displayname : %s",displayname);
 	new check = !strcmp("__SyS",displayname) && displayname[0] != '\0';
+	ASSERT(check == 1);
+}
+
+Test:TGGetChatTitle() {
+	new title[132];
+	TGGetChatTitle(g_bot,TGChatid:"-1001445898764",title);
+	printf("title : %s",title);
+	new check = !strcmp("bot_developement",title) && title[0] != '\0';
+	ASSERT(check == 1);
+}
+
+Test:TGGetChatDescription() {
+	new description[132];
+	TGGetChatDescription(g_bot,TGChatid:"-1001445898764",description);
+	printf("description : %s",description);
+	new check = !strcmp("testing bots",description) && description[0] != '\0';
 	ASSERT(check == 1);
 }
 

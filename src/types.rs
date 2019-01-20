@@ -45,6 +45,7 @@ pub struct Chat {
 	#[serde(rename = "type")]
 	pub chat_type:String,
 	pub title:Option<String>,
+	pub description:Option<String>,
 }
 
 #[derive(Deserialize,Debug,Clone)]
