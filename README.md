@@ -1,2 +1,4 @@
 # TgConnector
 [![Build Status](https://travis-ci.org/Sreyas-Sreelal/tgconnector.svg?branch=master)](https://travis-ci.org/Sreyas-Sreelal/tgconnector) [![Build status](https://ci.appveyor.com/api/projects/status/snip8i9cd6xh2x1u?svg=true)](https://ci.appveyor.com/project/Sreyas-Sreelal/tgconnector)
+[![sampctl-supported](https://shields.southcla.ws/badge/sampctl-TGConnector-2f2f2f.svg)](https://github.com/Sreyas-Sreelal/tgconnector)
+[![GitHub issues](https://img.shields.io/github/issues/Sreyas-Sreelal/tgconnector.svg)](https://github.com/Sreyas-Sreelal/tgconnector/issues) [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/sreyas-sreelal/tgconnector.svg)](https://github.com/Sreyas-Sreelal/tgconnector/pulls) [![GitHub pull license](https://img.shields.io/github/license/sreyas-sreelal/tgconnector.svg)](LICENSE) 
