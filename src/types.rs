@@ -4,6 +4,7 @@ pub enum UpdateType{
 	Message,
 	UserJoined,
 	UserLeft,
+	UnknownUpdate,
 }
 
 #[derive(Deserialize,Debug,Clone)]

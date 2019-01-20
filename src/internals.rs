@@ -84,6 +84,10 @@ pub fn update_process(plugin: &mut super::TgConnector) {
 					callbacks::ong_tg_user_left(plugin,id,user.id);	
 					
 				}
+
+				UpdateType::UnknownUpdate => {
+					continue;
+				}
 			}	
 			
 		}
@@ -95,8 +99,10 @@ fn get_update_type(update:&Update) -> UpdateType{
 		UpdateType::Message
 	} else if update.message.new_chat_members.is_some() {
 		UpdateType::UserJoined
-	} else {
+	} else if update.message.left_chat_member.is_some() {
 		UpdateType::UserLeft
+	} else {
+		UpdateType::UnknownUpdate
 	}
 
 }
