@@ -18,38 +18,38 @@ Test:TestInvalidToken() {
 
 Test:TestValidToken() {
 	printf("id is %d",_:g_bot);
-	TGSendMessage(g_bot,TGChatid:"562896556","`markdown text` ***bold*** _italic_ 123",.parse_mode=MARKDOWN,.callback="SendingMessage");
+	TGSendMessage(g_bot,TGChatId:"562896556","`markdown text` ***bold*** _italic_ 123",.parse_mode=MARKDOWN,.callback="SendingMessage");
 	ASSERT(g_bot != INVALID_BOT_ID);
 }
 
 Test:TGGetUserChatStatus() {
-	new TGUserStatus:status = TGGetUserChatStatus(g_bot,TGUser:562896556,TGChatid:"-1001445898764");
+	new TGUserStatus:status = TGGetUserChatStatus(g_bot,TGUser:562896556,TGChatId:"-1001445898764");
 	ASSERT(status == TG_CREATOR);
 }
 
 Test:TGGetChatMembersCount() {
-	new count = TGGetChatMembersCount(g_bot,TGChatid:"-1001445898764");
+	new count = TGGetChatMembersCount(g_bot,TGChatId:"-1001445898764");
 	printf("count %d",count);
 	ASSERT(count == 8);
 }
 
 Test:TGGetUserNameFromId() {
 	new username[32];
-	TGGetUserNameFromId(g_bot,TGUser:562896556,TGChatid:"562896556",username);
+	TGGetUserNameFromId(g_bot,TGUser:562896556,TGChatId:"562896556",username);
 	new check = !strcmp("SyS45",username) && username[0] != '\0';
 	ASSERT(check == 1);
 }
 
 Test:TGGetDisplayNameFromId() {
 	new displayname[32];
-	TGGetDisplayNameFromId(g_bot,TGUser:562896556,TGChatid:"562896556",displayname);
+	TGGetDisplayNameFromId(g_bot,TGUser:562896556,TGChatId:"562896556",displayname);
 	new check = !strcmp("__SyS",displayname) && displayname[0] != '\0';
 	ASSERT(check == 1);
 }
 
 Test:TGGetChatTitle() {
 	new title[132];
-	TGGetChatTitle(g_bot,TGChatid:"-1001445898764",title);
+	TGGetChatTitle(g_bot,TGChatId:"-1001445898764",title);
 	printf("title : %s",title);
 	new check = !strcmp("bot_developement",title) && title[0] != '\0';
 	ASSERT(check == 1);
@@ -57,7 +57,7 @@ Test:TGGetChatTitle() {
 
 Test:TGGetChatDescription() {
 	new description[132];
-	TGGetChatDescription(g_bot,TGChatid:"-1001445898764",description);
+	TGGetChatDescription(g_bot,TGChatId:"-1001445898764",description);
 	printf("description : %s",description);
 	new check = !strcmp("testing bots",description) && description[0] != '\0';
 	ASSERT(check == 1);
@@ -65,7 +65,7 @@ Test:TGGetChatDescription() {
 
 public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 	new 
-		TGChatid:chatid[34],
+		TGChatId:chatid[34],
 		message[128],
 		chattype[15],
 		username[24],
@@ -91,7 +91,7 @@ public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 
 forward SendingMessage(TGBot:bot,TGMessage:messageid);
 public SendingMessage(TGBot:bot,TGMessage:messageid) {
-	new TGChatid:chatid[52];
+	new TGChatId:chatid[52];
 	TGCacheGetChatId(chatid);
 	TGEditMessage(bot,chatid,messageid,"***edited message***",.parse_mode=MARKDOWN);
 	return 1;
@@ -99,7 +99,7 @@ public SendingMessage(TGBot:bot,TGMessage:messageid) {
 
 public OnTgUserJoined(TGBot:bot,TGUser:userid) {
 	new 
-		TGChatid:chatid[23],
+		TGChatId:chatid[23],
 		username[24],
 		chatname[129];
 	
@@ -113,7 +113,7 @@ public OnTgUserJoined(TGBot:bot,TGUser:userid) {
 
 public OnTgUserLeft(TGBot:bot,TGUser:userid) {
 	new 
-		TGChatid:chatid[23],
+		TGChatId:chatid[23],
 		username[24],
 		chatname[129];
 	
