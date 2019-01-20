@@ -106,7 +106,7 @@ impl super::TgConnector {
 		}
 	}
 
-	pub fn get_message(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
+	pub fn cache_get_message(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
 		let string = self.telegram_messages.front();
 
 		if string != None {
@@ -126,7 +126,7 @@ impl super::TgConnector {
 		}
 	}
 
-	pub fn get_username(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
+	pub fn cache_get_username(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
 		let string = self.telegram_username.front();
 		
 		if string != None {
@@ -145,7 +145,7 @@ impl super::TgConnector {
 		}
 	}
 
-	pub fn get_user_first_name(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
+	pub fn cache_get_user_first_name(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
 		let string = self.telegram_firstname.front();
 		
 		if string != None {
@@ -164,7 +164,7 @@ impl super::TgConnector {
 		}
 	}
 
-	pub fn get_user_last_name(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
+	pub fn cache_get_user_last_name(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
 		let string = self.telegram_lastname.front();
 		
 		if string != None {
@@ -183,7 +183,7 @@ impl super::TgConnector {
 		}
 	}
 	
-	pub fn get_chatid(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
+	pub fn cache_get_chatid(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
 		let string = self.telegram_chatid.front();
 
 		if string != None {
@@ -202,7 +202,7 @@ impl super::TgConnector {
 		}
 	}
 
-	pub fn get_chatname(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
+	pub fn cache_get_chatname(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
 	   let string =  self.telegram_chatname.front();
 	   
 	   if string != None {
@@ -221,7 +221,7 @@ impl super::TgConnector {
 		}
 	}
 
-	pub fn get_chattype(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
+	pub fn cache_get_chattype(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
 		let string = self.telegram_chattype.front();
 		
 		if string != None {
@@ -241,6 +241,36 @@ impl super::TgConnector {
 	}
 
 	pub fn get_user_status(&mut self,_amx:&AMX,botid:usize,userid:i32,chatid:String) -> AmxResult<Cell> {
+		if !self.bots.contains_key(&botid) {
+			log!("**[TGConnector] Error Invalid bot id {} passed",botid);
+			Ok(0)
+
+		}else {
+			let getchatmember = GetChatMember {
+				user_id: userid,
+				chat_id: chatid,
+			};
+			let chatmember = self.bots[&botid].get_chat_member(getchatmember);
+
+			if chatmember.is_none() {
+				Ok(0)
+			} else {
+				let chatmember = chatmember.unwrap();
+				
+				match chatmember.status.as_ref() {
+					"creator" => Ok(1),
+					"adminstrator" => Ok(2),
+					"member" => Ok(3),
+					"restricted" => Ok(4),
+					"left" => Ok(5),
+					"kicked" => Ok(6),
+					_ => Ok(0)
+				}
+			}
+		}
+	}
+
+	pub fn get_user_details(&mut self,_amx:&AMX,botid:usize,userid:i32,chatid:String) -> AmxResult<Cell> {
 		if !self.bots.contains_key(&botid) {
 			log!("**[TGConnector] Error Invalid bot id {} passed",botid);
 			Ok(0)

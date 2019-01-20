@@ -7,13 +7,13 @@ use internals;
 define_native!(bot_connect,token:String);
 define_native!(bot_connect_from_env,variable:String);
 define_native!(bot_send_message,botid:usize,chatid:String,text:String,reply_id:i32,parse_mode:i32,callback:String);
-define_native!(get_message,dest:ref Cell,size:usize);
-define_native!(get_username,dest:ref Cell,size:usize);
-define_native!(get_user_first_name,dest:ref Cell,size:usize);
-define_native!(get_user_last_name,dest:ref Cell,size:usize);
-define_native!(get_chatid,dest:ref Cell,size:usize);
-define_native!(get_chattype,dest:ref Cell,size:usize);
-define_native!(get_chatname,dest:ref Cell,size:usize);
+define_native!(cache_get_message,dest:ref Cell,size:usize);
+define_native!(cache_get_username,dest:ref Cell,size:usize);
+define_native!(cache_get_user_first_name,dest:ref Cell,size:usize);
+define_native!(cache_get_user_last_name,dest:ref Cell,size:usize);
+define_native!(cache_get_chatid,dest:ref Cell,size:usize);
+define_native!(cache_get_chattype,dest:ref Cell,size:usize);
+define_native!(cache_get_chatname,dest:ref Cell,size:usize);
 define_native!(bot_delete_message,botid:usize,chatid:String,messageid:i32);
 define_native!(bot_edit_message,botid:usize,chatid:String,messageid:i32,text:String,parse_mode:i32);
 define_native!(get_user_status,botid:usize,userid:i32,chatid:String);
@@ -49,16 +49,16 @@ impl TgConnector {
 			"TGConnect" => bot_connect,
 			"TGConnectFromEnv" => bot_connect_from_env,
 			"TGSendMessage" => bot_send_message,
-			"TGGetMessage" => get_message,
-			"TGGetUserName" => get_username,
-			"TGGetChatId" => get_chatid,
-			"TGGetChatType" => get_chattype,
-			"TGGetChatName" => get_chatname,
+			"TGCacheGetMessage" => cache_get_message,
+			"TGCacheGetUserName" => cache_get_username,
+			"TGCacheGetChatId" => cache_get_chatid,
+			"TGCacheGetChatType" => cache_get_chattype,
+			"TGCacheGetChatName" => cache_get_chatname,
+			"TGCacheGetUserFirstName" => cache_get_user_first_name,
+			"TGCacheGetUserLastName" => cache_get_user_last_name,
 			"TGDeleteMessage" => bot_delete_message,
 			"TGEditMessage" => bot_edit_message,
-			"TGGetUserGroupStatus" => get_user_status,
-			"TGGetUserFirstName" => get_user_first_name,
-			"TGGetUserLastName" => get_user_last_name
+			"TGGetUserGroupStatus" => get_user_status
 		};
 
 		match amx.register(&natives) {
