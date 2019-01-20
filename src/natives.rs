@@ -228,7 +228,6 @@ impl super::TgConnector {
 					"kicked" => Ok(6),
 					_ => Ok(0)
 				}
-				
 			}
 		}
 	}

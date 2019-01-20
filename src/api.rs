@@ -42,7 +42,7 @@ impl BOT {
 					self.get_updates();
 					true
 				}else {
-					log!("**[TGConnector] Error Invalid token is passed");
+					log!("**[TGConnector] Error bot couldn't connect.{}",response.description.unwrap());
 					false
 				}
 			}
@@ -121,7 +121,9 @@ impl BOT {
 			match request.make_request() {
 				Ok(response) => {
 					let response:APIResponse<Message> = serde_json::from_str(&response).unwrap();
-					if callback != None && response.ok {
+					if !response.ok {
+						log!("**[TGConnector] Error Couldn't send message.{}",response.description.unwrap());
+					} else if callback != None {
 						send_message_move.as_ref().unwrap().send((response.result.unwrap(),callback.unwrap())).unwrap();
 					}
 				},
@@ -148,7 +150,7 @@ impl BOT {
 				Ok(response) => {
 					let response:APIResponse<bool> = serde_json::from_str(&response).unwrap();
 					if !response.ok {
-						log!("**[TGConnector] Error Message {:?} in chat {:?} couldn't delete (Check bot permissions!)",delete_message_obj.message_id,delete_message_obj.chat_id);
+						log!("**[TGConnector] Error Message {:?} in chat {:?} couldn't delete. {}",delete_message_obj.message_id,delete_message_obj.chat_id,response.description.unwrap());
 					}
 				},
 
@@ -174,7 +176,7 @@ impl BOT {
 				Ok(response) => {
 					let response:APIResponse<Message> = serde_json::from_str(&response).unwrap();
 					if !response.ok {
-						log!("**[TGConnector] Error Message {:?} in chat {:?} couldn't edit (Check bot permissions!)",edit_message_obj.message_id,edit_message_obj.chat_id);
+						log!("**[TGConnector] Error Message {:?} in chat {:?} couldn't edit {}",edit_message_obj.message_id,edit_message_obj.chat_id,response.description.unwrap());
 					}
 				},
 
@@ -198,7 +200,7 @@ impl BOT {
 				if response.ok {
 					response.result
 				} else {
-					log!("**[TGConnector] Error get_chat_member {}",response.description.unwrap());
+					log!("**[TGConnector] Error get_chat_member.{}",response.description.unwrap());
 					None
 				}
 			},
