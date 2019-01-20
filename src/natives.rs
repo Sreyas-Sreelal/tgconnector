@@ -144,6 +144,44 @@ impl super::TgConnector {
 			Ok(0)
 		}
 	}
+
+	pub fn get_user_first_name(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
+		let string = self.telegram_firstname.front();
+		
+		if string != None {
+			match encode_replace(&string.unwrap()) {
+				Ok(encoded) => {
+					set_string!(encoded,dest,size);
+					Ok(1)
+				},
+				Err(err) => {
+					log!("**[TGConnector][get_user_first_name] Failed encoding {:?} \n {:?}",string.unwrap(),err);
+					Ok(0)
+				}   
+			}
+		}else {   
+			Ok(0)
+		}
+	}
+
+	pub fn get_user_last_name(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
+		let string = self.telegram_lastname.front();
+		
+		if string != None {
+			match encode_replace(&string.unwrap()) {
+				Ok(encoded) => {
+					set_string!(encoded,dest,size);
+					Ok(1)
+				},
+				Err(err) => {
+					log!("**[TGConnector][get_user_last_name] Failed encoding {:?} \n {:?}",string.unwrap(),err);
+					Ok(0)
+				}   
+			}
+		}else {   
+			Ok(0)
+		}
+	}
 	
 	pub fn get_chatid(&mut self,_amx:&AMX,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
 		let string = self.telegram_chatid.front();

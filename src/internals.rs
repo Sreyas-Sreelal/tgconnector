@@ -15,7 +15,16 @@ pub fn update_process(plugin: &mut super::TgConnector) {
 					plugin.telegram_messages.push_front(update.message.text.unwrap());
 					plugin.telegram_chatid.push_front(update.message.chat.id);
 					plugin.telegram_chattype.push_front(update.message.chat.chat_type);
+					plugin.telegram_firstname.push_front(update.message.from.first_name);
 					
+					match update.message.from.last_name {
+						Some(lastname) => {
+							plugin.telegram_lastname.push_front(lastname);
+						}
+						None => {
+						}
+					};
+
 					match update.message.from.username {
 						Some(username) => {
 							plugin.telegram_username.push_front(username);
@@ -37,6 +46,16 @@ pub fn update_process(plugin: &mut super::TgConnector) {
 				}
 				
 				UpdateType::UserJoined => {
+					plugin.telegram_firstname.push_front(update.message.from.first_name);
+					
+					match update.message.from.last_name {
+						Some(lastname) => {
+							plugin.telegram_lastname.push_front(lastname);
+						}
+						None => {
+						}
+					};
+
 					match update.message.chat.title {
 							Some(chatname) => {
 								plugin.telegram_chatname.push_front(chatname);
@@ -61,6 +80,15 @@ pub fn update_process(plugin: &mut super::TgConnector) {
 				}
 
 				UpdateType::UserLeft => {
+					plugin.telegram_firstname.push_front(update.message.from.first_name);
+					
+					match update.message.from.last_name {
+						Some(lastname) => {
+							plugin.telegram_lastname.push_front(lastname);
+						}
+						None => {
+						}
+					};
 
 					match update.message.chat.title {
 							Some(chatname) => {

@@ -34,16 +34,20 @@ public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 		message[128],
 		chattype[15],
 		username[24],
-		chatname[56];
+		chatname[56],
+		firstname[34],
+		lastname[34];
 
 	TGGetChatId(chatid);
 	TGGetMessage(message);
 	TGGetUserName(username);
 	TGGetChatName(chatname);
 	TGGetChatType(chattype);
+	TGGetUserLastName(lastname);
+	TGGetUserFirstName(firstname);
 	
 	printf("chattid: %s chatname:%s chattype:%s",_:chatid,chatname,chattype);
-	printf("username:%s message:%s messageid:%d\n",username,message,_:messageid);
+	printf("username:%s firstname:%s lastname:%s message:%s messageid:%d\n",username,firstname,lastname,message,_:messageid);
 	
 	TGDeleteMessage(bot,chatid,messageid);
 	TGSendMessage(bot,chatid,message,messageid,.callback="SendingMessage");

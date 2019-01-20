@@ -9,6 +9,8 @@ define_native!(bot_connect_from_env,variable:String);
 define_native!(bot_send_message,botid:usize,chatid:String,text:String,reply_id:i32,parse_mode:i32,callback:String);
 define_native!(get_message,dest:ref Cell,size:usize);
 define_native!(get_username,dest:ref Cell,size:usize);
+define_native!(get_user_first_name,dest:ref Cell,size:usize);
+define_native!(get_user_last_name,dest:ref Cell,size:usize);
 define_native!(get_chatid,dest:ref Cell,size:usize);
 define_native!(get_chattype,dest:ref Cell,size:usize);
 define_native!(get_chatname,dest:ref Cell,size:usize);
@@ -23,6 +25,8 @@ pub struct TgConnector {
 	pub bot_context_id: usize,
 	pub telegram_messages: std::collections::LinkedList<String>,
 	pub telegram_username: std::collections::LinkedList<String>,
+	pub telegram_firstname: std::collections::LinkedList<String>,
+	pub telegram_lastname: std::collections::LinkedList<String>,
 	pub telegram_chatname: std::collections::LinkedList<String>,
 	pub telegram_chatid: std::collections::LinkedList<String>,
 	pub telegram_chattype: std::collections::LinkedList<String>,
@@ -52,7 +56,9 @@ impl TgConnector {
 			"TGGetChatName" => get_chatname,
 			"TGDeleteMessage" => bot_delete_message,
 			"TGEditMessage" => bot_edit_message,
-			"TGGetUserGroupStatus" => get_user_status
+			"TGGetUserGroupStatus" => get_user_status,
+			"TGGetUserFirstName" => get_user_first_name,
+			"TGGetUserLastName" => get_user_last_name
 		};
 
 		match amx.register(&natives) {
@@ -77,6 +83,8 @@ impl TgConnector {
 		internals::clear_caches(&mut self.telegram_chatname);
 		internals::clear_caches(&mut self.telegram_messages);
 		internals::clear_caches(&mut self.telegram_username);
+		internals::clear_caches(&mut self.telegram_firstname);
+		internals::clear_caches(&mut self.telegram_lastname);
 		internals::clear_caches(&mut self.telegram_chattype);
 		internals::clear_caches(&mut self.telegram_chatid);
 	}
@@ -93,6 +101,8 @@ impl Default for TgConnector {
 			telegram_username: std::collections::LinkedList::new(),
 			telegram_chatname: std::collections::LinkedList::new(),
 			telegram_chatid: std::collections::LinkedList::new(),
+			telegram_firstname: std::collections::LinkedList::new(),
+			telegram_lastname: std::collections::LinkedList::new(),
 			telegram_chattype: std::collections::LinkedList::new(),
 		}
 	}
