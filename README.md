@@ -43,11 +43,12 @@ _Coming Soon_
 #include<tgconnector>
 #include<zcmd>
 
-#define CHAT_ID (TGChatId:"-1001445898764")
+#define CHAT_ID (TGChatId:"YOUR_CHAT_ID_HERE")
 
 new TGBot:g_bot;
 
 main() {
+	//Store bot token in SAMP_TG_BOT environment variable and connect from it
 	g_bot = TGConnectFromEnv("SAMP_TG_BOT");
 	if(g_bot != INVALID_BOT_ID) {
 		printf("bot connected successfully!");
