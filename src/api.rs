@@ -211,5 +211,30 @@ impl BOT {
 			}
 		}
 	}
+
+	pub fn get_chat_members_count(&self,getchatmemberscount:GetChatMembersCount) -> Option<i32> {
+		let request = HttpRequest {
+			url: format!("{}/getchatmemberscount",self.api_requset_link),
+			method: HttpMethod::Post,
+			body: Some(serde_json::to_string(&getchatmemberscount).unwrap()),
+		};
+
+		match request.make_request() {
+			Ok(response) => {
+				let response:APIResponse<i32> = serde_json::from_str(&response).unwrap();
+				if response.ok {
+					response.result 
+				} else {
+					log!("**[TGConnector] Error get_chat_members_count.{}",response.description.unwrap());
+					None
+				}
+			},
+			
+			Err(err) => {
+				log!("{:?}",err);
+				None
+			}
+		} 
+	}
 }
 

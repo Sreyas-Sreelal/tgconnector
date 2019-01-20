@@ -32,9 +32,12 @@ native TGDeleteMessage(TGBot:bot,TGChatid:chatid[],TGMessage:messageid);
 native TGEditMessage(TGBot:bot,TGChatid:chatid[],TGMessage:messageid,text[],TGParseMode:parse_mode=TGParseMode:-1);
 
 //user
-native TGUserStatus:TGGetUserGroupStatus(TGBot:bot,TGUser:userid,TGChatid:chatid[]);
+native TGUserStatus:TGGetUserChatStatus(TGBot:bot,TGUser:userid,TGChatid:chatid[]);
 native TGGetUserNameFromId(TGBot:bot,TGUser:userid,TGChatid:chatid[],username[],size=sizeof(username));
 native TGGetDisplayNameFromId(TGBot:bot,TGUser:userid,TGChatid:chatid[],displayname[],size=sizeof(displayname));
+
+//chat 
+native TGGetChatMembersCount(TGBot:bot,TGChatid:chatid[]);
 
 //cache functions
 native TGCacheGetUserFirstName(str[],size=sizeof(str));

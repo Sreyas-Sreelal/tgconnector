@@ -325,7 +325,7 @@ impl super::TgConnector {
 					None => chatmember.user.first_name,
 					Some(lastname) =>  chatmember.user.first_name+ " " + lastname
 				};
-				
+
 				match encode_replace(&displayname) {
 					Ok(encoded) => {
 						set_string!(encoded,dest,size);
@@ -336,6 +336,21 @@ impl super::TgConnector {
 						Ok(0)
 					}
 				}
+			}
+		}
+	}
+
+	pub fn get_chat_members_count(&mut self,_amx:&AMX,botid:usize,chatid:String) -> AmxResult<Cell> {
+		if !self.bots.contains_key(&botid) {
+			log!("**[TGConnector] Error Invalid bot id {} passed",botid);
+			Ok(-1)
+		} else {
+			let getchatmembercount = GetChatMembersCount {
+				chat_id: chatid,
+			};
+			match self.bots[&botid].get_chat_members_count(getchatmembercount) {
+				None => Ok(-1),
+				Some(count) => Ok(count)
 			}
 		}
 	}

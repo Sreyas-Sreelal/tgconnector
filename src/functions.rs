@@ -32,3 +32,8 @@ pub struct GetChatMember {
 	pub chat_id: String,
 	pub user_id: i32,
 }
+
+#[derive(Serialize,Debug,Clone)]
+pub struct GetChatMembersCount {
+	pub chat_id: String,
+}

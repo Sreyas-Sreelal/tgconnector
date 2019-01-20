@@ -22,10 +22,15 @@ Test:TestValidToken() {
 	ASSERT(g_bot != INVALID_BOT_ID);
 }
 
-Test:TGGetUserGroupStatus() {
-	new TGUserStatus:status = TGGetUserGroupStatus(g_bot,TGUser:562896556,TGChatid:"-1001445898764");
-	printf("status %d",_:status);
+Test:TGGetUserChatStatus() {
+	new TGUserStatus:status = TGGetUserChatStatus(g_bot,TGUser:562896556,TGChatid:"-1001445898764");
 	ASSERT(status == TG_CREATOR);
+}
+
+Test:TGGetChatMembersCount() {
+	new count = TGGetChatMembersCount(g_bot,TGChatid:"-1001445898764");
+	printf("count %d",count);
+	ASSERT(count == 8);
 }
 
 Test:TGGetUserNameFromId() {
