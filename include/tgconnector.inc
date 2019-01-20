@@ -7,8 +7,12 @@
 #endif
 #define _tgconnector_included
 
+#define TGCONNECTOR_VERSION 1
 #define INVALID_MESSAGE_ID (TGMessage:-1)
 #define INVALID_BOT_ID (TGBot:-1)
+
+public _tgconnector_version = TGCONNECTOR_VERSION;
+#pragma unused _tgconnector_version
 
 enum TGParseMode {
 	HTML,

@@ -1,6 +1,6 @@
 use samp_sdk::consts::*;
 use samp_sdk::types::Cell;
-use samp_sdk::amx::AMX;
+use samp_sdk::amx::{AMX,AmxResult};
 use api::BOT;
 use internals;
 
@@ -24,7 +24,7 @@ define_native!(get_chat_title,botid:usize,chatid:String,title:ref Cell,size:usiz
 define_native!(get_chat_description,botid:usize,chatid:String,description:ref Cell,size:usize);
 
 pub struct TgConnector {
-	//plugin_version: i32,
+	plugin_version: i32,
 	pub amx_list: Vec<usize>,
 	pub bots: std::collections::HashMap<usize,BOT>,
 	pub bot_context_id: usize,
@@ -39,12 +39,20 @@ pub struct TgConnector {
 
 impl TgConnector {
 	pub fn load(&self) -> bool {
-		log!("**[TGConnector] Loaded!");
+		log!("
+   ###############################################################
+   #                      TGConnector                            #
+   #                        V0.0.1 Loaded!!                      #
+   #   Found any bugs? Report it here:                           #
+   #       https://github.com/Sreyas-Sreelal/tgconnector/issues  #
+   #                                                             #
+   ###############################################################
+			");
 		return true;
 	}
 
 	pub fn unload(&self) {
-		log!("**[TGConnector] Unloaded!");
+		log!("**TGConnector V0.0.1 Unloaded!");
 	}
 
 	pub fn amx_load(&mut self, amx: &mut AMX) -> Cell {
@@ -76,6 +84,19 @@ impl TgConnector {
 			Err(err) => log!("Whoops, there is an error {:?}", err),
 		}
 
+		let get_version:AmxResult<&mut i32> = amx.find_pubvar("_tgconnector_version");
+
+		match get_version{
+			Ok(version) =>{
+				if *version != self.plugin_version{
+					log!("**[TGConnector] Warning plugin and include version doesnot match : Include {:?} Plugin {:?}",version,self.plugin_version);
+				}
+			},
+			Err(err)=>{
+				log!("**[TGConnector] Failed to retrive include version Reason:{:?}", err)
+			}
+		}
+
 		AMX_ERR_NONE
 	}
 
@@ -103,7 +124,7 @@ impl TgConnector {
 impl Default for TgConnector {
 	fn default() -> Self {
 		TgConnector {
-			//plugin_version: 1,
+			plugin_version: 1,
 			amx_list: Vec::new(),
 			bots: std::collections::HashMap::new(),
 			bot_context_id: 0,
