@@ -31,6 +31,7 @@ native TGSendMessage(TGBot:bot,const TGChatid:chatid[],const text[],TGMessage:re
 native TGDeleteMessage(TGBot:bot,TGChatid:chatid[],TGMessage:messageid);
 native TGEditMessage(TGBot:bot,TGChatid:chatid[],TGMessage:messageid,text[],TGParseMode:parse_mode=TGParseMode:-1);
 native TGUserStatus:TGGetUserGroupStatus(TGBot:bot,TGUser:userid,TGChatid:chatid[]);
+native TGGetUserNameFromId(TGBot:bot,TGUser:userid,TGChatid:chatid[],username[],size=sizeof(username));
 
 //cache functions
 native TGCacheGetUserFirstName(str[],size=sizeof(str));

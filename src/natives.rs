@@ -270,7 +270,7 @@ impl super::TgConnector {
 		}
 	}
 
-	pub fn get_user_details(&mut self,_amx:&AMX,botid:usize,userid:i32,chatid:String) -> AmxResult<Cell> {
+	pub fn get_username_from_id(&mut self,_amx:&AMX,botid:usize,userid:i32,chatid:String,dest:&mut Cell,size:usize) -> AmxResult<Cell> {
 		if !self.bots.contains_key(&botid) {
 			log!("**[TGConnector] Error Invalid bot id {} passed",botid);
 			Ok(0)
@@ -286,15 +286,20 @@ impl super::TgConnector {
 				Ok(0)
 			} else {
 				let chatmember = chatmember.unwrap();
-				
-				match chatmember.status.as_ref() {
-					"creator" => Ok(1),
-					"adminstrator" => Ok(2),
-					"member" => Ok(3),
-					"restricted" => Ok(4),
-					"left" => Ok(5),
-					"kicked" => Ok(6),
-					_ => Ok(0)
+				let username = &chatmember.user.username;
+				if *username == None {
+					Ok(0)
+				} else {
+					match encode_replace(username.as_ref().unwrap()) {
+						Ok(encoded) => {
+							set_string!(encoded,dest,size);
+							Ok(1)
+						},
+						Err(err) => {
+							log!("**[TGConnector][get_username_from_id] Failed encoding {:?} \n {:?}",username.as_ref().unwrap(),err);
+							Ok(0)
+						}
+					}
 				}
 			}
 		}

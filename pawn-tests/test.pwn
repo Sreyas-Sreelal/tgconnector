@@ -28,6 +28,12 @@ Test:TGGetUserGroupStatus() {
 	ASSERT(status == TG_CREATOR);
 }
 
+Test:TGGetUserNameFromId() {
+	new username[32];
+	TGGetUserNameFromId(g_bot,TGUser:562896556,TGChatid:"562896556",username);
+	new check = !strcmp("SyS45",username) && username[0] != '\0';
+	ASSERT(check == 1);
+}
 public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 	new 
 		TGChatid:chatid[34],
@@ -47,7 +53,7 @@ public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 	TGCacheGetUserFirstName(firstname);
 
 	printf("chattid: %s chatname:%s chattype:%s",_:chatid,chatname,chattype);
-	printf("username:%s firstname:%s lastname:%s message:%s messageid:%d\n",username,firstname,lastname,message,_:messageid);
+	printf("userid:%d username:%s firstname:%s lastname:%s message:%s messageid:%d\n",_:fromid,username,firstname,lastname,message,_:messageid);
 	
 	//TGDeleteMessage(bot,chatid,messageid);
 	TGSendMessage(bot,chatid,message,messageid,.callback="SendingMessage");
