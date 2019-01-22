@@ -2,6 +2,7 @@ use serde::{Deserializer,Deserialize};
 
 pub enum UpdateType{
 	Message,
+	ChannelPost,
 	UserJoined,
 	UserLeft,
 	UnknownUpdate,
@@ -16,26 +17,27 @@ pub struct APIResponse<T> {
 
 #[derive(Deserialize,Debug,Clone)]
 pub struct Update {
-	pub message: Message,
+	pub message: Option<Message>,
+	pub channel_post: Option<Message>,
 	pub update_id: i32,
 }
 
 #[derive(Deserialize,Debug,Clone)]
 pub struct Message {
 	pub text: Option<String>,
-	pub from:User,
-	pub chat:Chat,
-	pub message_id:i32,
-	pub new_chat_members:Option<std::collections::VecDeque<User>>,
+	pub from: Option<User>,
+	pub chat: Chat,
+	pub message_id: i32,
+	pub new_chat_members: Option<std::collections::VecDeque<User>>,
 	pub left_chat_member: Option<User>,
 }
 
 #[derive(Deserialize,Debug,Clone)]
 pub struct User {
 	pub id: i32,
-	pub first_name:String,
-	pub last_name:Option<String>,
-	pub username:Option<String>,
+	pub first_name: String,
+	pub last_name: Option<String>,
+	pub username: Option<String>,
 }
 
 #[derive(Deserialize,Debug,Clone)]
@@ -43,15 +45,15 @@ pub struct Chat {
 	#[serde(deserialize_with = "de_from_int")]
 	pub id: String,
 	#[serde(rename = "type")]
-	pub chat_type:String,
-	pub title:Option<String>,
-	pub description:Option<String>,
+	pub chat_type: String,
+	pub title: Option<String>,
+	pub description: Option<String>,
 }
 
 #[derive(Deserialize,Debug,Clone)]
 pub struct ChatMember {
 	pub user: User,
-	pub status:String,
+	pub status: String,
 }
 
 fn de_from_int<'de, D>(deserializer: D) -> Result<String, D::Error>
