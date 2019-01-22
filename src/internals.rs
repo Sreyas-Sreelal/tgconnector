@@ -160,7 +160,12 @@ fn get_update_type(update:&Update) -> UpdateType{
 			UpdateType::UnknownUpdate
 		}
 	} else if update.channel_post.is_some() {
-		UpdateType::ChannelPost
+		let post = update.channel_post.as_ref().unwrap();
+		if post.text.is_some() {
+			UpdateType::ChannelPost
+		} else {
+			UpdateType::UnknownUpdate
+		}
 	} else {
 		UpdateType::UnknownUpdate
 	}
