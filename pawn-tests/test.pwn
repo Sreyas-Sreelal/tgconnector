@@ -108,7 +108,7 @@ public OnTGChannelPost(TGBot:bot,TGMessage:postid) {
 	
 	printf("[%s](%s):%s(%d)",chatname,_:chatid,post,_:postid);
 }
-public OnTgUserJoined(TGBot:bot,TGUser:userid) {
+public OnTGUserJoined(TGBot:bot,TGUser:userid) {
 	new 
 		TGChatId:chatid[15],
 		username[24],
@@ -122,7 +122,7 @@ public OnTgUserJoined(TGBot:bot,TGUser:userid) {
 	return 1;
 }
 
-public OnTgUserLeft(TGBot:bot,TGUser:userid) {
+public OnTGUserLeft(TGBot:bot,TGUser:userid) {
 	new 
 		TGChatId:chatid[15],
 		username[24],

@@ -57,5 +57,5 @@ native TGCacheGetMessage(str[],size=sizeof(str));
 //callbacks
 forward OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid);
 forward OnTGChannelPost(TGBot:bot,TGMessage:postid);
-forward OnTgUserJoined(TGBot:bot,TGUser:userid);
-forward OnTgUserLeft(TGBot:bot,TGUser:userid);
+forward OnTGUserJoined(TGBot:bot,TGUser:userid);
+forward OnTGUserLeft(TGBot:bot,TGUser:userid);

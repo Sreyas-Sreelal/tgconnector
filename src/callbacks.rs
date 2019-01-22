@@ -72,7 +72,7 @@ pub fn on_tg_user_joined(plugin: &super::TgConnector,botid:&usize,userid:i32) {
 		let mut executed;
 	   	let botid:usize = *botid;
 
-		match exec_public!(amx,"OnTgUserJoined";botid,userid) {
+		match exec_public!(amx,"OnTGUserJoined";botid,userid) {
 			Ok(_) => {
 				executed = true;
 			},
@@ -94,7 +94,7 @@ pub fn on_tg_user_left(plugin: &super::TgConnector,botid:&usize,userid:i32) {
 		let mut executed;
 	   	let botid:usize = *botid;
 
-		match exec_public!(amx,"OnTgUserLeft";botid,userid) {
+		match exec_public!(amx,"OnTGUserLeft";botid,userid) {
 			Ok(_) => {
 				executed = true;
 			},
