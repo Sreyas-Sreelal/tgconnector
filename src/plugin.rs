@@ -42,7 +42,7 @@ impl TgConnector {
 		log!("
    ###############################################################
    #                      TGConnector                            #
-   #                        V0.0.1 Loaded!!                      #
+   #                        v0.1.0 Loaded!!                      #
    #   Found any bugs? Report it here:                           #
    #       https://github.com/Sreyas-Sreelal/tgconnector/issues  #
    #                                                             #
@@ -52,7 +52,7 @@ impl TgConnector {
 	}
 
 	pub fn unload(&self) {
-		log!("**TGConnector V0.0.1 Unloaded!");
+		log!("**TGConnector v0.1.0 Unloaded!");
 	}
 
 	pub fn amx_load(&mut self, amx: &mut AMX) -> Cell {
@@ -124,7 +124,7 @@ impl TgConnector {
 impl Default for TgConnector {
 	fn default() -> Self {
 		TgConnector {
-			plugin_version: 1,
+			plugin_version: 10,
 			amx_list: Vec::new(),
 			bots: std::collections::HashMap::new(),
 			bot_context_id: 0,
