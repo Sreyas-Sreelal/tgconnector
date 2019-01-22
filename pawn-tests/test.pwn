@@ -18,7 +18,7 @@ Test:TestInvalidToken() {
 
 Test:TestValidToken() {
 	printf("id is %d",_:g_bot);
-	TGSendMessage(g_bot,TGChatId:"562896556","`markdown text` ***bold*** _italic_ 123",.parse_mode=MARKDOWN,.callback="SendingMessage");
+	TGSendMessage(g_bot,TGChatId:"@testsamp","`markdown text` ***bold*** _italic_ 123",.parse_mode=MARKDOWN,.callback="SendingMessage");
 	ASSERT(g_bot != INVALID_BOT_ID);
 }
 
@@ -65,7 +65,7 @@ Test:TGGetChatDescription() {
 
 public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 	new 
-		TGChatId:chatid[34],
+		TGChatId:chatid[15],
 		message[128],
 		chattype[15],
 		username[24],
@@ -84,22 +84,33 @@ public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 	printf("chattid: %s chatname:%s chattype:%s",_:chatid,chatname,chattype);
 	printf("userid:%d username:%s firstname:%s lastname:%s message:%s messageid:%d\n",_:fromid,username,firstname,lastname,message,_:messageid);
 	
-	//TGDeleteMessage(bot,chatid,messageid);
-	TGSendMessage(bot,chatid,message,messageid,.callback="SendingMessage");
+	TGDeleteMessage(bot,chatid,messageid);
+	TGSendMessage(bot,chatid,message,.callback="SendingMessage");
 	return 1;
 }
 
 forward SendingMessage(TGBot:bot,TGMessage:messageid);
 public SendingMessage(TGBot:bot,TGMessage:messageid) {
-	new TGChatId:chatid[52];
+	new TGChatId:chatid[15];
 	TGCacheGetChatId(chatid);
 	TGEditMessage(bot,chatid,messageid,"***edited message***",.parse_mode=MARKDOWN);
 	return 1;
 }
+public OnTGChannelPost(TGBot:bot,TGMessage:postid) {
+	new 
+		post[200],
+		chatname[56],
+		TGChatId:chatid[15];
 
+	TGCacheGetMessage(post);
+	TGCacheGetChatName(chatname);
+	TGCacheGetChatId(chatid);
+	
+	printf("[%s](%s):%s(%d)",chatname,_:chatid,post,_:postid);
+}
 public OnTgUserJoined(TGBot:bot,TGUser:userid) {
 	new 
-		TGChatId:chatid[23],
+		TGChatId:chatid[15],
 		username[24],
 		chatname[129];
 	
@@ -113,7 +124,7 @@ public OnTgUserJoined(TGBot:bot,TGUser:userid) {
 
 public OnTgUserLeft(TGBot:bot,TGUser:userid) {
 	new 
-		TGChatId:chatid[23],
+		TGChatId:chatid[15],
 		username[24],
 		chatname[129];
 	
