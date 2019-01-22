@@ -38,7 +38,7 @@ public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 }
 
 
-public OnTgUserJoined(TGBot:bot,TGUser:userid) {
+public OnTGUserJoined(TGBot:bot,TGUser:userid) {
 	new 
 		TGChatId:chatid[12],
 		username[24],
@@ -54,7 +54,7 @@ public OnTgUserJoined(TGBot:bot,TGUser:userid) {
 	return 1;
 }
 
-public OnTgUserLeft(TGBot:bot,TGUser:userid) {
+public OnTGUserLeft(TGBot:bot,TGUser:userid) {
 	new 
 		TGChatId:chatid[12],
 		username[24],
