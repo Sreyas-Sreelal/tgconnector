@@ -3,6 +3,7 @@ use types::*;
 use http::{HttpRequest,HttpMethod};
 use functions::*;
 use std::collections::VecDeque;
+use serde_json::{to_string,from_str};
 
 pub struct BOT {
 	pub api_request_link: String,
@@ -36,13 +37,13 @@ impl BOT {
 			   
 		match request.make_request() {
 			Ok(response) => {
-				let response:APIResponse<User> = serde_json::from_str(&response).unwrap();
+				let response:APIResponse<User> = from_str(&response).unwrap();
 				
 				if response.ok {
 					self.get_updates();
 					true
 				}else {
-					log!("**[TGConnector] Error bot couldn't connect.{}",response.description.unwrap());
+					log!("**[TGConnector] Error bot couldn't connect.{:?}",response);
 					false
 				}
 			}
@@ -67,12 +68,12 @@ impl BOT {
 				let request = HttpRequest {
 					url: format!("{}/getUpdates",api_link),
 					method: HttpMethod::Post,
-					body: Some(serde_json::to_string(&getupdate).unwrap()),
+					body: Some(to_string(&getupdate).unwrap()),
 				};
 			
 				match request.make_request() {
 					Ok(response) => {
-						let update:APIResponse<VecDeque<Update>> = serde_json::from_str(&response).unwrap();
+						let update:APIResponse<VecDeque<Update>> = from_str(&response).unwrap();
 						
 						let mut check_result:VecDeque<Update> = match update.result {
 							None => {
@@ -115,16 +116,18 @@ impl BOT {
 			let request = HttpRequest {
 					url: format!("{}/sendmessage",api_link),
 					method: HttpMethod::Post,
-					body: Some(serde_json::to_string(&send_message_obj).unwrap()),
+					body: Some(to_string(&send_message_obj).unwrap()),
 			};
 			
 			match request.make_request() {
 				Ok(response) => {
-					let response:APIResponse<Message> = serde_json::from_str(&response).unwrap();
+					let response:APIResponse<Message> = from_str(&response).unwrap();
 					if !response.ok {
-						log!("**[TGConnector] Error Couldn't send message.{}",response.description.unwrap());
+						log!("**[TGConnector] Error Couldn't send message.{:?}",response);
 					} else if callback != None {
-						send_message_move.as_ref().unwrap().send((response.result.unwrap(),callback.unwrap())).unwrap();
+						let sender = send_message_move.as_ref().unwrap();
+						let send_data = (response.result.unwrap(),callback.unwrap());
+						sender.send(send_data).unwrap();
 					}
 				},
 
@@ -143,14 +146,18 @@ impl BOT {
 			let request = HttpRequest {
 					url: format!("{}/deletemessage",api_link),
 					method: HttpMethod::Post,
-					body: Some(serde_json::to_string(&delete_message_obj).unwrap()),
+					body: Some(to_string(&delete_message_obj).unwrap()),
 			};
 			
 			match request.make_request() {
 				Ok(response) => {
-					let response:APIResponse<bool> = serde_json::from_str(&response).unwrap();
+					let response:APIResponse<bool> = from_str(&response).unwrap();
 					if !response.ok {
-						log!("**[TGConnector] Error Message {:?} in chat {:?} couldn't delete. {}",delete_message_obj.message_id,delete_message_obj.chat_id,response.description.unwrap());
+						log!(
+							"**[TGConnector] Error Message {:?} couldn't delete. {:?}",
+							delete_message_obj,
+							response
+						);
 					}
 				},
 
@@ -169,14 +176,18 @@ impl BOT {
 			let request = HttpRequest {
 					url: format!("{}/editmessagetext",api_link),
 					method: HttpMethod::Post,
-					body: Some(serde_json::to_string(&edit_message_obj).unwrap()),
+					body: Some(to_string(&edit_message_obj).unwrap()),
 			};
 			
 			match request.make_request() {
 				Ok(response) => {
-					let response:APIResponse<Message> = serde_json::from_str(&response).unwrap();
+					let response:APIResponse<Message> = from_str(&response).unwrap();
 					if !response.ok {
-						log!("**[TGConnector] Error Message {:?} in chat {:?} couldn't edit {}",edit_message_obj.message_id,edit_message_obj.chat_id,response.description.unwrap());
+						log!(
+							"**[TGConnector] Error Message {:?} couldn't edit {:?}",
+							edit_message_obj,
+							response
+						);
 					}
 				},
 
@@ -191,16 +202,16 @@ impl BOT {
 		let request = HttpRequest {
 			url: format!("{}/getchatmember",self.api_request_link),
 			method: HttpMethod::Post,
-			body: Some(serde_json::to_string(&getchatmember).unwrap()),
+			body: Some(to_string(&getchatmember).unwrap()),
 		};
 
 		match request.make_request() {
 			Ok(response) => {
-				let response:APIResponse<ChatMember> = serde_json::from_str(&response).unwrap();
+				let response:APIResponse<ChatMember> = from_str(&response).unwrap();
 				if response.ok {
 					response.result
 				} else {
-					log!("**[TGConnector] Error get_chat_member.{}",response.description.unwrap());
+					log!("**[TGConnector] Error get_chat_member.{:?}",response);
 					None
 				}
 			},
@@ -216,16 +227,16 @@ impl BOT {
 		let request = HttpRequest {
 			url: format!("{}/getchatmemberscount",self.api_request_link),
 			method: HttpMethod::Post,
-			body: Some(serde_json::to_string(&getchatmemberscount).unwrap()),
+			body: Some(to_string(&getchatmemberscount).unwrap()),
 		};
 
 		match request.make_request() {
 			Ok(response) => {
-				let response:APIResponse<i32> = serde_json::from_str(&response).unwrap();
+				let response:APIResponse<i32> = from_str(&response).unwrap();
 				if response.ok {
 					response.result 
 				} else {
-					log!("**[TGConnector] Error get_chat_members_count.{}",response.description.unwrap());
+					log!("**[TGConnector] Error get_chat_members_count.{:?}",response);
 					None
 				}
 			},
@@ -241,16 +252,16 @@ impl BOT {
 		let request = HttpRequest {
 			url: format!("{}/getchat",self.api_request_link),
 			method: HttpMethod::Post,
-			body: Some(serde_json::to_string(&getchat).unwrap()),
+			body: Some(to_string(&getchat).unwrap()),
 		};
 
 		match request.make_request() {
 			Ok(response) => {
-				let response:APIResponse<Chat> = serde_json::from_str(&response).unwrap();
+				let response:APIResponse<Chat> = from_str(&response).unwrap();
 				if response.ok {
 					response.result
 				} else {
-					log!("**[TGConnector] Error get_chat.{}",response.description.unwrap());
+					log!("**[TGConnector] Error get_chat.{:?}",response);
 					None
 				}
 			},

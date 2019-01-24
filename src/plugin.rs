@@ -3,38 +3,140 @@ use samp_sdk::types::Cell;
 use samp_sdk::amx::{AMX,AmxResult};
 use api::BOT;
 use internals;
+use std::collections::{LinkedList,HashMap};
 
-define_native!(bot_connect,token:String);
-define_native!(bot_connect_from_env,variable:String);
-define_native!(bot_send_message,botid:usize,chatid:String,text:String,reply_id:i32,parse_mode:i32,callback:String);
-define_native!(cache_get_message,dest:ref Cell,size:usize);
-define_native!(cache_get_username,dest:ref Cell,size:usize);
-define_native!(cache_get_user_first_name,dest:ref Cell,size:usize);
-define_native!(cache_get_user_last_name,dest:ref Cell,size:usize);
-define_native!(cache_get_chatid,dest:ref Cell,size:usize);
-define_native!(cache_get_chattype,dest:ref Cell,size:usize);
-define_native!(cache_get_chatname,dest:ref Cell,size:usize);
-define_native!(bot_delete_message,botid:usize,chatid:String,messageid:i32);
-define_native!(bot_edit_message,botid:usize,chatid:String,messageid:i32,text:String,parse_mode:i32);
-define_native!(get_user_status,botid:usize,userid:i32,chatid:String);
-define_native!(get_username_from_id,botid:usize,userid:i32,chatid:String,dest:ref Cell,size:usize);
-define_native!(get_display_name_from_id,botid:usize,userid:i32,chatid:String,dest:ref Cell,size:usize);
-define_native!(get_chat_members_count,botid:usize,chatid:String);
-define_native!(get_chat_title,botid:usize,chatid:String,title:ref Cell,size:usize);
-define_native!(get_chat_description,botid:usize,chatid:String,description:ref Cell,size:usize);
+define_native!(
+	bot_connect,
+	token:String
+);
+
+define_native!(
+	bot_connect_from_env,
+	variable:String
+);
+
+define_native!(
+	bot_send_message,
+	botid:usize,
+	chatid:String,
+	text:String,
+	reply_id:i32,
+	parse_mode:i32,
+	callback:String
+);
+
+define_native!(
+	cache_get_message,
+	dest:ref Cell,
+	size:usize
+);
+
+define_native!(
+	cache_get_username,
+	dest:ref Cell,
+	size:usize
+);
+
+define_native!(
+	cache_get_user_first_name,
+	dest:ref Cell,
+	size:usize
+);
+define_native!(
+	cache_get_user_last_name,
+	dest:ref Cell,
+	size:usize
+);
+define_native!(
+	cache_get_chatid,
+	dest:ref Cell,
+	size:usize
+);
+define_native!(
+	cache_get_chattype,
+	dest:ref Cell,
+	size:usize
+);
+define_native!(
+	cache_get_chatname,
+	dest:ref Cell,
+	size:usize
+);
+define_native!(
+	bot_delete_message,
+	botid:usize,
+	chatid:String,
+	messageid:i32
+);
+
+define_native!(
+	bot_edit_message,
+	botid:usize,
+	chatid:String,
+	messageid:i32,
+	text:String,
+	parse_mode:i32
+);
+
+define_native!(
+	get_user_status,
+	botid:usize,
+	userid:i32,
+	chatid:String
+);
+
+define_native!(
+	get_username_from_id,
+	botid:usize,
+	userid:i32,
+	chatid:String,
+	dest:ref Cell,
+	size:usize
+);
+
+define_native!(
+	get_display_name_from_id,
+	botid:usize,
+	userid:i32,
+	chatid:String,
+	dest:ref Cell,
+	size:usize
+);
+
+define_native!(
+	get_chat_members_count,
+	botid:usize,
+	chatid:String
+);
+
+define_native!(
+	get_chat_title,
+	botid:usize,
+	chatid:String,
+	title:ref Cell,
+	size:usize
+);
+
+define_native!(
+	get_chat_description,
+	botid:usize,
+	chatid:String,
+	description:ref Cell,
+	size:usize
+);
 
 pub struct TgConnector {
 	plugin_version: i32,
 	pub amx_list: Vec<usize>,
-	pub bots: std::collections::HashMap<usize,BOT>,
+	pub bots: HashMap<usize,BOT>,
 	pub bot_context_id: usize,
-	pub telegram_messages: std::collections::LinkedList<String>,
-	pub telegram_username: std::collections::LinkedList<String>,
-	pub telegram_firstname: std::collections::LinkedList<String>,
-	pub telegram_lastname: std::collections::LinkedList<String>,
-	pub telegram_chatname: std::collections::LinkedList<String>,
-	pub telegram_chatid: std::collections::LinkedList<String>,
-	pub telegram_chattype: std::collections::LinkedList<String>,
+	pub telegram_messages: LinkedList<String>,
+	pub telegram_username: LinkedList<String>,
+	pub telegram_firstname: LinkedList<String>,
+	pub telegram_lastname: LinkedList<String>,
+	pub telegram_chatname: LinkedList<String>,
+	pub telegram_chatid: LinkedList<String>,
+	pub telegram_chattype: LinkedList<String>,
 }
 
 impl TgConnector {
@@ -126,15 +228,15 @@ impl Default for TgConnector {
 		TgConnector {
 			plugin_version: 10,
 			amx_list: Vec::new(),
-			bots: std::collections::HashMap::new(),
+			bots: HashMap::new(),
 			bot_context_id: 0,
-			telegram_messages: std::collections::LinkedList::new(),
-			telegram_username: std::collections::LinkedList::new(),
-			telegram_chatname: std::collections::LinkedList::new(),
-			telegram_chatid: std::collections::LinkedList::new(),
-			telegram_firstname: std::collections::LinkedList::new(),
-			telegram_lastname: std::collections::LinkedList::new(),
-			telegram_chattype: std::collections::LinkedList::new(),
+			telegram_messages: LinkedList::new(),
+			telegram_username: LinkedList::new(),
+			telegram_chatname: LinkedList::new(),
+			telegram_chatid: LinkedList::new(),
+			telegram_firstname: LinkedList::new(),
+			telegram_lastname: LinkedList::new(),
+			telegram_chattype: LinkedList::new(),
 		}
 	}
 }

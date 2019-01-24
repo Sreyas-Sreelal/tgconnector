@@ -1,6 +1,11 @@
 use samp_sdk::amx::AMX;
 
-pub fn on_tg_message(plugin: &super::TgConnector,botid:&usize,fromid:i32,message_id:i32) {
+pub fn on_tg_message(
+	plugin: &super::TgConnector,
+	botid:&usize,
+	fromid:i32,
+	message_id:i32,
+) {
 	for amx in &plugin.amx_list{
 		let amx = AMX::new(*amx as *mut _);
 		let mut executed;   
@@ -22,7 +27,12 @@ pub fn on_tg_message(plugin: &super::TgConnector,botid:&usize,fromid:i32,message
 	}
 }
 
-pub fn on_tg_send_message(plugin: &super::TgConnector,name:String,botid:&usize,message_id:i32) {
+pub fn on_tg_send_message(
+	plugin: &super::TgConnector,
+	name:String,
+	botid:&usize,
+	message_id:i32,
+) {
 	for amx in &plugin.amx_list{
 		let amx = AMX::new(*amx as *mut _);
 		let mut executed;
@@ -44,7 +54,11 @@ pub fn on_tg_send_message(plugin: &super::TgConnector,name:String,botid:&usize,m
 	}
 }
 
-pub fn on_tg_channel_post(plugin: &super::TgConnector,botid:&usize,message_id:i32) {
+pub fn on_tg_channel_post(
+	plugin: &super::TgConnector,
+	botid:&usize,
+	message_id:i32,
+) {
 	for amx in &plugin.amx_list{
 		let amx = AMX::new(*amx as *mut _);
 		let mut executed;
@@ -66,7 +80,11 @@ pub fn on_tg_channel_post(plugin: &super::TgConnector,botid:&usize,message_id:i3
 	}
 }
 
-pub fn on_tg_user_joined(plugin: &super::TgConnector,botid:&usize,userid:i32) {
+pub fn on_tg_user_joined(
+	plugin: &super::TgConnector,
+	botid:&usize,
+	userid:i32,
+) {
 	for amx in &plugin.amx_list{
 		let amx = AMX::new(*amx as *mut _);
 		let mut executed;
@@ -88,7 +106,11 @@ pub fn on_tg_user_joined(plugin: &super::TgConnector,botid:&usize,userid:i32) {
 	}
 }
 
-pub fn on_tg_user_left(plugin: &super::TgConnector,botid:&usize,userid:i32) {
+pub fn on_tg_user_left(
+	plugin: &super::TgConnector,
+	botid:&usize,
+	userid:i32,
+) {
 	for amx in &plugin.amx_list{
 		let amx = AMX::new(*amx as *mut _);
 		let mut executed;

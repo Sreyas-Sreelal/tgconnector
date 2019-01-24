@@ -1,4 +1,5 @@
 use minihttp::request::Request;
+use std::collections::HashMap;
 
 pub enum HttpMethod {
 	Get,
@@ -23,8 +24,12 @@ impl HttpRequest {
 					HttpMethod::Post => {
 						let body = &self.body.clone().unwrap();
 						requests_obj.body_str(&body);
-						let mut headers = std::collections::HashMap::new();
-						headers.insert("Content-Type".to_string(),"application/json".to_string());
+						let mut headers = HashMap::new();
+
+						headers.insert(
+							"Content-Type".to_string(),"application/json".to_string()
+						);
+						
 						requests_obj.headers(headers);
 						requests_obj.post()
 					}

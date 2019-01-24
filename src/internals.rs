@@ -1,7 +1,11 @@
 use callbacks;
 use types::*;
+use api::BOT;
+use samp_sdk::amx::AmxResult;
+use samp_sdk::types::Cell;
+use std::collections::LinkedList;
 
-pub fn clear_caches(cache: &mut std::collections::LinkedList<String>) {
+pub fn clear_caches(cache: &mut LinkedList<String>) {
 	if !cache.is_empty() {
 		cache.clear();
 	}
@@ -179,5 +183,15 @@ pub fn on_send_message_process(plugin: &mut super::TgConnector) {
 				callbacks::on_tg_send_message(plugin,callback,id,message.message_id);
 			}
 		}
+	}
+}
+
+pub fn create_bot(plugin: &mut super::TgConnector,api:BOT) -> AmxResult<Cell> {
+	if api.connect() {
+		plugin.bots.insert(plugin.bot_context_id,api);
+		plugin.bot_context_id += 1;
+		Ok(plugin.bot_context_id as Cell -1)
+	}else {
+		Ok(-1)
 	}
 }

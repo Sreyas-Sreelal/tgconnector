@@ -1,4 +1,5 @@
 use serde::{Deserializer,Deserialize};
+use std::collections::VecDeque;
 
 pub enum UpdateType{
 	Message,
@@ -28,7 +29,7 @@ pub struct Message {
 	pub from: Option<User>,
 	pub chat: Chat,
 	pub message_id: i32,
-	pub new_chat_members: Option<std::collections::VecDeque<User>>,
+	pub new_chat_members: Option<VecDeque<User>>,
 	pub left_chat_member: Option<User>,
 }
 
