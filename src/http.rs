@@ -13,14 +13,14 @@ pub struct HttpRequest {
 }
 
 impl HttpRequest {
-	pub fn make_request(&self) -> Result<String,String>{      
+	pub fn make_request(&self) -> Result<String,String>{
 		match Request::new(&self.url) {
 			Ok(mut requests_obj) => {
 				let method = match self.method {
 					HttpMethod::Get => {
 						requests_obj.get()
 					},
-					
+
 					HttpMethod::Post => {
 						let body = &self.body.clone().unwrap();
 						requests_obj.body_str(&body);
@@ -29,14 +29,14 @@ impl HttpRequest {
 						headers.insert(
 							"Content-Type".to_string(),"application/json".to_string()
 						);
-						
+
 						requests_obj.headers(headers);
 						requests_obj.post()
 					}
 				};
-				
+
 				match method.send() {
-					
+
 					Ok(data) => {
 						Ok(data.text())
 					},

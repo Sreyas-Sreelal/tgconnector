@@ -28,7 +28,7 @@ impl super::TgConnector {
 		} else {
 			let token = token.unwrap().into_string().unwrap();
 			let api = BOT::new(token);
-			create_bot(self,api)		
+			create_bot(self,api)
 		}
 	}
 
@@ -146,10 +146,10 @@ impl super::TgConnector {
 						err
 					);
 					Ok(0)
-				}   
+				}
 			}
 		}else {
-			 
+
 			Ok(0)
 		}
 	}
@@ -161,7 +161,7 @@ impl super::TgConnector {
 		size:usize,
 	) -> AmxResult<Cell> {
 		let string = self.telegram_username.front();
-		
+
 		if string != None {
 			match encode_replace(&string.unwrap()) {
 				Ok(encoded) => {
@@ -175,9 +175,9 @@ impl super::TgConnector {
 						err
 					);
 					Ok(0)
-				}   
+				}
 			}
-		}else {   
+		}else {
 			Ok(0)
 		}
 	}
@@ -189,7 +189,7 @@ impl super::TgConnector {
 		size:usize,
 	) -> AmxResult<Cell> {
 		let string = self.telegram_firstname.front();
-		
+
 		if string != None {
 			match encode_replace(&string.unwrap()) {
 				Ok(encoded) => {
@@ -203,9 +203,9 @@ impl super::TgConnector {
 						err
 					);
 					Ok(0)
-				}   
+				}
 			}
-		}else {   
+		}else {
 			Ok(0)
 		}
 	}
@@ -217,7 +217,7 @@ impl super::TgConnector {
 		size:usize,
 	) -> AmxResult<Cell> {
 		let string = self.telegram_lastname.front();
-		
+
 		if string != None {
 			match encode_replace(&string.unwrap()) {
 				Ok(encoded) => {
@@ -231,13 +231,13 @@ impl super::TgConnector {
 						err
 					);
 					Ok(0)
-				}   
+				}
 			}
-		}else {   
+		}else {
 			Ok(0)
 		}
 	}
-	
+
 	pub fn cache_get_chatid(
 		&mut self,
 		_amx:&AMX,
@@ -259,9 +259,9 @@ impl super::TgConnector {
 						err
 					);
 					Ok(0)
-				}   
+				}
 			}
-		}else {   
+		}else {
 			Ok(0)
 		}
 	}
@@ -273,7 +273,7 @@ impl super::TgConnector {
 		size:usize,
 	) -> AmxResult<Cell> {
 	   let string =  self.telegram_chatname.front();
-	   
+
 	   if string != None {
 			match encode_replace(&string.unwrap()) {
 				Ok(encoded) => {
@@ -287,9 +287,9 @@ impl super::TgConnector {
 						err
 					);
 					Ok(0)
-				}   
+				}
 			}
-		}else {   
+		}else {
 			Ok(0)
 		}
 	}
@@ -301,7 +301,7 @@ impl super::TgConnector {
 		size:usize,
 	) -> AmxResult<Cell> {
 		let string = self.telegram_chattype.front();
-		
+
 		if string != None {
 			match encode_replace(&string.unwrap()) {
 				Ok(encoded) => {
@@ -315,9 +315,9 @@ impl super::TgConnector {
 						err
 					);
 					Ok(0)
-				}   
+				}
 			}
-		}else {    
+		}else {
 			Ok(0)
 		}
 	}
@@ -344,7 +344,7 @@ impl super::TgConnector {
 				Ok(0)
 			} else {
 				let chatmember = chatmember.unwrap();
-				
+
 				match chatmember.status.as_ref() {
 					"creator" => Ok(1),
 					"adminstrator" => Ok(2),
@@ -487,7 +487,7 @@ impl super::TgConnector {
 			let getchat = GetChat {
 				chat_id: chatid,
 			};
-			
+
 			let chat = self.bots[&botid].get_chat(getchat);
 			if chat.is_none() {
 				Ok(0)
@@ -532,7 +532,7 @@ impl super::TgConnector {
 			let getchat = GetChat {
 				chat_id: chatid,
 			};
-			
+
 			let chat = self.bots[&botid].get_chat(getchat);
 			if chat.is_none() {
 				Ok(0)

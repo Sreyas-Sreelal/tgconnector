@@ -212,7 +212,7 @@ impl TgConnector {
 	pub fn process_tick(&mut self) {
 		internals::update_process(self);
 		internals::on_send_message_process(self);
-		
+
 		internals::clear_caches(&mut self.telegram_chatname);
 		internals::clear_caches(&mut self.telegram_messages);
 		internals::clear_caches(&mut self.telegram_username);

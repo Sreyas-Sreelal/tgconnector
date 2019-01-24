@@ -17,7 +17,7 @@ impl BOT {
 	pub fn new(bot_token:String) -> Self {
 		let (update_sender,update_reciever) = channel();
 		let (send_message_sender,send_message_reciever) = channel();
-		
+
 		BOT {
 			api_request_link: String::from("https://api.telegram.org/bot") + &bot_token,
 			update_reciever: Some(update_reciever),
@@ -25,7 +25,7 @@ impl BOT {
 			send_message_reciever: Some(send_message_reciever),
 			send_message_sender: Some(send_message_sender),
 		}
-	} 
+	}
 
 	pub fn connect(&self) -> bool {
 
@@ -34,11 +34,11 @@ impl BOT {
 			method: HttpMethod::Get,
 			body: None,
 		};
-			   
+
 		match request.make_request() {
 			Ok(response) => {
 				let response:APIResponse<User> = from_str(&response).unwrap();
-				
+
 				if response.ok {
 					self.get_updates();
 					true
@@ -53,15 +53,15 @@ impl BOT {
 			}
 		}
 	}
-	
+
 	fn get_updates(&self) {
 		let update_move = self.update_sender.clone();
 		let api_link = self.api_request_link.clone();
-		
+
 		let mut getupdate = GetUpdates {
 				offset: -2,
 		};
-		
+
 
 		std::thread::spawn(move|| {
 			loop {
@@ -70,11 +70,11 @@ impl BOT {
 					method: HttpMethod::Post,
 					body: Some(to_string(&getupdate).unwrap()),
 				};
-			
+
 				match request.make_request() {
 					Ok(response) => {
 						let update:APIResponse<VecDeque<Update>> = from_str(&response).unwrap();
-						
+
 						let mut check_result:VecDeque<Update> = match update.result {
 							None => {
 								continue;
@@ -100,7 +100,7 @@ impl BOT {
 
 					Err(err) => {
 						log!("{:?}",err);
-						continue;                       
+						continue;
 					}
 				}
 			}
@@ -118,7 +118,7 @@ impl BOT {
 					method: HttpMethod::Post,
 					body: Some(to_string(&send_message_obj).unwrap()),
 			};
-			
+
 			match request.make_request() {
 				Ok(response) => {
 					let response:APIResponse<Message> = from_str(&response).unwrap();
@@ -148,7 +148,7 @@ impl BOT {
 					method: HttpMethod::Post,
 					body: Some(to_string(&delete_message_obj).unwrap()),
 			};
-			
+
 			match request.make_request() {
 				Ok(response) => {
 					let response:APIResponse<bool> = from_str(&response).unwrap();
@@ -178,7 +178,7 @@ impl BOT {
 					method: HttpMethod::Post,
 					body: Some(to_string(&edit_message_obj).unwrap()),
 			};
-			
+
 			match request.make_request() {
 				Ok(response) => {
 					let response:APIResponse<Message> = from_str(&response).unwrap();
@@ -215,7 +215,7 @@ impl BOT {
 					None
 				}
 			},
-			
+
 			Err(err) => {
 				log!("{:?}",err);
 				None
@@ -234,18 +234,18 @@ impl BOT {
 			Ok(response) => {
 				let response:APIResponse<i32> = from_str(&response).unwrap();
 				if response.ok {
-					response.result 
+					response.result
 				} else {
 					log!("**[TGConnector] Error get_chat_members_count.{:?}",response);
 					None
 				}
 			},
-			
+
 			Err(err) => {
 				log!("{:?}",err);
 				None
 			}
-		} 
+		}
 	}
 
 	pub fn get_chat(&self,getchat:GetChat) -> Option<Chat> {
@@ -265,12 +265,12 @@ impl BOT {
 					None
 				}
 			},
-			
+
 			Err(err) => {
 				log!("{:?}",err);
 				None
 			}
-		} 
+		}
 	}
 }
 
