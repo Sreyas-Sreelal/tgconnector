@@ -4,7 +4,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/Sreyas-Sreelal/tgconnector.svg)](https://github.com/Sreyas-Sreelal/tgconnector/issues) [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/sreyas-sreelal/tgconnector.svg)](https://github.com/Sreyas-Sreelal/tgconnector/pulls) [![GitHub pull license](https://img.shields.io/github/license/sreyas-sreelal/tgconnector.svg)](LICENSE)
 
 A telegram connector plugin that helps to interact with telgram bots through SA-MP.
-## Installing 
+## Installing
 
 If you are a sampctl user
 
@@ -22,10 +22,10 @@ If you are a sampctl user
 	`git clone https://github.com/Sreyas-Sreelal/tgconnector.git`
 
 * Use makefile to compile and test
-	* Setup testing environment 
+	* Setup testing environment
 
 		`make setup`
-	* To build release version 
+	* To build release version
 
 		`make release`
 	* Run tests
@@ -58,12 +58,12 @@ main() {
 }
 
 public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
-	
+
 	if(g_bot != bot){
 		return 1;
 	}
 
-	new 
+	new
 		message[50],
 		username[24],
 		chatname[56],
@@ -72,21 +72,21 @@ public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 	TGCacheGetMessage(message);
 	TGCacheGetUserName(username);
 	TGCacheGetChatName(chatname);
-	
+
 	format(server_msg,128,"[%s] %s(%d): %s",chatname,username,_:fromid,message);
 	SendClientMessageToAll(-1,server_msg);
-	
+
 	return 1;
 }
 
 
-public OnTgUserJoined(TGBot:bot,TGUser:userid) {
-	new 
+public OnTGUserJoined(TGBot:bot,TGUser:userid) {
+	new
 		TGChatId:chatid[12],
 		username[24],
 		chatname[56],
 		server_msg[128];
-	
+
 	TGCacheGetUserName(username);
 	TGCacheGetChatId(chatid);
 	TGCacheGetChatName(chatname);
@@ -96,13 +96,13 @@ public OnTgUserJoined(TGBot:bot,TGUser:userid) {
 	return 1;
 }
 
-public OnTgUserLeft(TGBot:bot,TGUser:userid) {
-	new 
+public OnTGUserLeft(TGBot:bot,TGUser:userid) {
+	new
 		TGChatId:chatid[12],
 		username[24],
 		chatname[56],
 		server_msg[128];
-	
+
 	TGCacheGetUserName(username);
 	TGCacheGetChatId(chatid);
 	TGCacheGetChatName(chatname);
