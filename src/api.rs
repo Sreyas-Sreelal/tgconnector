@@ -1,276 +1,267 @@
-use std::sync::mpsc::{Sender,Receiver,channel};
-use types::*;
-use http::{HttpRequest,HttpMethod};
 use functions::*;
+use http::{HttpMethod, HttpRequest};
+use serde_json::{from_str, to_string};
 use std::collections::VecDeque;
-use serde_json::{to_string,from_str};
+use std::sync::mpsc::{channel, Receiver, Sender};
+use types::*;
 
 pub struct BOT {
-	pub api_request_link: String,
-	pub update_reciever: Option<Receiver<Update>>,
-	pub update_sender: Option<Sender<Update>>,
-	pub send_message_reciever: Option<Receiver<(Message,String)>>,
-	pub send_message_sender: Option<Sender<(Message,String)>>,
+    pub api_request_link: String,
+    pub update_reciever: Option<Receiver<Update>>,
+    pub update_sender: Option<Sender<Update>>,
+    pub send_message_reciever: Option<Receiver<(Message, String)>>,
+    pub send_message_sender: Option<Sender<(Message, String)>>,
 }
 
 impl BOT {
-	pub fn new(bot_token:String) -> Self {
-		let (update_sender,update_reciever) = channel();
-		let (send_message_sender,send_message_reciever) = channel();
+    pub fn new(bot_token: String) -> Self {
+        let (update_sender, update_reciever) = channel();
+        let (send_message_sender, send_message_reciever) = channel();
 
-		BOT {
-			api_request_link: String::from("https://api.telegram.org/bot") + &bot_token,
-			update_reciever: Some(update_reciever),
-			update_sender: Some(update_sender),
-			send_message_reciever: Some(send_message_reciever),
-			send_message_sender: Some(send_message_sender),
-		}
-	}
+        BOT {
+            api_request_link: String::from("https://api.telegram.org/bot") + &bot_token,
+            update_reciever: Some(update_reciever),
+            update_sender: Some(update_sender),
+            send_message_reciever: Some(send_message_reciever),
+            send_message_sender: Some(send_message_sender),
+        }
+    }
 
-	pub fn connect(&self) -> bool {
+    pub fn connect(&self) -> bool {
+        let request = HttpRequest {
+            url: format!("{}/getme", self.api_request_link),
+            method: HttpMethod::Get,
+            body: None,
+        };
 
-		let request = HttpRequest {
-			url: format!("{}/getme",self.api_request_link),
-			method: HttpMethod::Get,
-			body: None,
-		};
+        match request.make_request() {
+            Ok(response) => {
+                let response: APIResponse<User> = from_str(&response).unwrap();
 
-		match request.make_request() {
-			Ok(response) => {
-				let response:APIResponse<User> = from_str(&response).unwrap();
+                if response.ok {
+                    self.get_updates();
+                    true
+                } else {
+                    log!("**[TGConnector] Error bot couldn't connect.{:?}", response);
+                    false
+                }
+            }
+            Err(err) => {
+                log!("{:?}", err);
+                false
+            }
+        }
+    }
 
-				if response.ok {
-					self.get_updates();
-					true
-				}else {
-					log!("**[TGConnector] Error bot couldn't connect.{:?}",response);
-					false
-				}
-			}
-			Err(err) => {
-				log!("{:?}",err);
-				false
-			}
-		}
-	}
+    fn get_updates(&self) {
+        let update_move = self.update_sender.clone();
+        let api_link = self.api_request_link.clone();
 
-	fn get_updates(&self) {
-		let update_move = self.update_sender.clone();
-		let api_link = self.api_request_link.clone();
+        let mut getupdate = GetUpdates { offset: -2 };
 
-		let mut getupdate = GetUpdates {
-				offset: -2,
-		};
+        std::thread::spawn(move || loop {
+            let request = HttpRequest {
+                url: format!("{}/getUpdates", api_link),
+                method: HttpMethod::Post,
+                body: Some(to_string(&getupdate).unwrap()),
+            };
 
+            match request.make_request() {
+                Ok(response) => {
+                    let update: APIResponse<VecDeque<Update>> = from_str(&response).unwrap();
 
-		std::thread::spawn(move|| {
-			loop {
-				let request = HttpRequest {
-					url: format!("{}/getUpdates",api_link),
-					method: HttpMethod::Post,
-					body: Some(to_string(&getupdate).unwrap()),
-				};
+                    let mut check_result: VecDeque<Update> = match update.result {
+                        None => {
+                            continue;
+                        }
+                        Some(check_result) => check_result,
+                    };
 
-				match request.make_request() {
-					Ok(response) => {
-						let update:APIResponse<VecDeque<Update>> = from_str(&response).unwrap();
+                    let first_update = check_result.pop_front();
 
-						let mut check_result:VecDeque<Update> = match update.result {
-							None => {
-								continue;
-							}
-							Some(check_result) => {
-								check_result
-							}
-						};
+                    match first_update {
+                        Some(result) => {
+                            getupdate.offset = result.update_id + 1;
+                            update_move.as_ref().unwrap().send(result).unwrap();
+                        }
 
-						let first_update = check_result.pop_front();
+                        None => {
+                            continue;
+                        }
+                    }
+                }
 
-						match first_update {
-							Some(result) => {
-								getupdate.offset = result.update_id+1;
-								update_move.as_ref().unwrap().send(result).unwrap();
-							}
+                Err(err) => {
+                    log!("{:?}", err);
+                    continue;
+                }
+            }
+        });
+    }
 
-							None => {
-								continue;
-							}
-						}
-					}
+    pub fn send_message(&self, send_message_obj: SendMessage, callback: Option<String>) {
+        let send_message_move = self.send_message_sender.clone();
+        let api_link = self.api_request_link.clone();
 
-					Err(err) => {
-						log!("{:?}",err);
-						continue;
-					}
-				}
-			}
-		});
-	}
+        std::thread::spawn(move || {
+            let request = HttpRequest {
+                url: format!("{}/sendmessage", api_link),
+                method: HttpMethod::Post,
+                body: Some(to_string(&send_message_obj).unwrap()),
+            };
 
-	pub fn send_message(&self,send_message_obj:SendMessage,callback:Option<String>) {
-		let send_message_move = self.send_message_sender.clone();
-		let api_link = self.api_request_link.clone();
+            match request.make_request() {
+                Ok(response) => {
+                    let response: APIResponse<Message> = from_str(&response).unwrap();
+                    if !response.ok {
+                        log!("**[TGConnector] Error Couldn't send message.{:?}", response);
+                    } else if callback != None {
+                        let sender = send_message_move.as_ref().unwrap();
+                        let send_data = (response.result.unwrap(), callback.unwrap());
+                        sender.send(send_data).unwrap();
+                    }
+                }
 
-		std::thread::spawn(move || {
+                Err(err) => {
+                    log!("{:?}", err);
+                }
+            }
+        });
+    }
 
-			let request = HttpRequest {
-					url: format!("{}/sendmessage",api_link),
-					method: HttpMethod::Post,
-					body: Some(to_string(&send_message_obj).unwrap()),
-			};
+    pub fn delete_message(&self, delete_message_obj: DeleteMessage) {
+        let api_link = self.api_request_link.clone();
 
-			match request.make_request() {
-				Ok(response) => {
-					let response:APIResponse<Message> = from_str(&response).unwrap();
-					if !response.ok {
-						log!("**[TGConnector] Error Couldn't send message.{:?}",response);
-					} else if callback != None {
-						let sender = send_message_move.as_ref().unwrap();
-						let send_data = (response.result.unwrap(),callback.unwrap());
-						sender.send(send_data).unwrap();
-					}
-				},
+        std::thread::spawn(move || {
+            let request = HttpRequest {
+                url: format!("{}/deletemessage", api_link),
+                method: HttpMethod::Post,
+                body: Some(to_string(&delete_message_obj).unwrap()),
+            };
 
-				Err(err) => {
-					log!("{:?}",err);
-				}
-			}
-		});
-	}
+            match request.make_request() {
+                Ok(response) => {
+                    let response: APIResponse<bool> = from_str(&response).unwrap();
+                    if !response.ok {
+                        log!(
+                            "**[TGConnector] Error Message {:?} couldn't delete. {:?}",
+                            delete_message_obj,
+                            response
+                        );
+                    }
+                }
 
-	pub fn delete_message(&self,delete_message_obj:DeleteMessage) {
-		let api_link = self.api_request_link.clone();
+                Err(err) => {
+                    log!("{:?}", err);
+                }
+            }
+        });
+    }
 
-		std::thread::spawn(move || {
+    pub fn edit_message(&self, edit_message_obj: EditMessageText) {
+        let api_link = self.api_request_link.clone();
 
-			let request = HttpRequest {
-					url: format!("{}/deletemessage",api_link),
-					method: HttpMethod::Post,
-					body: Some(to_string(&delete_message_obj).unwrap()),
-			};
+        std::thread::spawn(move || {
+            let request = HttpRequest {
+                url: format!("{}/editmessagetext", api_link),
+                method: HttpMethod::Post,
+                body: Some(to_string(&edit_message_obj).unwrap()),
+            };
 
-			match request.make_request() {
-				Ok(response) => {
-					let response:APIResponse<bool> = from_str(&response).unwrap();
-					if !response.ok {
-						log!(
-							"**[TGConnector] Error Message {:?} couldn't delete. {:?}",
-							delete_message_obj,
-							response
-						);
-					}
-				},
+            match request.make_request() {
+                Ok(response) => {
+                    let response: APIResponse<Message> = from_str(&response).unwrap();
+                    if !response.ok {
+                        log!(
+                            "**[TGConnector] Error Message {:?} couldn't edit {:?}",
+                            edit_message_obj,
+                            response
+                        );
+                    }
+                }
 
-				Err(err) => {
-					log!("{:?}",err);
-				}
-			}
-		});
-	}
+                Err(err) => {
+                    log!("{:?}", err);
+                }
+            }
+        });
+    }
 
-	pub fn edit_message(&self,edit_message_obj:EditMessageText) {
-		let api_link = self.api_request_link.clone();
+    pub fn get_chat_member(&self, getchatmember: GetChatMember) -> Option<ChatMember> {
+        let request = HttpRequest {
+            url: format!("{}/getchatmember", self.api_request_link),
+            method: HttpMethod::Post,
+            body: Some(to_string(&getchatmember).unwrap()),
+        };
 
-		std::thread::spawn(move || {
+        match request.make_request() {
+            Ok(response) => {
+                let response: APIResponse<ChatMember> = from_str(&response).unwrap();
+                if response.ok {
+                    response.result
+                } else {
+                    log!("**[TGConnector] Error get_chat_member.{:?}", response);
+                    None
+                }
+            }
 
-			let request = HttpRequest {
-					url: format!("{}/editmessagetext",api_link),
-					method: HttpMethod::Post,
-					body: Some(to_string(&edit_message_obj).unwrap()),
-			};
+            Err(err) => {
+                log!("{:?}", err);
+                None
+            }
+        }
+    }
 
-			match request.make_request() {
-				Ok(response) => {
-					let response:APIResponse<Message> = from_str(&response).unwrap();
-					if !response.ok {
-						log!(
-							"**[TGConnector] Error Message {:?} couldn't edit {:?}",
-							edit_message_obj,
-							response
-						);
-					}
-				},
+    pub fn get_chat_members_count(&self, getchatmemberscount: GetChatMembersCount) -> Option<i32> {
+        let request = HttpRequest {
+            url: format!("{}/getchatmemberscount", self.api_request_link),
+            method: HttpMethod::Post,
+            body: Some(to_string(&getchatmemberscount).unwrap()),
+        };
 
-				Err(err) => {
-					log!("{:?}",err);
-				}
-			}
-		});
-	}
+        match request.make_request() {
+            Ok(response) => {
+                let response: APIResponse<i32> = from_str(&response).unwrap();
+                if response.ok {
+                    response.result
+                } else {
+                    log!(
+                        "**[TGConnector] Error get_chat_members_count.{:?}",
+                        response
+                    );
+                    None
+                }
+            }
 
-	pub fn get_chat_member(&self,getchatmember:GetChatMember) -> Option<ChatMember> {
-		let request = HttpRequest {
-			url: format!("{}/getchatmember",self.api_request_link),
-			method: HttpMethod::Post,
-			body: Some(to_string(&getchatmember).unwrap()),
-		};
+            Err(err) => {
+                log!("{:?}", err);
+                None
+            }
+        }
+    }
 
-		match request.make_request() {
-			Ok(response) => {
-				let response:APIResponse<ChatMember> = from_str(&response).unwrap();
-				if response.ok {
-					response.result
-				} else {
-					log!("**[TGConnector] Error get_chat_member.{:?}",response);
-					None
-				}
-			},
+    pub fn get_chat(&self, getchat: GetChat) -> Option<Chat> {
+        let request = HttpRequest {
+            url: format!("{}/getchat", self.api_request_link),
+            method: HttpMethod::Post,
+            body: Some(to_string(&getchat).unwrap()),
+        };
 
-			Err(err) => {
-				log!("{:?}",err);
-				None
-			}
-		}
-	}
+        match request.make_request() {
+            Ok(response) => {
+                let response: APIResponse<Chat> = from_str(&response).unwrap();
+                if response.ok {
+                    response.result
+                } else {
+                    log!("**[TGConnector] Error get_chat.{:?}", response);
+                    None
+                }
+            }
 
-	pub fn get_chat_members_count(&self,getchatmemberscount:GetChatMembersCount) -> Option<i32> {
-		let request = HttpRequest {
-			url: format!("{}/getchatmemberscount",self.api_request_link),
-			method: HttpMethod::Post,
-			body: Some(to_string(&getchatmemberscount).unwrap()),
-		};
-
-		match request.make_request() {
-			Ok(response) => {
-				let response:APIResponse<i32> = from_str(&response).unwrap();
-				if response.ok {
-					response.result
-				} else {
-					log!("**[TGConnector] Error get_chat_members_count.{:?}",response);
-					None
-				}
-			},
-
-			Err(err) => {
-				log!("{:?}",err);
-				None
-			}
-		}
-	}
-
-	pub fn get_chat(&self,getchat:GetChat) -> Option<Chat> {
-		let request = HttpRequest {
-			url: format!("{}/getchat",self.api_request_link),
-			method: HttpMethod::Post,
-			body: Some(to_string(&getchat).unwrap()),
-		};
-
-		match request.make_request() {
-			Ok(response) => {
-				let response:APIResponse<Chat> = from_str(&response).unwrap();
-				if response.ok {
-					response.result
-				} else {
-					log!("**[TGConnector] Error get_chat.{:?}",response);
-					None
-				}
-			},
-
-			Err(err) => {
-				log!("{:?}",err);
-				None
-			}
-		}
-	}
+            Err(err) => {
+                log!("{:?}", err);
+                None
+            }
+        }
+    }
 }
-
