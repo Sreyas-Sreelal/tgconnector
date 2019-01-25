@@ -34,7 +34,7 @@ If you are a sampctl user
 
 ## API
 
-_Coming Soon_
+Checkout the [Wiki](https://github.com/Sreyas-Sreelal/tgconnector/wiki)
 
 ## Example
 **A basic bot**
