@@ -384,11 +384,7 @@ impl super::TgConnector {
                             Ok(1)
                         }
                         Err(err) => {
-                            log!(
-								"**[TGConnector][get_username_from_id] Failed encoding {:?} \n {:?}",
-								username.as_ref().unwrap(),
-								err
-							);
+                            log!("**[TGConnector][get_username_from_id] Failed encoding {:?} \n {:?}",username.as_ref().unwrap(),err);
                             Ok(0)
                         }
                     }
@@ -431,11 +427,7 @@ impl super::TgConnector {
                         Ok(1)
                     }
                     Err(err) => {
-                        log!(
-							"**[TGConnector][get_display_name_from_id] Failed encoding {:?} \n {:?}",
-							displayname,
-							err
-						);
+                        log!("**[TGConnector][get_display_name_from_id] Failed encoding {:?} \n {:?}",displayname,err);
                         Ok(0)
                     }
                 }
@@ -525,11 +517,7 @@ impl super::TgConnector {
                             Ok(1)
                         }
                         Err(err) => {
-                            log!(
-									"**[TGConnector][get_chat_description] Failed encoding {:?} \n {:?}",
-									chat_description,
-									err
-								);
+                            log!("**[TGConnector][get_chat_description] Failed encoding {:?} \n {:?}",chat_description,err);
                             Ok(0)
                         }
                     },
