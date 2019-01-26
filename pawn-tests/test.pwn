@@ -64,7 +64,7 @@ Test:TGGetChatDescription() {
 }
 
 public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
-	new 
+	new
 		TGChatId:chatid[15],
 		message[128],
 		chattype[15],
@@ -83,7 +83,7 @@ public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 
 	printf("chattid: %s chatname:%s chattype:%s",_:chatid,chatname,chattype);
 	printf("userid:%d username:%s firstname:%s lastname:%s message:%s messageid:%d\n",_:fromid,username,firstname,lastname,message,_:messageid);
-	
+
 	TGDeleteMessage(bot,chatid,messageid);
 	TGSendMessage(bot,chatid,message,.callback="SendingMessage");
 	return 1;
@@ -97,7 +97,7 @@ public SendingMessage(TGBot:bot,TGMessage:messageid) {
 	return 1;
 }
 public OnTGChannelPost(TGBot:bot,TGMessage:postid) {
-	new 
+	new
 		post[200],
 		chatname[56],
 		TGChatId:chatid[15];
@@ -105,15 +105,15 @@ public OnTGChannelPost(TGBot:bot,TGMessage:postid) {
 	TGCacheGetMessage(post);
 	TGCacheGetChatName(chatname);
 	TGCacheGetChatId(chatid);
-	
+
 	printf("[%s](%s):%s(%d)",chatname,_:chatid,post,_:postid);
 }
 public OnTGUserJoined(TGBot:bot,TGUser:userid) {
-	new 
+	new
 		TGChatId:chatid[15],
 		username[24],
 		chatname[129];
-	
+
 	TGCacheGetUserName(username);
 	TGCacheGetChatId(chatid);
 	TGCacheGetChatName(chatname);
@@ -123,11 +123,11 @@ public OnTGUserJoined(TGBot:bot,TGUser:userid) {
 }
 
 public OnTGUserLeft(TGBot:bot,TGUser:userid) {
-	new 
+	new
 		TGChatId:chatid[15],
 		username[24],
 		chatname[129];
-	
+
 	TGCacheGetUserName(username);
 	TGCacheGetChatId(chatid);
 	TGCacheGetChatName(chatname);

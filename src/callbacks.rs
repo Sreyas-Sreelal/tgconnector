@@ -1,116 +1,42 @@
 use samp_sdk::amx::AMX;
 
-pub fn on_tg_message(plugin: &super::TgConnector, botid: &usize, fromid: i32, message_id: i32) {
-    for amx in &plugin.amx_list {
-        let amx = AMX::new(*amx as *mut _);
-        let mut executed;
-        let botid: usize = *botid;
-
-        match exec_public!(amx,"OnTGMessage";botid,fromid,message_id) {
-            Ok(_) => {
-                executed = true;
-            }
-
-            Err(_err) => {
-                continue;
+macro_rules! execute {
+    ($amx_list:ident,$name:tt,$botid:ident;$($args:tt)*) => {
+        let mut executed: bool = false;
+        for amx in $amx_list {
+            let amx = cast_amx!(amx);
+            let botid: usize = *$botid;
+            match exec_callback!(amx,$name;botid,$($args)*) {
+                Ok(_) => {
+                    executed = true;
+                }
+                Err(_err) => {
+                    continue;
+                }
             }
         }
-
         if !executed {
-            log!("**[TGConnector] Error executing callback OnTGMessage");
+            log!("**[TGConnector] Error executing callback {}",$name);
         }
-    }
+    };
 }
 
-pub fn on_tg_send_message(
-    plugin: &super::TgConnector,
-    name: String,
-    botid: &usize,
-    message_id: i32,
-) {
-    for amx in &plugin.amx_list {
-        let amx = AMX::new(*amx as *mut _);
-        let mut executed;
-        let botid: usize = *botid;
-
-        match exec_public_with_name!(amx,name;botid,message_id) {
-            Ok(_) => {
-                executed = true;
-            }
-
-            Err(_err) => {
-                continue;
-            }
-        }
-
-        if !executed {
-            log!("**[TGConnector] Error executing callback {}", name);
-        }
-    }
+pub fn on_tg_message(amx_list: &Vec<usize>, botid: &usize, fromid: i32, message_id: i32) {
+    execute!(amx_list,"OnTGMessage",botid;fromid,message_id);
 }
 
-pub fn on_tg_channel_post(plugin: &super::TgConnector, botid: &usize, message_id: i32) {
-    for amx in &plugin.amx_list {
-        let amx = AMX::new(*amx as *mut _);
-        let mut executed;
-        let botid: usize = *botid;
-
-        match exec_public!(amx,"OnTGChannelPost";botid,message_id) {
-            Ok(_) => {
-                executed = true;
-            }
-
-            Err(_err) => {
-                continue;
-            }
-        }
-
-        if !executed {
-            log!("**[TGConnector] Error executing callback OnTGChannelPost");
-        }
-    }
+pub fn on_tg_send_message(amx_list: &Vec<usize>, name: String, botid: &usize, message_id: i32) {
+    execute!(amx_list,name,botid;message_id);
 }
 
-pub fn on_tg_user_joined(plugin: &super::TgConnector, botid: &usize, userid: i32) {
-    for amx in &plugin.amx_list {
-        let amx = AMX::new(*amx as *mut _);
-        let mut executed;
-        let botid: usize = *botid;
-
-        match exec_public!(amx,"OnTGUserJoined";botid,userid) {
-            Ok(_) => {
-                executed = true;
-            }
-
-            Err(_err) => {
-                continue;
-            }
-        }
-
-        if !executed {
-            log!("**[TGConnector] Error executing callback OnTgUserJoined");
-        }
-    }
+pub fn on_tg_channel_post(amx_list: &Vec<usize>, botid: &usize, message_id: i32) {
+    execute!(amx_list,"OnTGChannelPost",botid;message_id);
 }
 
-pub fn on_tg_user_left(plugin: &super::TgConnector, botid: &usize, userid: i32) {
-    for amx in &plugin.amx_list {
-        let amx = AMX::new(*amx as *mut _);
-        let mut executed;
-        let botid: usize = *botid;
+pub fn on_tg_user_joined(amx_list: &Vec<usize>, botid: &usize, userid: i32) {
+    execute!(amx_list,"OnTGUserJoined",botid;userid);
+}
 
-        match exec_public!(amx,"OnTGUserLeft";botid,userid) {
-            Ok(_) => {
-                executed = true;
-            }
-
-            Err(_err) => {
-                continue;
-            }
-        }
-
-        if !executed {
-            log!("**[TGConnector] Error executing callback OnTgUserLeft");
-        }
-    }
+pub fn on_tg_user_left(amx_list: &Vec<usize>, botid: &usize, userid: i32) {
+    execute!(amx_list,"OnTGUserLeft",botid;userid);
 }

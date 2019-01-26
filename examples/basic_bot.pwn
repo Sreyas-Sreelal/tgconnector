@@ -16,12 +16,12 @@ main() {
 }
 
 public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
-	
+
 	if(g_bot != bot){
 		return 1;
 	}
 
-	new 
+	new
 		message[50],
 		username[24],
 		chatname[56],
@@ -30,21 +30,21 @@ public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 	TGCacheGetMessage(message);
 	TGCacheGetUserName(username);
 	TGCacheGetChatName(chatname);
-	
+
 	format(server_msg,128,"[%s] %s(%d): %s",chatname,username,_:fromid,message);
 	SendClientMessageToAll(-1,server_msg);
-	
+
 	return 1;
 }
 
 
 public OnTGUserJoined(TGBot:bot,TGUser:userid) {
-	new 
+	new
 		TGChatId:chatid[12],
 		username[24],
 		chatname[56],
 		server_msg[128];
-	
+
 	TGCacheGetUserName(username);
 	TGCacheGetChatId(chatid);
 	TGCacheGetChatName(chatname);
@@ -55,12 +55,12 @@ public OnTGUserJoined(TGBot:bot,TGUser:userid) {
 }
 
 public OnTGUserLeft(TGBot:bot,TGUser:userid) {
-	new 
+	new
 		TGChatId:chatid[12],
 		username[24],
 		chatname[56],
 		server_msg[128];
-	
+
 	TGCacheGetUserName(username);
 	TGCacheGetChatId(chatid);
 	TGCacheGetChatName(chatname);

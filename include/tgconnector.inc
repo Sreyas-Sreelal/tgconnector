@@ -40,7 +40,7 @@ native TGUserStatus:TGGetUserChatStatus(TGBot:bot,TGUser:userid,TGChatId:chatid[
 native TGGetUserNameFromId(TGBot:bot,TGUser:userid,TGChatId:chatid[],username[],size=sizeof(username));
 native TGGetDisplayNameFromId(TGBot:bot,TGUser:userid,TGChatId:chatid[],displayname[],size=sizeof(displayname));
 
-//chat 
+//chat
 native TGGetChatMembersCount(TGBot:bot,TGChatId:chatid[]);
 native TGGetChatTitle(TGBot:bot,TGChatId:chatid[],title[],size=sizeof(title));
 native TGGetChatDescription(TGBot:bot,TGChatId:chatid[],description[],size=sizeof(description));

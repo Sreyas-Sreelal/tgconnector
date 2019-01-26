@@ -45,7 +45,7 @@ pub fn update_process(plugin: &mut super::TgConnector) {
                         None => {}
                     };
 
-                    callbacks::on_tg_message(plugin, id, user.id, message.message_id);
+                    callbacks::on_tg_message(&plugin.amx_list, id, user.id, message.message_id);
                 }
 
                 UpdateType::ChannelPost => {
@@ -59,7 +59,7 @@ pub fn update_process(plugin: &mut super::TgConnector) {
                         }
                         None => {}
                     };
-                    callbacks::on_tg_channel_post(plugin, id, message.message_id);
+                    callbacks::on_tg_channel_post(&plugin.amx_list, id, message.message_id);
                 }
 
                 UpdateType::UserJoined => {
@@ -91,7 +91,7 @@ pub fn update_process(plugin: &mut super::TgConnector) {
                             }
                             None => {}
                         };
-                        callbacks::on_tg_user_joined(plugin, id, user.id);
+                        callbacks::on_tg_user_joined(&plugin.amx_list, id, user.id);
                     }
                 }
 
@@ -124,7 +124,7 @@ pub fn update_process(plugin: &mut super::TgConnector) {
                         }
                         None => {}
                     };
-                    callbacks::on_tg_user_left(plugin, id, user.id);
+                    callbacks::on_tg_user_left(&plugin.amx_list, id, user.id);
                 }
 
                 UpdateType::UnknownUpdate => {
@@ -164,7 +164,7 @@ pub fn on_send_message_process(plugin: &mut super::TgConnector) {
             if message.text != None {
                 plugin.telegram_messages.push_front(message.text.unwrap());
                 plugin.telegram_chatid.push_front(message.chat.id);
-                callbacks::on_tg_send_message(plugin, callback, id, message.message_id);
+                callbacks::on_tg_send_message(&plugin.amx_list, callback, id, message.message_id);
             }
         }
     }
