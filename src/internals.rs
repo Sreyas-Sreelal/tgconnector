@@ -139,25 +139,21 @@ fn get_update_type(update: &Update) -> UpdateType {
     if update.message.is_some() {
         let message = update.message.as_ref().unwrap();
         if message.text.is_some() {
-            UpdateType::Message
+            return UpdateType::Message;
         } else if message.new_chat_members.is_some() {
-            UpdateType::UserJoined
+            return UpdateType::UserJoined;
         } else if message.left_chat_member.is_some() {
-            UpdateType::UserLeft
-        } else {
-            UpdateType::UnknownUpdate
+            return UpdateType::UserLeft;
         }
     } else if update.channel_post.is_some() {
         let post = update.channel_post.as_ref().unwrap();
         if post.text.is_some() {
-            UpdateType::ChannelPost
-        } else {
-            UpdateType::UnknownUpdate
+            return UpdateType::ChannelPost;
         }
-    } else {
-        UpdateType::UnknownUpdate
     }
+    return UpdateType::UnknownUpdate;
 }
+
 pub fn on_send_message_process(plugin: &mut super::TgConnector) {
     for (id, bot) in &plugin.bots {
         for (message, callback) in bot.send_message_reciever.as_ref().unwrap().try_iter() {
