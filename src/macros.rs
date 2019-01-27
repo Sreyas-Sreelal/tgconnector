@@ -37,7 +37,7 @@ macro_rules! cast_amx {
 }
 
 macro_rules! cache_get {
-	($cache_list:ident,$dest:ident,$size:ident) => {
+    ($cache_list:ident,$dest:ident,$size:ident) => {
         if $cache_list.front() != None {
             match encode_replace(&$cache_list.front().unwrap()) {
                 Ok(encoded) => {
@@ -56,5 +56,5 @@ macro_rules! cache_get {
         } else {
             Ok(0)
         }
-	};
+    };
 }

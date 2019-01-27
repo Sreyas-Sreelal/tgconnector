@@ -127,7 +127,7 @@ impl super::TgConnector {
         size: usize,
     ) -> AmxResult<Cell> {
         let cache_list = &self.telegram_messages;
-        cache_get!(cache_list,dest,size)
+        cache_get!(cache_list, dest, size)
     }
 
     pub fn cache_get_username(
@@ -137,7 +137,7 @@ impl super::TgConnector {
         size: usize,
     ) -> AmxResult<Cell> {
         let cache_list = &self.telegram_username;
-        cache_get!(cache_list,dest,size)
+        cache_get!(cache_list, dest, size)
     }
 
     pub fn cache_get_user_first_name(
@@ -147,7 +147,7 @@ impl super::TgConnector {
         size: usize,
     ) -> AmxResult<Cell> {
         let cache_list = &self.telegram_firstname;
-        cache_get!(cache_list,dest,size)
+        cache_get!(cache_list, dest, size)
     }
 
     pub fn cache_get_user_last_name(
@@ -157,7 +157,7 @@ impl super::TgConnector {
         size: usize,
     ) -> AmxResult<Cell> {
         let cache_list = &self.telegram_lastname;
-        cache_get!(cache_list,dest,size)
+        cache_get!(cache_list, dest, size)
     }
 
     pub fn cache_get_chatid(
@@ -167,7 +167,7 @@ impl super::TgConnector {
         size: usize,
     ) -> AmxResult<Cell> {
         let cache_list = &self.telegram_chatid;
-        cache_get!(cache_list,dest,size)
+        cache_get!(cache_list, dest, size)
     }
 
     pub fn cache_get_chatname(
@@ -177,7 +177,7 @@ impl super::TgConnector {
         size: usize,
     ) -> AmxResult<Cell> {
         let cache_list = &self.telegram_chatname;
-        cache_get!(cache_list,dest,size)
+        cache_get!(cache_list, dest, size)
     }
 
     pub fn cache_get_chattype(
@@ -187,7 +187,7 @@ impl super::TgConnector {
         size: usize,
     ) -> AmxResult<Cell> {
         let cache_list = &self.telegram_chattype;
-        cache_get!(cache_list,dest,size)
+        cache_get!(cache_list, dest, size)
     }
 
     pub fn get_user_status(
