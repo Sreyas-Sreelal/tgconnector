@@ -35,3 +35,26 @@ macro_rules! cast_amx {
         AMX::new(*$amx as *mut _)
     };
 }
+
+macro_rules! cache_get {
+	($cache_list:ident,$dest:ident,$size:ident) => {
+        if $cache_list.front() != None {
+            match encode_replace(&$cache_list.front().unwrap()) {
+                Ok(encoded) => {
+                    set_string!(encoded, $dest, $size);
+                    Ok(1)
+                }
+                Err(err) => {
+                    log!(
+                        "**[TGConnector] Failed encoding {:?} \n {:?}",
+                        $cache_list.front().unwrap(),
+                        err
+                    );
+                    Ok(0)
+                }
+            }
+        } else {
+            Ok(0)
+        }
+	};
+}

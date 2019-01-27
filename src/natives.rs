@@ -126,26 +126,8 @@ impl super::TgConnector {
         dest: &mut Cell,
         size: usize,
     ) -> AmxResult<Cell> {
-        let string = self.telegram_messages.front();
-
-        if string != None {
-            match encode_replace(&string.unwrap()) {
-                Ok(encoded) => {
-                    set_string!(encoded, dest, size);
-                    Ok(1)
-                }
-                Err(err) => {
-                    log!(
-                        "**[TGConnector][get_message] Failed encoding {:?} \n {:?}",
-                        string.unwrap(),
-                        err
-                    );
-                    Ok(0)
-                }
-            }
-        } else {
-            Ok(0)
-        }
+        let cache_list = &self.telegram_messages;
+        cache_get!(cache_list,dest,size)
     }
 
     pub fn cache_get_username(
@@ -154,26 +136,8 @@ impl super::TgConnector {
         dest: &mut Cell,
         size: usize,
     ) -> AmxResult<Cell> {
-        let string = self.telegram_username.front();
-
-        if string != None {
-            match encode_replace(&string.unwrap()) {
-                Ok(encoded) => {
-                    set_string!(encoded, dest, size);
-                    Ok(1)
-                }
-                Err(err) => {
-                    log!(
-                        "**[TGConnector][get_username] Failed encoding {:?} \n {:?}",
-                        string.unwrap(),
-                        err
-                    );
-                    Ok(0)
-                }
-            }
-        } else {
-            Ok(0)
-        }
+        let cache_list = &self.telegram_username;
+        cache_get!(cache_list,dest,size)
     }
 
     pub fn cache_get_user_first_name(
@@ -182,26 +146,8 @@ impl super::TgConnector {
         dest: &mut Cell,
         size: usize,
     ) -> AmxResult<Cell> {
-        let string = self.telegram_firstname.front();
-
-        if string != None {
-            match encode_replace(&string.unwrap()) {
-                Ok(encoded) => {
-                    set_string!(encoded, dest, size);
-                    Ok(1)
-                }
-                Err(err) => {
-                    log!(
-                        "**[TGConnector][get_user_first_name] Failed encoding {:?} \n {:?}",
-                        string.unwrap(),
-                        err
-                    );
-                    Ok(0)
-                }
-            }
-        } else {
-            Ok(0)
-        }
+        let cache_list = &self.telegram_firstname;
+        cache_get!(cache_list,dest,size)
     }
 
     pub fn cache_get_user_last_name(
@@ -210,26 +156,8 @@ impl super::TgConnector {
         dest: &mut Cell,
         size: usize,
     ) -> AmxResult<Cell> {
-        let string = self.telegram_lastname.front();
-
-        if string != None {
-            match encode_replace(&string.unwrap()) {
-                Ok(encoded) => {
-                    set_string!(encoded, dest, size);
-                    Ok(1)
-                }
-                Err(err) => {
-                    log!(
-                        "**[TGConnector][get_user_last_name] Failed encoding {:?} \n {:?}",
-                        string.unwrap(),
-                        err
-                    );
-                    Ok(0)
-                }
-            }
-        } else {
-            Ok(0)
-        }
+        let cache_list = &self.telegram_lastname;
+        cache_get!(cache_list,dest,size)
     }
 
     pub fn cache_get_chatid(
@@ -238,26 +166,8 @@ impl super::TgConnector {
         dest: &mut Cell,
         size: usize,
     ) -> AmxResult<Cell> {
-        let string = self.telegram_chatid.front();
-
-        if string != None {
-            match encode_replace(&string.unwrap()) {
-                Ok(encoded) => {
-                    set_string!(encoded, dest, size);
-                    Ok(1)
-                }
-                Err(err) => {
-                    log!(
-                        "**[TGConnector][get_chatid] Failed encoding {:?} \n {:?}",
-                        string.unwrap(),
-                        err
-                    );
-                    Ok(0)
-                }
-            }
-        } else {
-            Ok(0)
-        }
+        let cache_list = &self.telegram_chatid;
+        cache_get!(cache_list,dest,size)
     }
 
     pub fn cache_get_chatname(
@@ -266,26 +176,8 @@ impl super::TgConnector {
         dest: &mut Cell,
         size: usize,
     ) -> AmxResult<Cell> {
-        let string = self.telegram_chatname.front();
-
-        if string != None {
-            match encode_replace(&string.unwrap()) {
-                Ok(encoded) => {
-                    set_string!(encoded, dest, size);
-                    Ok(1)
-                }
-                Err(err) => {
-                    log!(
-                        "**[TGConnector][get_chatname] Failed encoding {:?} \n {:?}",
-                        string.unwrap(),
-                        err
-                    );
-                    Ok(0)
-                }
-            }
-        } else {
-            Ok(0)
-        }
+        let cache_list = &self.telegram_chatname;
+        cache_get!(cache_list,dest,size)
     }
 
     pub fn cache_get_chattype(
@@ -294,26 +186,8 @@ impl super::TgConnector {
         dest: &mut Cell,
         size: usize,
     ) -> AmxResult<Cell> {
-        let string = self.telegram_chattype.front();
-
-        if string != None {
-            match encode_replace(&string.unwrap()) {
-                Ok(encoded) => {
-                    set_string!(encoded, dest, size);
-                    Ok(1)
-                }
-                Err(err) => {
-                    log!(
-                        "**[TGConnector][get_chattype] Failed encoding {:?} \n {:?}",
-                        string.unwrap(),
-                        err
-                    );
-                    Ok(0)
-                }
-            }
-        } else {
-            Ok(0)
-        }
+        let cache_list = &self.telegram_chattype;
+        cache_get!(cache_list,dest,size)
     }
 
     pub fn get_user_status(
