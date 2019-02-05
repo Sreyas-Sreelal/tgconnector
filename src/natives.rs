@@ -125,49 +125,12 @@ impl super::TgConnector {
         Ok(1)
     }
 
-    pub fn get_username_from_id(
-        &mut self,
-        _amx: &AMX,
-        botid: usize,
-        userid: i32,
-        chatid: String,
-        dest: &mut Cell,
-        size: usize,
-    ) -> AmxResult<Cell> {
+    pub fn get_bot_user_id(&mut self, _amx: &AMX, botid: usize) -> AmxResult<Cell> {
         if !self.bots.contains_key(&botid) {
             log!("**[TGConnector] Error Invalid bot id {} passed", botid);
-            return Ok(0);
+            return Ok(-1);
         }
-        let getchatmember = GetChatMember {
-            user_id: userid,
-            chat_id: chatid,
-        };
-        let chatmember = self.bots[&botid].get_chat_member(getchatmember);
-
-        if chatmember.is_none() {
-            return Ok(0);
-        }
-
-        let chatmember = chatmember.unwrap();
-        let username = &chatmember.user.username;
-        if *username == None {
-            return Ok(0);
-        }
-
-        match encode_replace(username.as_ref().unwrap()) {
-            Ok(encoded) => {
-                set_string!(encoded, dest, size);
-                Ok(1)
-            }
-            Err(err) => {
-                log!(
-                    "**[TGConnector][get_username_from_id] Failed encoding {:?} \n {:?}",
-                    username.as_ref().unwrap(),
-                    err
-                );
-                Ok(0)
-            }
-        }
+        Ok(self.bots[&botid].user_id)
     }
 
     pub fn cache_get_message(
@@ -274,12 +237,49 @@ impl super::TgConnector {
         }
     }
 
-    pub fn get_bot_user_id(&mut self, _amx: &AMX, botid: usize) -> AmxResult<Cell> {
+    pub fn get_username_from_id(
+        &mut self,
+        _amx: &AMX,
+        botid: usize,
+        userid: i32,
+        chatid: String,
+        dest: &mut Cell,
+        size: usize,
+    ) -> AmxResult<Cell> {
         if !self.bots.contains_key(&botid) {
             log!("**[TGConnector] Error Invalid bot id {} passed", botid);
-            return Ok(-1);
+            return Ok(0);
         }
-        Ok(self.bots[&botid].user_id)
+        let getchatmember = GetChatMember {
+            user_id: userid,
+            chat_id: chatid,
+        };
+        let chatmember = self.bots[&botid].get_chat_member(getchatmember);
+
+        if chatmember.is_none() {
+            return Ok(0);
+        }
+
+        let chatmember = chatmember.unwrap();
+        let username = &chatmember.user.username;
+        if *username == None {
+            return Ok(0);
+        }
+
+        match encode_replace(username.as_ref().unwrap()) {
+            Ok(encoded) => {
+                set_string!(encoded, dest, size);
+                Ok(1)
+            }
+            Err(err) => {
+                log!(
+                    "**[TGConnector][get_username_from_id] Failed encoding {:?} \n {:?}",
+                    username.as_ref().unwrap(),
+                    err
+                );
+                Ok(0)
+            }
+        }
     }
 
     pub fn get_display_name_from_id(
