@@ -166,7 +166,7 @@ pub fn on_send_message_process(plugin: &mut super::TgConnector) {
     }
 }
 
-pub fn create_bot(plugin: &mut super::TgConnector, api: BOT) -> AmxResult<Cell> {
+pub fn create_bot(plugin: &mut super::TgConnector, mut api: BOT) -> AmxResult<Cell> {
     if api.connect() {
         plugin.bots.insert(plugin.bot_context_id, api);
         plugin.bot_context_id += 1;

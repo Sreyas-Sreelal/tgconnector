@@ -7,6 +7,7 @@ use types::*;
 
 pub struct BOT {
     pub api_request_link: String,
+    pub user_id: i32,
     pub update_reciever: Option<Receiver<Update>>,
     pub update_sender: Option<Sender<Update>>,
     pub send_message_reciever: Option<Receiver<(Message, String)>>,
@@ -20,6 +21,7 @@ impl BOT {
 
         BOT {
             api_request_link: String::from("https://api.telegram.org/bot") + &bot_token,
+            user_id: -1,
             update_reciever: Some(update_reciever),
             update_sender: Some(update_sender),
             send_message_reciever: Some(send_message_reciever),
@@ -27,7 +29,7 @@ impl BOT {
         }
     }
 
-    pub fn connect(&self) -> bool {
+    pub fn connect(&mut self) -> bool {
         let request = HttpRequest {
             url: format!("{}/getme", self.api_request_link),
             method: HttpMethod::Get,
@@ -39,6 +41,7 @@ impl BOT {
                 let response: APIResponse<User> = from_str(&response).unwrap();
 
                 if response.ok {
+                    self.user_id = response.result.unwrap().id;
                     self.get_updates();
                     true
                 } else {

@@ -8,6 +8,7 @@ use std::collections::{HashMap, LinkedList};
 define_native!(bot_connect, token: String);
 
 define_native!(bot_connect_from_env, variable: String);
+define_native!(get_bot_user_id, botid: usize);
 
 define_native!(
     bot_send_message,
@@ -165,7 +166,8 @@ impl TgConnector {
             "TGGetDisplayNameFromId" => get_display_name_from_id,
             "TGGetChatMembersCount" => get_chat_members_count,
             "TGGetChatTitle" => get_chat_title,
-            "TGGetChatDescription" => get_chat_description
+            "TGGetChatDescription" => get_chat_description,
+            "TGGetBotUserId" => get_bot_user_id
         };
 
         match amx.register(&natives) {

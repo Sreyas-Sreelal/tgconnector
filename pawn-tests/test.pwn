@@ -21,6 +21,24 @@ Test:TestValidToken() {
 	TGSendMessage(g_bot,TGChatId:"@testsamp","`markdown text` ***bold*** _italic_ 123",.parse_mode=MARKDOWN,.callback="SendingMessage");
 	ASSERT(g_bot != INVALID_BOT_ID);
 }
+Test:TGGetBotUserId() {
+	new 
+		TGUser:userid = TGGetBotUserId(g_bot),
+		name[34],
+		username[32];
+	
+	TGGetDisplayNameFromId(g_bot,userid,TGChatId:"562896556",name);
+	new bool:name_check = !strcmp("samp",name);
+	ASSERT(name_check);
+
+	TGGetUserNameFromId(g_bot,userid,TGChatId:"562896556",username);
+	new bool:username_check = !strcmp("samptg_bot",username);
+	ASSERT(username_check);
+	
+	new TGUserStatus:status = TGGetUserChatStatus(g_bot,userid,TGChatId:"562896556");
+	ASSERT(status == TG_MEMBER);
+
+}
 
 Test:TGGetUserChatStatus() {
 	new TGUserStatus:status = TGGetUserChatStatus(g_bot,TGUser:562896556,TGChatId:"-1001445898764");
