@@ -1,3 +1,5 @@
+use serde_derive::Serialize;
+
 #[derive(Serialize, Debug, Clone)]
 pub struct GetUpdates {
     pub offset: i32,

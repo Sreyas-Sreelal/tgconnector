@@ -1,8 +1,10 @@
-use api::BOT;
-use internals;
+use crate::api::BOT;
+use crate::internals;
 use samp_sdk::amx::{AmxResult, AMX};
 use samp_sdk::consts::*;
 use samp_sdk::types::Cell;
+use samp_sdk::{define_native,expand_args,get_string,log,natives};
+
 use std::collections::{HashMap, LinkedList};
 
 define_native!(bot_connect, token: String);

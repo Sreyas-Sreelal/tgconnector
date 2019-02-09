@@ -1,16 +1,6 @@
 #[macro_use]
-extern crate samp_sdk;
-extern crate encoding;
-extern crate minihttp;
-extern crate serde;
-extern crate serde_json;
-
-#[macro_use]
-extern crate serde_derive;
-
-#[macro_use]
 mod macros;
-
+use plugin::TgConnector;
 mod api;
 mod callbacks;
 mod encode;
@@ -21,6 +11,6 @@ mod natives;
 mod plugin;
 mod types;
 
-use plugin::TgConnector;
+use samp_sdk::new_plugin;
 
 new_plugin!(TgConnector with process_tick);

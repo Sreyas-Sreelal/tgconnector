@@ -15,7 +15,7 @@ pub struct HttpRequest {
 impl HttpRequest {
     pub fn make_request(&self) -> Result<String, String> {
         let mut requests_obj = match Request::new(&self.url) {
-            Ok(mut requests_obj) => requests_obj,
+            Ok(requests_obj) => requests_obj,
 
             Err(err) => {
                 return Err(format!(

@@ -1,5 +1,3 @@
-#[macro_export]
-
 macro_rules! execute {
     ($amx_list:ident,$name:tt,$botid:ident;$($args:tt)*) => {
         let mut executed: bool = false;

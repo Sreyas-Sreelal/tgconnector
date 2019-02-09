@@ -1,10 +1,11 @@
-use api::BOT;
-use encode::encode_replace;
-use functions::*;
-use internals::create_bot;
+use crate::api::BOT;
+use crate::encode::encode_replace;
+use crate::functions::*;
+use crate::internals::create_bot;
 use samp_sdk::amx::AmxResult;
 use samp_sdk::amx::AMX;
 use samp_sdk::types::Cell;
+use samp_sdk::{log,set_string};
 
 impl super::TgConnector {
     pub fn bot_connect(&mut self, _amx: &AMX, token: String) -> AmxResult<Cell> {

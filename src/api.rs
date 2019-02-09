@@ -1,9 +1,10 @@
-use functions::*;
-use http::{HttpMethod, HttpRequest};
+use crate::functions::*;
+use crate::http::{HttpMethod, HttpRequest};
 use serde_json::{from_str, to_string};
 use std::collections::VecDeque;
 use std::sync::mpsc::{channel, Receiver, Sender};
-use types::*;
+use crate::types::*;
+use samp_sdk::log;
 
 pub struct BOT {
     pub api_request_link: String,

@@ -2,6 +2,7 @@
 name = "tgconnector"
 version = "0.1.0"
 authors = ["Sreyas-Sreelal"]
+edition = "2018"
 
 [lib]
 name = "tgconnector"
