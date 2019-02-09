@@ -9,7 +9,7 @@
     },
     "files": [
       {
-        "includePattern": "test/plugins/tgconnector.so",
+        "includePattern": "test-server/plugins/tgconnector.so",
         "uploadPattern": "tgconnector.so",
         "matrixParams": {
           "override": 1

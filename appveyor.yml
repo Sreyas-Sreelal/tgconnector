@@ -26,7 +26,7 @@ test_script:
   - make run
 
 artifacts:
-  - path: test/plugins/tgconnector.dll
+  - path: test-server/plugins/tgconnector.dll
     name: tgconnector
 
 deploy:
