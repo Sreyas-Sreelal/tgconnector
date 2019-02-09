@@ -1,9 +1,9 @@
 use crate::api::BOT;
 use crate::callbacks;
+use crate::types::*;
 use samp_sdk::amx::AmxResult;
 use samp_sdk::types::Cell;
 use std::collections::LinkedList;
-use crate::types::*;
 
 pub fn clear_caches(cache: &mut LinkedList<String>) {
     if !cache.is_empty() {

@@ -1,5 +1,5 @@
 use samp_sdk::amx::AMX;
-use samp_sdk::{log,exec};
+use samp_sdk::{exec, log};
 
 pub fn on_tg_message(amx_list: &Vec<usize>, botid: &usize, fromid: i32, message_id: i32) {
     execute!(amx_list,"OnTGMessage",botid;fromid,message_id);

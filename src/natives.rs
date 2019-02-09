@@ -5,7 +5,7 @@ use crate::internals::create_bot;
 use samp_sdk::amx::AmxResult;
 use samp_sdk::amx::AMX;
 use samp_sdk::types::Cell;
-use samp_sdk::{log,set_string};
+use samp_sdk::{log, set_string};
 
 impl super::TgConnector {
     pub fn bot_connect(&mut self, _amx: &AMX, token: String) -> AmxResult<Cell> {

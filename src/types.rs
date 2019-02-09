@@ -1,6 +1,6 @@
 use serde::{Deserialize, Deserializer};
-use std::collections::VecDeque;
 use serde_derive::Deserialize;
+use std::collections::VecDeque;
 
 pub enum UpdateType {
     Message,
