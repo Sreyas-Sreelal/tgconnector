@@ -42,7 +42,7 @@ impl BOT {
                 let response: APIResponse<User> = from_str(&response).unwrap();
 
                 if response.ok {
-                    self.user_id = response.result.unwrap().id;
+                    self.user_id = response.body.unwrap().id;
                     self.get_updates();
                     true
                 } else {
@@ -74,7 +74,7 @@ impl BOT {
                 Ok(response) => {
                     let update: APIResponse<VecDeque<Update>> = from_str(&response).unwrap();
 
-                    let mut check_result: VecDeque<Update> = match update.result {
+                    let mut check_result: VecDeque<Update> = match update.body {
                         None => {
                             continue;
                         }
@@ -121,7 +121,7 @@ impl BOT {
                         log!("**[TGConnector] Error Couldn't send message.{:?}", response);
                     } else if callback != None {
                         let sender = send_message_move.as_ref().unwrap();
-                        let send_data = (response.result.unwrap(), callback.unwrap());
+                        let send_data = (response.body.unwrap(), callback.unwrap());
                         sender.send(send_data).unwrap();
                     }
                 }
@@ -202,7 +202,7 @@ impl BOT {
             Ok(response) => {
                 let response: APIResponse<ChatMember> = from_str(&response).unwrap();
                 if response.ok {
-                    response.result
+                    response.body
                 } else {
                     log!("**[TGConnector] Error get_chat_member.{:?}", response);
                     None
@@ -227,7 +227,7 @@ impl BOT {
             Ok(response) => {
                 let response: APIResponse<i32> = from_str(&response).unwrap();
                 if response.ok {
-                    response.result
+                    response.body
                 } else {
                     log!(
                         "**[TGConnector] Error get_chat_members_count.{:?}",
@@ -255,7 +255,7 @@ impl BOT {
             Ok(response) => {
                 let response: APIResponse<Chat> = from_str(&response).unwrap();
                 if response.ok {
-                    response.result
+                    response.body
                 } else {
                     log!("**[TGConnector] Error get_chat.{:?}", response);
                     None

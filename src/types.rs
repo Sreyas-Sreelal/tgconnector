@@ -13,7 +13,8 @@ pub enum UpdateType {
 #[derive(Deserialize, Debug, Clone)]
 pub struct APIResponse<T> {
     pub ok: bool,
-    pub result: Option<T>,
+    #[serde(rename = "result")]
+    pub body: Option<T>,
     pub description: Option<String>,
 }
 
