@@ -8,7 +8,6 @@ use samp_sdk::{define_native, expand_args, get_string, log, natives};
 use std::collections::{HashMap, LinkedList};
 
 define_native!(bot_connect, token: String);
-
 define_native!(bot_connect_from_env, variable: String);
 define_native!(get_bot_user_id, botid: usize);
 
@@ -39,26 +38,31 @@ define_native!(
 	dest:ref Cell,
 	size:usize
 );
+
 define_native!(
 	cache_get_user_last_name,
 	dest:ref Cell,
 	size:usize
 );
+
 define_native!(
 	cache_get_chatid,
 	dest:ref Cell,
 	size:usize
 );
+
 define_native!(
 	cache_get_chattype,
 	dest:ref Cell,
 	size:usize
 );
+
 define_native!(
 	cache_get_chatname,
 	dest:ref Cell,
 	size:usize
 );
+
 define_native!(
     bot_delete_message,
     botid: usize,

@@ -1,5 +1,5 @@
-use crate::functions::*;
 use crate::http::{HttpMethod, HttpRequest};
+use crate::methods::*;
 use crate::types::*;
 use samp_sdk::log;
 use serde_json::{from_str, to_string};

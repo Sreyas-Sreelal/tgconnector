@@ -28,11 +28,9 @@ pub fn update_process(plugin: &mut super::TgConnector) {
                         plugin.telegram_lastname.push_front(lastname);
                     }
 
-                
                     if let Some(username) = user.username {
                         plugin.telegram_username.push_front(username);
                     }
-                        
 
                     if let Some(chatname) = message.chat.title {
                         plugin.telegram_chatname.push_front(chatname);
@@ -61,9 +59,7 @@ pub fn update_process(plugin: &mut super::TgConnector) {
                     if let Some(lastname) = user.last_name {
                         plugin.telegram_lastname.push_front(lastname);
                     }
-                    
 
-                    
                     if let Some(chatname) = message.chat.title {
                         plugin.telegram_chatname.push_front(chatname);
                     }
@@ -71,11 +67,10 @@ pub fn update_process(plugin: &mut super::TgConnector) {
                     plugin.telegram_chatid.push_front(message.chat.id);
 
                     for user in message.new_chat_members.unwrap() {
-                        
                         if let Some(username) = user.username {
                             plugin.telegram_username.push_front(username);
                         }
-                        
+
                         callbacks::on_tg_user_joined(&plugin.amx_list, *id, user.id);
                     }
                 }
@@ -89,20 +84,19 @@ pub fn update_process(plugin: &mut super::TgConnector) {
                     if let Some(lastname) = user.last_name {
                         plugin.telegram_lastname.push_front(lastname);
                     }
-    
+
                     if let Some(chatname) = message.chat.title {
                         plugin.telegram_chatname.push_front(chatname);
                     }
-                        
 
                     plugin.telegram_chatid.push_front(message.chat.id);
 
                     let user = message.left_chat_member.unwrap();
-                   
+
                     if let Some(username) = user.username {
                         plugin.telegram_username.push_front(username);
                     }
-                
+
                     callbacks::on_tg_user_left(&plugin.amx_list, *id, user.id);
                 }
 

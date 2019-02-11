@@ -1,7 +1,7 @@
 use crate::api::BOT;
 use crate::encode::encode_replace;
-use crate::functions::*;
 use crate::internals::create_bot;
+use crate::methods::*;
 use samp_sdk::amx::AmxResult;
 use samp_sdk::amx::AMX;
 use samp_sdk::types::Cell;
@@ -45,11 +45,7 @@ impl super::TgConnector {
             return Ok(0);
         }
 
-        let reply = if reply_id == -1 { 
-            None 
-        } else { 
-            Some(reply_id) 
-        };
+        let reply = if reply_id == -1 { None } else { Some(reply_id) };
 
         let parsemode: Option<&str> = match parse_mode {
             0 => Some("HTML"),
@@ -57,10 +53,10 @@ impl super::TgConnector {
             _ => None,
         };
 
-        let callback = if callback.is_empty() { 
-            None 
-        } else { 
-            Some(callback) 
+        let callback = if callback.is_empty() {
+            None
+        } else {
+            Some(callback)
         };
 
         let send_message_obj = SendMessage {
@@ -134,22 +130,12 @@ impl super::TgConnector {
         Ok(self.bots[&botid].user_id)
     }
 
-    pub fn cache_get_message(
-        &self,
-        _amx: &AMX,
-        dest: &mut Cell,
-        size: usize,
-    ) -> AmxResult<Cell> {
+    pub fn cache_get_message(&self, _amx: &AMX, dest: &mut Cell, size: usize) -> AmxResult<Cell> {
         let cache_list = &self.telegram_messages;
         cache_get!(cache_list, dest, size)
     }
 
-    pub fn cache_get_username(
-        &self,
-        _amx: &AMX,
-        dest: &mut Cell,
-        size: usize,
-    ) -> AmxResult<Cell> {
+    pub fn cache_get_username(&self, _amx: &AMX, dest: &mut Cell, size: usize) -> AmxResult<Cell> {
         let cache_list = &self.telegram_username;
         cache_get!(cache_list, dest, size)
     }
@@ -174,32 +160,17 @@ impl super::TgConnector {
         cache_get!(cache_list, dest, size)
     }
 
-    pub fn cache_get_chatid(
-        &self,
-        _amx: &AMX,
-        dest: &mut Cell,
-        size: usize,
-    ) -> AmxResult<Cell> {
+    pub fn cache_get_chatid(&self, _amx: &AMX, dest: &mut Cell, size: usize) -> AmxResult<Cell> {
         let cache_list = &self.telegram_chatid;
         cache_get!(cache_list, dest, size)
     }
 
-    pub fn cache_get_chatname(
-        &self,
-        _amx: &AMX,
-        dest: &mut Cell,
-        size: usize,
-    ) -> AmxResult<Cell> {
+    pub fn cache_get_chatname(&self, _amx: &AMX, dest: &mut Cell, size: usize) -> AmxResult<Cell> {
         let cache_list = &self.telegram_chatname;
         cache_get!(cache_list, dest, size)
     }
 
-    pub fn cache_get_chattype(
-        &self,
-        _amx: &AMX,
-        dest: &mut Cell,
-        size: usize,
-    ) -> AmxResult<Cell> {
+    pub fn cache_get_chattype(&self, _amx: &AMX, dest: &mut Cell, size: usize) -> AmxResult<Cell> {
         let cache_list = &self.telegram_chattype;
         cache_get!(cache_list, dest, size)
     }
