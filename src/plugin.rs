@@ -140,7 +140,8 @@ impl TgConnector {
    ###############################################################
 			"
         );
-        return true;
+
+        true
     }
 
     pub fn unload(&self) {

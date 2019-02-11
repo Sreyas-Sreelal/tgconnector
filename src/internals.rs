@@ -24,28 +24,21 @@ pub fn update_process(plugin: &mut super::TgConnector) {
                     plugin.telegram_chatid.push_front(message.chat.id);
                     plugin.telegram_chattype.push_front(message.chat.chat_type);
 
-                    match user.last_name {
-                        Some(lastname) => {
-                            plugin.telegram_lastname.push_front(lastname);
-                        }
-                        None => {}
-                    };
+                    if let Some(lastname) = user.last_name {
+                        plugin.telegram_lastname.push_front(lastname);
+                    }
 
-                    match user.username {
-                        Some(username) => {
-                            plugin.telegram_username.push_front(username);
-                        }
-                        None => {}
-                    };
+                
+                    if let Some(username) = user.username {
+                        plugin.telegram_username.push_front(username);
+                    }
+                        
 
-                    match message.chat.title {
-                        Some(chatname) => {
-                            plugin.telegram_chatname.push_front(chatname);
-                        }
-                        None => {}
-                    };
+                    if let Some(chatname) = message.chat.title {
+                        plugin.telegram_chatname.push_front(chatname);
+                    }
 
-                    callbacks::on_tg_message(&plugin.amx_list, id, user.id, message.message_id);
+                    callbacks::on_tg_message(&plugin.amx_list, *id, user.id, message.message_id);
                 }
 
                 UpdateType::ChannelPost => {
@@ -53,13 +46,10 @@ pub fn update_process(plugin: &mut super::TgConnector) {
                     plugin.telegram_messages.push_front(message.text.unwrap());
                     plugin.telegram_chatid.push_front(message.chat.id);
 
-                    match message.chat.title {
-                        Some(chatname) => {
-                            plugin.telegram_chatname.push_front(chatname);
-                        }
-                        None => {}
-                    };
-                    callbacks::on_tg_channel_post(&plugin.amx_list, id, message.message_id);
+                    if let Some(chatname) = message.chat.title {
+                        plugin.telegram_chatname.push_front(chatname);
+                    }
+                    callbacks::on_tg_channel_post(&plugin.amx_list, *id, message.message_id);
                 }
 
                 UpdateType::UserJoined => {
@@ -68,30 +58,25 @@ pub fn update_process(plugin: &mut super::TgConnector) {
 
                     plugin.telegram_firstname.push_front(user.first_name);
 
-                    match user.last_name {
-                        Some(lastname) => {
-                            plugin.telegram_lastname.push_front(lastname);
-                        }
-                        None => {}
-                    };
+                    if let Some(lastname) = user.last_name {
+                        plugin.telegram_lastname.push_front(lastname);
+                    }
+                    
 
-                    match message.chat.title {
-                        Some(chatname) => {
-                            plugin.telegram_chatname.push_front(chatname);
-                        }
-                        None => {}
-                    };
+                    
+                    if let Some(chatname) = message.chat.title {
+                        plugin.telegram_chatname.push_front(chatname);
+                    }
 
                     plugin.telegram_chatid.push_front(message.chat.id);
 
                     for user in message.new_chat_members.unwrap() {
-                        match user.username {
-                            Some(username) => {
-                                plugin.telegram_username.push_front(username);
-                            }
-                            None => {}
-                        };
-                        callbacks::on_tg_user_joined(&plugin.amx_list, id, user.id);
+                        
+                        if let Some(username) = user.username {
+                            plugin.telegram_username.push_front(username);
+                        }
+                        
+                        callbacks::on_tg_user_joined(&plugin.amx_list, *id, user.id);
                     }
                 }
 
@@ -101,30 +86,24 @@ pub fn update_process(plugin: &mut super::TgConnector) {
 
                     plugin.telegram_firstname.push_front(user.first_name);
 
-                    match user.last_name {
-                        Some(lastname) => {
-                            plugin.telegram_lastname.push_front(lastname);
-                        }
-                        None => {}
-                    };
-
-                    match message.chat.title {
-                        Some(chatname) => {
-                            plugin.telegram_chatname.push_front(chatname);
-                        }
-                        None => {}
-                    };
+                    if let Some(lastname) = user.last_name {
+                        plugin.telegram_lastname.push_front(lastname);
+                    }
+    
+                    if let Some(chatname) = message.chat.title {
+                        plugin.telegram_chatname.push_front(chatname);
+                    }
+                        
 
                     plugin.telegram_chatid.push_front(message.chat.id);
 
                     let user = message.left_chat_member.unwrap();
-                    match user.username {
-                        Some(username) => {
-                            plugin.telegram_username.push_front(username);
-                        }
-                        None => {}
-                    };
-                    callbacks::on_tg_user_left(&plugin.amx_list, id, user.id);
+                   
+                    if let Some(username) = user.username {
+                        plugin.telegram_username.push_front(username);
+                    }
+                
+                    callbacks::on_tg_user_left(&plugin.amx_list, *id, user.id);
                 }
 
                 UpdateType::UnknownUpdate => {
@@ -151,7 +130,7 @@ fn get_update_type(update: &Update) -> UpdateType {
             return UpdateType::ChannelPost;
         }
     }
-    return UpdateType::UnknownUpdate;
+    UpdateType::UnknownUpdate
 }
 
 pub fn on_send_message_process(plugin: &mut super::TgConnector) {
@@ -160,7 +139,7 @@ pub fn on_send_message_process(plugin: &mut super::TgConnector) {
             if message.text != None {
                 plugin.telegram_messages.push_front(message.text.unwrap());
                 plugin.telegram_chatid.push_front(message.chat.id);
-                callbacks::on_tg_send_message(&plugin.amx_list, callback, id, message.message_id);
+                callbacks::on_tg_send_message(&plugin.amx_list, callback, *id, message.message_id);
             }
         }
     }

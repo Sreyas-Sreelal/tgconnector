@@ -3,7 +3,7 @@ macro_rules! execute {
         let mut executed: bool = false;
         for amx in $amx_list {
             let amx = cast_amx!(amx);
-            let botid: usize = *$botid;
+            let botid: usize = $botid;
             match exec_callback!(amx,$name;botid,$($args)*) {
                 Ok(_) => {
                     executed = true;

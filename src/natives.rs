@@ -27,11 +27,11 @@ impl super::TgConnector {
         let token = token.unwrap().into_string().unwrap();
         let api = BOT::new(token);
 
-        return create_bot(self, api);
+        create_bot(self, api)
     }
 
     pub fn bot_send_message(
-        &mut self,
+        &self,
         _amx: &AMX,
         botid: usize,
         chatid: String,
@@ -45,12 +45,11 @@ impl super::TgConnector {
             return Ok(0);
         }
 
-        let reply: Option<i32>;
-        if reply_id == -1 {
-            reply = None;
-        } else {
-            reply = Some(reply_id);
-        }
+        let reply = if reply_id == -1 { 
+            None 
+        } else { 
+            Some(reply_id) 
+        };
 
         let parsemode: Option<&str> = match parse_mode {
             0 => Some("HTML"),
@@ -58,14 +57,15 @@ impl super::TgConnector {
             _ => None,
         };
 
-        let callback: Option<String> = match callback.is_empty() {
-            true => None,
-            false => Some(callback),
+        let callback = if callback.is_empty() { 
+            None 
+        } else { 
+            Some(callback) 
         };
 
         let send_message_obj = SendMessage {
             chat_id: chatid,
-            text: text,
+            text,
             reply_to_message_id: reply,
             parse_mode: parsemode,
         };
@@ -75,7 +75,7 @@ impl super::TgConnector {
     }
 
     pub fn bot_delete_message(
-        &mut self,
+        &self,
         _amx: &AMX,
         botid: usize,
         chatid: String,
@@ -96,7 +96,7 @@ impl super::TgConnector {
     }
 
     pub fn bot_edit_message(
-        &mut self,
+        &self,
         _amx: &AMX,
         botid: usize,
         chatid: String,
@@ -117,7 +117,7 @@ impl super::TgConnector {
 
         let edit_message_obj = EditMessageText {
             chat_id: chatid,
-            text: text,
+            text,
             message_id: messageid,
             parse_mode: parsemode,
         };
@@ -126,7 +126,7 @@ impl super::TgConnector {
         Ok(1)
     }
 
-    pub fn get_bot_user_id(&mut self, _amx: &AMX, botid: usize) -> AmxResult<Cell> {
+    pub fn get_bot_user_id(&self, _amx: &AMX, botid: usize) -> AmxResult<Cell> {
         if !self.bots.contains_key(&botid) {
             log!("**[TGConnector] Error Invalid bot id {} passed", botid);
             return Ok(-1);
@@ -135,7 +135,7 @@ impl super::TgConnector {
     }
 
     pub fn cache_get_message(
-        &mut self,
+        &self,
         _amx: &AMX,
         dest: &mut Cell,
         size: usize,
@@ -145,7 +145,7 @@ impl super::TgConnector {
     }
 
     pub fn cache_get_username(
-        &mut self,
+        &self,
         _amx: &AMX,
         dest: &mut Cell,
         size: usize,
@@ -155,7 +155,7 @@ impl super::TgConnector {
     }
 
     pub fn cache_get_user_first_name(
-        &mut self,
+        &self,
         _amx: &AMX,
         dest: &mut Cell,
         size: usize,
@@ -165,7 +165,7 @@ impl super::TgConnector {
     }
 
     pub fn cache_get_user_last_name(
-        &mut self,
+        &self,
         _amx: &AMX,
         dest: &mut Cell,
         size: usize,
@@ -175,7 +175,7 @@ impl super::TgConnector {
     }
 
     pub fn cache_get_chatid(
-        &mut self,
+        &self,
         _amx: &AMX,
         dest: &mut Cell,
         size: usize,
@@ -185,7 +185,7 @@ impl super::TgConnector {
     }
 
     pub fn cache_get_chatname(
-        &mut self,
+        &self,
         _amx: &AMX,
         dest: &mut Cell,
         size: usize,
@@ -195,7 +195,7 @@ impl super::TgConnector {
     }
 
     pub fn cache_get_chattype(
-        &mut self,
+        &self,
         _amx: &AMX,
         dest: &mut Cell,
         size: usize,
@@ -205,7 +205,7 @@ impl super::TgConnector {
     }
 
     pub fn get_user_status(
-        &mut self,
+        &self,
         _amx: &AMX,
         botid: usize,
         userid: i32,
@@ -239,7 +239,7 @@ impl super::TgConnector {
     }
 
     pub fn get_username_from_id(
-        &mut self,
+        &self,
         _amx: &AMX,
         botid: usize,
         userid: i32,
@@ -284,7 +284,7 @@ impl super::TgConnector {
     }
 
     pub fn get_display_name_from_id(
-        &mut self,
+        &self,
         _amx: &AMX,
         botid: usize,
         userid: i32,
@@ -330,7 +330,7 @@ impl super::TgConnector {
     }
 
     pub fn get_chat_members_count(
-        &mut self,
+        &self,
         _amx: &AMX,
         botid: usize,
         chatid: String,
@@ -348,7 +348,7 @@ impl super::TgConnector {
     }
 
     pub fn get_chat_title(
-        &mut self,
+        &self,
         _amx: &AMX,
         botid: usize,
         chatid: String,
@@ -389,7 +389,7 @@ impl super::TgConnector {
     }
 
     pub fn get_chat_description(
-        &mut self,
+        &self,
         _amx: &AMX,
         botid: usize,
         chatid: String,
