@@ -7,7 +7,7 @@
 #endif
 #define _tgconnector_included
 
-#define TGCONNECTOR_VERSION 10
+#define TGCONNECTOR_VERSION 11
 #define INVALID_MESSAGE_ID (TGMessage:-1)
 #define INVALID_BOT_ID (TGBot:-1)
 
@@ -29,8 +29,8 @@ enum TGUserStatus {
 };
 
 //basic
-native TGBot:TGConnect(const token[]);
-native TGBot:TGConnectFromEnv(const variable[]);
+native TGBot:TGConnect(const token[],thread_limit=3);
+native TGBot:TGConnectFromEnv(const variable[],thread_limit=3);
 native TGSendMessage(TGBot:bot,const TGChatId:chatid[],const text[],TGMessage:reply_id=INVALID_MESSAGE_ID,TGParseMode:parse_mode=TGParseMode:-1,callback[]="");
 native TGDeleteMessage(TGBot:bot,TGChatId:chatid[],TGMessage:messageid);
 native TGEditMessage(TGBot:bot,TGChatId:chatid[],TGMessage:messageid,text[],TGParseMode:parse_mode=TGParseMode:-1);

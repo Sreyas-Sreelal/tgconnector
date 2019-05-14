@@ -1,10 +1,11 @@
 use crate::http::{HttpMethod, HttpRequest};
 use crate::methods::*;
 use crate::types::*;
-use samp_sdk::log;
+use log::error;
 use serde_json::{from_str, to_string};
 use std::collections::VecDeque;
 use std::sync::mpsc::{channel, Receiver, Sender};
+use threadpool::ThreadPool;
 
 pub struct BOT {
     pub api_request_link: String,
@@ -13,10 +14,11 @@ pub struct BOT {
     pub update_sender: Option<Sender<Update>>,
     pub send_message_reciever: Option<Receiver<(Message, String)>>,
     pub send_message_sender: Option<Sender<(Message, String)>>,
+    pub pool: ThreadPool,
 }
 
 impl BOT {
-    pub fn new(bot_token: String) -> Self {
+    pub fn new(bot_token: String, thread_count: i32) -> Self {
         let (update_sender, update_reciever) = channel();
         let (send_message_sender, send_message_reciever) = channel();
 
@@ -27,6 +29,7 @@ impl BOT {
             update_sender: Some(update_sender),
             send_message_reciever: Some(send_message_reciever),
             send_message_sender: Some(send_message_sender),
+            pool: ThreadPool::new(thread_count as usize),
         }
     }
 
@@ -46,12 +49,12 @@ impl BOT {
                     self.get_updates();
                     true
                 } else {
-                    log!("**[TGConnector] Error bot couldn't connect.{:?}", response);
+                    error!("Bot couldn't connect.{:?}", response);
                     false
                 }
             }
             Err(err) => {
-                log!("{:?}", err);
+                error!("{:?}", err);
                 false
             }
         }
@@ -63,7 +66,7 @@ impl BOT {
 
         let mut getupdate = GetUpdates { offset: -2 };
 
-        std::thread::spawn(move || loop {
+        self.pool.execute(move || loop {
             let request = HttpRequest {
                 url: format!("{}/getUpdates", api_link),
                 method: HttpMethod::Post,
@@ -96,7 +99,7 @@ impl BOT {
                 }
 
                 Err(err) => {
-                    log!("{:?}", err);
+                    error!("{:?}", err);
                     continue;
                 }
             }
@@ -107,7 +110,7 @@ impl BOT {
         let send_message_move = self.send_message_sender.clone();
         let api_link = self.api_request_link.clone();
 
-        std::thread::spawn(move || {
+        self.pool.execute(move || {
             let request = HttpRequest {
                 url: format!("{}/sendmessage", api_link),
                 method: HttpMethod::Post,
@@ -118,7 +121,7 @@ impl BOT {
                 Ok(response) => {
                     let response: APIResponse<Message> = from_str(&response).unwrap();
                     if !response.ok {
-                        log!("**[TGConnector] Error Couldn't send message.{:?}", response);
+                        error!("Couldn't send message.{:?}", response);
                     } else if callback != None {
                         let sender = send_message_move.as_ref().unwrap();
                         let send_data = (response.body.unwrap(), callback.unwrap());
@@ -127,7 +130,7 @@ impl BOT {
                 }
 
                 Err(err) => {
-                    log!("{:?}", err);
+                    error!("{:?}", err);
                 }
             }
         });
@@ -136,7 +139,7 @@ impl BOT {
     pub fn delete_message(&self, delete_message_obj: DeleteMessage) {
         let api_link = self.api_request_link.clone();
 
-        std::thread::spawn(move || {
+        self.pool.execute(move || {
             let request = HttpRequest {
                 url: format!("{}/deletemessage", api_link),
                 method: HttpMethod::Post,
@@ -147,16 +150,15 @@ impl BOT {
                 Ok(response) => {
                     let response: APIResponse<bool> = from_str(&response).unwrap();
                     if !response.ok {
-                        log!(
-                            "**[TGConnector] Error Message {:?} couldn't delete. {:?}",
-                            delete_message_obj,
-                            response
+                        error!(
+                            "Message {:?} couldn't delete. {:?}",
+                            delete_message_obj, response
                         );
                     }
                 }
 
                 Err(err) => {
-                    log!("{:?}", err);
+                    error!("{:?}", err);
                 }
             }
         });
@@ -165,7 +167,7 @@ impl BOT {
     pub fn edit_message(&self, edit_message_obj: EditMessageText) {
         let api_link = self.api_request_link.clone();
 
-        std::thread::spawn(move || {
+        self.pool.execute(move || {
             let request = HttpRequest {
                 url: format!("{}/editmessagetext", api_link),
                 method: HttpMethod::Post,
@@ -176,16 +178,15 @@ impl BOT {
                 Ok(response) => {
                     let response: APIResponse<Message> = from_str(&response).unwrap();
                     if !response.ok {
-                        log!(
-                            "**[TGConnector] Error Message {:?} couldn't edit {:?}",
-                            edit_message_obj,
-                            response
+                        error!(
+                            "Message {:?} couldn't edit {:?}",
+                            edit_message_obj, response
                         );
                     }
                 }
 
                 Err(err) => {
-                    log!("{:?}", err);
+                    error!("{:?}", err);
                 }
             }
         });
@@ -204,13 +205,13 @@ impl BOT {
                 if response.ok {
                     response.body
                 } else {
-                    log!("**[TGConnector] Error get_chat_member.{:?}", response);
+                    error!("get_chat_member.{:?}", response);
                     None
                 }
             }
 
             Err(err) => {
-                log!("{:?}", err);
+                error!("{:?}", err);
                 None
             }
         }
@@ -229,16 +230,13 @@ impl BOT {
                 if response.ok {
                     response.body
                 } else {
-                    log!(
-                        "**[TGConnector] Error get_chat_members_count.{:?}",
-                        response
-                    );
+                    error!("get_chat_members_count.{:?}", response);
                     None
                 }
             }
 
             Err(err) => {
-                log!("{:?}", err);
+                error!("{:?}", err);
                 None
             }
         }
@@ -257,13 +255,13 @@ impl BOT {
                 if response.ok {
                     response.body
                 } else {
-                    log!("**[TGConnector] Error get_chat.{:?}", response);
+                    error!("get_chat.{:?}", response);
                     None
                 }
             }
 
             Err(err) => {
-                log!("{:?}", err);
+                error!("{:?}", err);
                 None
             }
         }

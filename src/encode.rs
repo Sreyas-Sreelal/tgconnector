@@ -1,10 +1,13 @@
 use encoding::all::WINDOWS_1251;
 use encoding::{EncoderTrap, Encoding};
-use samp_sdk::amx::{AmxError, AmxResult};
+use std::str::from_utf8;
 
-//Just a modification to encode function to replace the chararcter on error instead of giving up entire thing
-pub fn encode_replace(string: &str) -> AmxResult<Vec<u8>> {
-    WINDOWS_1251
-        .encode(string, EncoderTrap::Replace)
-        .map_err(|_| AmxError::Format)
+pub fn encode_replace(string: &str) -> Result<String, ()> {
+    match WINDOWS_1251.encode(string, EncoderTrap::Replace) {
+        Ok(bytes) => match from_utf8(&bytes) {
+            Ok(data) => Ok(String::from(data)),
+            Err(_) => Err(()),
+        },
+        Err(_) => Err(()),
+    }
 }

@@ -1,8 +1,7 @@
 use crate::api::BOT;
 use crate::callbacks;
 use crate::types::*;
-use samp_sdk::amx::AmxResult;
-use samp_sdk::types::Cell;
+use samp::prelude::*;
 use std::collections::LinkedList;
 
 pub fn clear_caches(cache: &mut LinkedList<String>) {
@@ -133,17 +132,17 @@ pub fn on_send_message_process(plugin: &mut super::TgConnector) {
             if message.text != None {
                 plugin.telegram_messages.push_front(message.text.unwrap());
                 plugin.telegram_chatid.push_front(message.chat.id);
-                callbacks::on_tg_send_message(&plugin.amx_list, callback, *id, message.message_id);
+                callbacks::on_tg_send_message(&plugin.amx_list, &callback, *id, message.message_id);
             }
         }
     }
 }
 
-pub fn create_bot(plugin: &mut super::TgConnector, mut api: BOT) -> AmxResult<Cell> {
+pub fn create_bot(plugin: &mut super::TgConnector, mut api: BOT) -> AmxResult<i32> {
     if api.connect() {
         plugin.bots.insert(plugin.bot_context_id, api);
         plugin.bot_context_id += 1;
-        Ok(plugin.bot_context_id as Cell - 1)
+        Ok(plugin.bot_context_id as i32 - 1)
     } else {
         Ok(-1)
     }

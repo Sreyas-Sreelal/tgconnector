@@ -2,50 +2,61 @@ use crate::api::BOT;
 use crate::encode::encode_replace;
 use crate::internals::create_bot;
 use crate::methods::*;
-use samp_sdk::amx::AmxResult;
-use samp_sdk::amx::AMX;
-use samp_sdk::types::Cell;
-use samp_sdk::{log, set_string};
+use log::error;
+use samp::native;
+use samp::prelude::*;
 
 impl super::TgConnector {
-    pub fn bot_connect(&mut self, _amx: &AMX, token: String) -> AmxResult<Cell> {
-        let api = BOT::new(token);
+    #[native(name = "TGConnect")]
+    pub fn bot_connect(
+        &mut self,
+        _amx: &Amx,
+        token: AmxString,
+        thread_count: i32,
+    ) -> AmxResult<i32> {
+        let api = BOT::new(token.to_string(), thread_count);
         create_bot(self, api)
     }
 
-    pub fn bot_connect_from_env(&mut self, _amx: &AMX, variable: String) -> AmxResult<Cell> {
+    #[native(name = "TGConnectFromEnv")]
+    pub fn bot_connect_from_env(
+        &mut self,
+        _amx: &Amx,
+        variable: AmxString,
+        thread_count: i32,
+    ) -> AmxResult<i32> {
+        let variable = variable.to_string();
         let token = std::env::var_os(&variable);
 
         if token == None {
-            log!(
-                "**[TGConnector] Error environment variable {:?} is not set",
-                variable
-            );
+            error!("Environment variable {:?} is not set", variable);
             return Ok(-1);
         }
 
         let token = token.unwrap().into_string().unwrap();
-        let api = BOT::new(token);
+        let api = BOT::new(token, thread_count);
 
         create_bot(self, api)
     }
 
+    #[native(name = "TGSendMessage")]
     pub fn bot_send_message(
         &self,
-        _amx: &AMX,
+        _amx: &Amx,
         botid: usize,
-        chatid: String,
-        text: String,
+        chatid: AmxString,
+        text: AmxString,
         reply_id: i32,
         parse_mode: i32,
-        callback: String,
-    ) -> AmxResult<Cell> {
+        callback: AmxString,
+    ) -> AmxResult<i32> {
         if !self.bots.contains_key(&botid) {
-            log!("**[TGConnector] Error Invalid bot id {} passed", botid);
+            error!("Invalid bot id {} passed", botid);
             return Ok(0);
         }
 
         let reply = if reply_id == -1 { None } else { Some(reply_id) };
+        let callback = callback.to_string();
 
         let parsemode: Option<&str> = match parse_mode {
             0 => Some("HTML"),
@@ -60,8 +71,8 @@ impl super::TgConnector {
         };
 
         let send_message_obj = SendMessage {
-            chat_id: chatid,
-            text,
+            chat_id: chatid.to_string(),
+            text: text.to_string(),
             reply_to_message_id: reply,
             parse_mode: parsemode,
         };
@@ -70,20 +81,21 @@ impl super::TgConnector {
         Ok(1)
     }
 
+    #[native(name = "TGDeleteMessage")]
     pub fn bot_delete_message(
         &self,
-        _amx: &AMX,
+        _amx: &Amx,
         botid: usize,
-        chatid: String,
+        chatid: AmxString,
         messageid: i32,
-    ) -> AmxResult<Cell> {
+    ) -> AmxResult<i32> {
         if !self.bots.contains_key(&botid) {
-            log!("**[TGConnector] Error Invalid bot id {} passed", botid);
+            error!("Invalid bot id {} passed", botid);
             return Ok(0);
         }
 
         let delete_message_obj = DeleteMessage {
-            chat_id: chatid,
+            chat_id: chatid.to_string(),
             message_id: messageid,
         };
 
@@ -91,15 +103,16 @@ impl super::TgConnector {
         Ok(1)
     }
 
+    #[native(name = "TGEditMessage")]
     pub fn bot_edit_message(
         &self,
-        _amx: &AMX,
+        _amx: &Amx,
         botid: usize,
-        chatid: String,
+        chatid: AmxString,
         messageid: i32,
-        text: String,
+        text: AmxString,
         parse_mode: i32,
-    ) -> AmxResult<Cell> {
+    ) -> AmxResult<i32> {
         let parsemode: Option<&str> = match parse_mode {
             0 => Some("HTML"),
             1 => Some("markdown"),
@@ -107,13 +120,13 @@ impl super::TgConnector {
         };
 
         if !self.bots.contains_key(&botid) {
-            log!("**[TGConnector] Error Invalid bot id {} passed", botid);
+            error!("Error Invalid bot id {} passed", botid);
             return Ok(0);
         }
 
         let edit_message_obj = EditMessageText {
-            chat_id: chatid,
-            text,
+            chat_id: chatid.to_string(),
+            text: text.to_string(),
             message_id: messageid,
             parse_mode: parsemode,
         };
@@ -122,74 +135,103 @@ impl super::TgConnector {
         Ok(1)
     }
 
-    pub fn get_bot_user_id(&self, _amx: &AMX, botid: usize) -> AmxResult<Cell> {
+    #[native(name = "TGGetBotUserId")]
+    pub fn get_bot_user_id(&self, _amx: &Amx, botid: usize) -> AmxResult<i32> {
         if !self.bots.contains_key(&botid) {
-            log!("**[TGConnector] Error Invalid bot id {} passed", botid);
+            error!("Invalid bot id {} passed", botid);
             return Ok(-1);
         }
         Ok(self.bots[&botid].user_id)
     }
 
-    pub fn cache_get_message(&self, _amx: &AMX, dest: &mut Cell, size: usize) -> AmxResult<Cell> {
+    #[native(name = "TGCacheGetMessage")]
+    pub fn cache_get_message(
+        &self,
+        _amx: &Amx,
+        dest: UnsizedBuffer,
+        size: usize,
+    ) -> AmxResult<i32> {
         let cache_list = &self.telegram_messages;
         cache_get!(cache_list, dest, size)
     }
 
-    pub fn cache_get_username(&self, _amx: &AMX, dest: &mut Cell, size: usize) -> AmxResult<Cell> {
+    #[native(name = "TGCacheGetUserName")]
+    pub fn cache_get_username(
+        &self,
+        _amx: &Amx,
+        dest: UnsizedBuffer,
+        size: usize,
+    ) -> AmxResult<i32> {
         let cache_list = &self.telegram_username;
         cache_get!(cache_list, dest, size)
     }
 
+    #[native(name = "TGCacheGetUserFirstName")]
     pub fn cache_get_user_first_name(
         &self,
-        _amx: &AMX,
-        dest: &mut Cell,
+        _amx: &Amx,
+        dest: UnsizedBuffer,
         size: usize,
-    ) -> AmxResult<Cell> {
+    ) -> AmxResult<i32> {
         let cache_list = &self.telegram_firstname;
         cache_get!(cache_list, dest, size)
     }
 
+    #[native(name = "TGCacheGetUserLastName")]
     pub fn cache_get_user_last_name(
         &self,
-        _amx: &AMX,
-        dest: &mut Cell,
+        _amx: &Amx,
+        dest: UnsizedBuffer,
         size: usize,
-    ) -> AmxResult<Cell> {
+    ) -> AmxResult<i32> {
         let cache_list = &self.telegram_lastname;
         cache_get!(cache_list, dest, size)
     }
 
-    pub fn cache_get_chatid(&self, _amx: &AMX, dest: &mut Cell, size: usize) -> AmxResult<Cell> {
+    #[native(name = "TGCacheGetChatId")]
+    pub fn cache_get_chatid(&self, _amx: &Amx, dest: UnsizedBuffer, size: usize) -> AmxResult<i32> {
         let cache_list = &self.telegram_chatid;
         cache_get!(cache_list, dest, size)
     }
 
-    pub fn cache_get_chatname(&self, _amx: &AMX, dest: &mut Cell, size: usize) -> AmxResult<Cell> {
+    #[native(name = "TGCacheGetChatName")]
+    pub fn cache_get_chatname(
+        &self,
+        _amx: &Amx,
+        dest: UnsizedBuffer,
+        size: usize,
+    ) -> AmxResult<i32> {
         let cache_list = &self.telegram_chatname;
         cache_get!(cache_list, dest, size)
     }
 
-    pub fn cache_get_chattype(&self, _amx: &AMX, dest: &mut Cell, size: usize) -> AmxResult<Cell> {
+    #[native(name = "TGCacheGetChatType")]
+    pub fn cache_get_chattype(
+        &self,
+        _amx: &Amx,
+        dest: UnsizedBuffer,
+        size: usize,
+    ) -> AmxResult<i32> {
         let cache_list = &self.telegram_chattype;
         cache_get!(cache_list, dest, size)
     }
 
+    #[native(name = "TGGetUserChatStatus")]
     pub fn get_user_status(
         &self,
-        _amx: &AMX,
+        _amx: &Amx,
         botid: usize,
         userid: i32,
-        chatid: String,
-    ) -> AmxResult<Cell> {
+        chatid: AmxString,
+    ) -> AmxResult<i32> {
         if !self.bots.contains_key(&botid) {
-            log!("**[TGConnector] Error Invalid bot id {} passed", botid);
+            error!("**[TGConnector] Error Invalid bot id {} passed", botid);
             return Ok(0);
         }
 
         let getchatmember = GetChatMember {
             user_id: userid,
-            chat_id: chatid,
+            chat_id: chatid.to_string(),
         };
         let chatmember = self.bots[&botid].get_chat_member(getchatmember);
         if chatmember.is_none() {
@@ -209,22 +251,24 @@ impl super::TgConnector {
         }
     }
 
+    #[native(name = "TGGetUserNameFromId")]
     pub fn get_username_from_id(
         &self,
-        _amx: &AMX,
+        _amx: &Amx,
         botid: usize,
         userid: i32,
-        chatid: String,
-        dest: &mut Cell,
+        chatid: AmxString,
+        dest: UnsizedBuffer,
         size: usize,
-    ) -> AmxResult<Cell> {
+    ) -> AmxResult<i32> {
         if !self.bots.contains_key(&botid) {
-            log!("**[TGConnector] Error Invalid bot id {} passed", botid);
+            error!("Invalid bot id {} passed", botid);
             return Ok(0);
         }
+
         let getchatmember = GetChatMember {
             user_id: userid,
-            chat_id: chatid,
+            chat_id: chatid.to_string(),
         };
         let chatmember = self.bots[&botid].get_chat_member(getchatmember);
 
@@ -240,12 +284,13 @@ impl super::TgConnector {
 
         match encode_replace(username.as_ref().unwrap()) {
             Ok(encoded) => {
-                set_string!(encoded, dest, size);
+                let mut dest = dest.into_sized_buffer(size);
+                let _ = samp::cell::string::put_in_buffer(&mut dest, &encoded);
                 Ok(1)
             }
             Err(err) => {
-                log!(
-                    "**[TGConnector][get_username_from_id] Failed encoding {:?} \n {:?}",
+                error!(
+                    "[get_username_from_id] Failed encoding {:?} \n {:?}",
                     username.as_ref().unwrap(),
                     err
                 );
@@ -254,23 +299,24 @@ impl super::TgConnector {
         }
     }
 
+    #[native(name = "TGGetDisplayNameFromId")]
     pub fn get_display_name_from_id(
         &self,
-        _amx: &AMX,
+        _amx: &Amx,
         botid: usize,
         userid: i32,
-        chatid: String,
-        dest: &mut Cell,
+        chatid: AmxString,
+        dest: UnsizedBuffer,
         size: usize,
-    ) -> AmxResult<Cell> {
+    ) -> AmxResult<i32> {
         if !self.bots.contains_key(&botid) {
-            log!("**[TGConnector] Error Invalid bot id {} passed", botid);
+            error!("Invalid bot id {} passed", botid);
             return Ok(0);
         }
 
         let getchatmember = GetChatMember {
             user_id: userid,
-            chat_id: chatid,
+            chat_id: chatid.to_string(),
         };
 
         let chatmember = self.bots[&botid].get_chat_member(getchatmember);
@@ -286,52 +332,59 @@ impl super::TgConnector {
 
         match encode_replace(&displayname) {
             Ok(encoded) => {
-                set_string!(encoded, dest, size);
+                let mut dest = dest.into_sized_buffer(size);
+                let _ = samp::cell::string::put_in_buffer(&mut dest, &encoded);
                 Ok(1)
             }
             Err(err) => {
-                log!(
-                    "**[TGConnector][get_display_name_from_id] Failed encoding {:?} \n {:?}",
-                    displayname,
-                    err
+                error!(
+                    "get_display_name_from_id] Failed encoding {:?} \n {:?}",
+                    displayname, err
                 );
                 Ok(0)
             }
         }
     }
 
+    #[native(name = "TGGetChatMembersCount")]
     pub fn get_chat_members_count(
         &self,
-        _amx: &AMX,
+        _amx: &Amx,
         botid: usize,
-        chatid: String,
-    ) -> AmxResult<Cell> {
+        chatid: AmxString,
+    ) -> AmxResult<i32> {
         if !self.bots.contains_key(&botid) {
-            log!("**[TGConnector] Error Invalid bot id {} passed", botid);
+            error!("Invalid bot id {} passed", botid);
             return Ok(-1);
         }
 
-        let getchatmembercount = GetChatMembersCount { chat_id: chatid };
+        let getchatmembercount = GetChatMembersCount {
+            chat_id: chatid.to_string(),
+        };
+
         match self.bots[&botid].get_chat_members_count(getchatmembercount) {
             None => Ok(-1),
             Some(count) => Ok(count),
         }
     }
 
+    #[native(name = "TGGetChatTitle")]
     pub fn get_chat_title(
         &self,
-        _amx: &AMX,
+        _amx: &Amx,
         botid: usize,
-        chatid: String,
-        title: &mut Cell,
+        chatid: AmxString,
+        dest: UnsizedBuffer,
         size: usize,
-    ) -> AmxResult<Cell> {
+    ) -> AmxResult<i32> {
         if !self.bots.contains_key(&botid) {
-            log!("**[TGConnector] Error Invalid bot id {} passed", botid);
+            error!("Invalid bot id {} passed", botid);
             return Ok(0);
         }
 
-        let getchat = GetChat { chat_id: chatid };
+        let getchat = GetChat {
+            chat_id: chatid.to_string(),
+        };
 
         let chat = self.bots[&botid].get_chat(getchat);
         if chat.is_none() {
@@ -345,34 +398,37 @@ impl super::TgConnector {
         let chat_title = chat.unwrap().title.unwrap();
         match encode_replace(&chat_title) {
             Ok(encoded) => {
-                set_string!(encoded, title, size);
+                let mut dest = dest.into_sized_buffer(size);
+                let _ = samp::cell::string::put_in_buffer(&mut dest, &encoded);
                 Ok(1)
             }
             Err(err) => {
-                log!(
-                    "**[TGConnector][get_chat_title] Failed encoding {:?} \n {:?}",
-                    chat_title,
-                    err
+                error!(
+                    "[get_chat_title] Failed encoding {:?} \n {:?}",
+                    chat_title, err
                 );
                 Ok(0)
             }
         }
     }
 
+    #[native(name = "TGGetChatDescription")]
     pub fn get_chat_description(
         &self,
-        _amx: &AMX,
+        _amx: &Amx,
         botid: usize,
-        chatid: String,
-        description: &mut Cell,
+        chatid: AmxString,
+        dest: UnsizedBuffer,
         size: usize,
-    ) -> AmxResult<Cell> {
+    ) -> AmxResult<i32> {
         if !self.bots.contains_key(&botid) {
-            log!("**[TGConnector] Error Invalid bot id {} passed", botid);
+            error!("Invalid bot id {} passed", botid);
             return Ok(0);
         }
 
-        let getchat = GetChat { chat_id: chatid };
+        let getchat = GetChat {
+            chat_id: chatid.to_string(),
+        };
 
         let chat = self.bots[&botid].get_chat(getchat);
         if chat.is_none() {
@@ -386,14 +442,14 @@ impl super::TgConnector {
         let chat_description = chat.unwrap().description.unwrap();
         match encode_replace(&chat_description) {
             Ok(encoded) => {
-                set_string!(encoded, description, size);
+                let mut dest = dest.into_sized_buffer(size);
+                let _ = samp::cell::string::put_in_buffer(&mut dest, &encoded);
                 Ok(1)
             }
             Err(err) => {
-                log!(
-                    "**[TGConnector][get_chat_description] Failed encoding {:?} \n {:?}",
-                    chat_description,
-                    err
+                error!(
+                    "[get_chat_description] Failed encoding {:?} \n {:?}",
+                    chat_description, err
                 );
                 Ok(0)
             }

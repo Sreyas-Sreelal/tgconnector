@@ -9,8 +9,14 @@
 *dll
 *so
 *zip
+*log
 
 /dependencies/
+/dependencies/
+/gamemodes/
+/plugins/
+/scriptfiles/
+/filterscripts/
 
 announce
 samp03svr

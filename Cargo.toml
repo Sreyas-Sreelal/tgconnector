@@ -1,6 +1,6 @@
 [package]
 name = "tgconnector"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Sreyas-Sreelal"]
 edition = "2018"
 
@@ -13,7 +13,10 @@ lto = true
 panic = "abort"
 
 [dependencies]
-samp-sdk = {git = "https://github.com/ZOTTCE/samp-sdk"}
+samp = {git="https://github.com/ZOTTCE/samp-rs/",branch="async-amx",features = ["async"]}
+log = "0.4.6"
+fern = "0.5.7"
+threadpool = "1.7.1"
 minihttp = {git = "https://github.com/Sreyas-Sreelal/minihttp"}
 serde_json = "1.0.38"
 serde = "1.0.86"

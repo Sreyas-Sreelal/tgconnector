@@ -1,7 +1,7 @@
 #define RUN_TESTS
 
 #include <a_samp>
-#include <YSI\y_testing>
+#include <YSI_Core\y_testing>
 
 #include "../include/tgconnector.inc"
 
@@ -22,11 +22,11 @@ Test:TestValidToken() {
 	ASSERT(g_bot != INVALID_BOT_ID);
 }
 Test:TGGetBotUserId() {
-	new 
+	new
 		TGUser:userid = TGGetBotUserId(g_bot),
 		name[34],
 		username[32];
-	
+
 	TGGetDisplayNameFromId(g_bot,userid,TGChatId:"562896556",name);
 	new bool:name_check = !strcmp("samp",name);
 	ASSERT(name_check);
@@ -34,7 +34,7 @@ Test:TGGetBotUserId() {
 	TGGetUserNameFromId(g_bot,userid,TGChatId:"562896556",username);
 	new bool:username_check = !strcmp("samptg_bot",username);
 	ASSERT(username_check);
-	
+
 	new TGUserStatus:status = TGGetUserChatStatus(g_bot,userid,TGChatId:"562896556");
 	ASSERT(status == TG_MEMBER);
 
