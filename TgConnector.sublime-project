@@ -1,0 +1,19 @@
+{
+	"folders":
+	[
+		{
+			"path": "."
+		}
+	],
+	"settings":
+	{
+		"LSP":
+		{
+			"rls":
+			{
+				"enabled": true,
+				"command":["rustup","run","stable-i686","rls"]
+			}
+		}
+	}
+}
