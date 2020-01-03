@@ -18,10 +18,7 @@ impl HttpRequest {
             Ok(requests_obj) => requests_obj,
 
             Err(err) => {
-                return Err(format!(
-                    "**[TGConnector] Error building request to telegram api\n{:?}",
-                    err
-                ));
+                return Err(format!("Error building request to telegram api\n{:?}", err));
             }
         };
         let method = match self.method {
@@ -40,10 +37,7 @@ impl HttpRequest {
         match method.send() {
             Ok(data) => Ok(data.text()),
 
-            Err(err) => Err(format!(
-                "**[TGConnector] Error sending request to telegram api\n{:?}",
-                err
-            )),
+            Err(err) => Err(format!("Error sending request to telegram api\n{:?}", err)),
         }
     }
 }
