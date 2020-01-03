@@ -2,6 +2,8 @@ use crate::http::{HttpMethod, HttpRequest};
 use crate::methods::*;
 use crate::types::*;
 use log::error;
+use serde::de::DeserializeOwned;
+use serde::Serialize;
 use serde_json::{from_str, to_string};
 use std::collections::VecDeque;
 use std::sync::mpsc::{channel, Receiver, Sender};
@@ -63,20 +65,13 @@ impl BOT {
     fn get_updates(&self) {
         let update_move = self.update_sender.clone();
         let api_link = self.api_request_link.clone();
-
         let mut getupdate = GetUpdates { offset: -2 };
 
         self.pool.execute(move || loop {
-            let request = HttpRequest {
-                url: format!("{}/getUpdates", api_link),
-                method: HttpMethod::Post,
-                body: Some(to_string(&getupdate).unwrap()),
-            };
-
-            match request.make_request() {
-                Ok(response) => {
-                    let update: APIResponse<VecDeque<Update>> = from_str(&response).unwrap();
-
+            let update: Result<APIResponse<VecDeque<Update>>, String> =
+                telegram_request("getUpdates", &api_link, &getupdate);
+            match update {
+                Ok(update) => {
                     let mut check_result: VecDeque<Update> = match update.body {
                         None => {
                             continue;
@@ -111,15 +106,10 @@ impl BOT {
         let api_link = self.api_request_link.clone();
 
         self.pool.execute(move || {
-            let request = HttpRequest {
-                url: format!("{}/sendmessage", api_link),
-                method: HttpMethod::Post,
-                body: Some(to_string(&send_message_obj).unwrap()),
-            };
-
-            match request.make_request() {
+            let response: Result<APIResponse<Message>, String> =
+                telegram_request("sendmessage", &api_link, &send_message_obj);
+            match response {
                 Ok(response) => {
-                    let response: APIResponse<Message> = from_str(&response).unwrap();
                     if !response.ok {
                         error!("Couldn't send message.{:?}", response);
                     } else if callback != None {
@@ -140,15 +130,11 @@ impl BOT {
         let api_link = self.api_request_link.clone();
 
         self.pool.execute(move || {
-            let request = HttpRequest {
-                url: format!("{}/deletemessage", api_link),
-                method: HttpMethod::Post,
-                body: Some(to_string(&delete_message_obj).unwrap()),
-            };
+            let response: Result<APIResponse<bool>, String> =
+                telegram_request("deletemessage", &api_link, &delete_message_obj);
 
-            match request.make_request() {
+            match response {
                 Ok(response) => {
-                    let response: APIResponse<bool> = from_str(&response).unwrap();
                     if !response.ok {
                         error!(
                             "Message {:?} couldn't delete. {:?}",
@@ -168,15 +154,10 @@ impl BOT {
         let api_link = self.api_request_link.clone();
 
         self.pool.execute(move || {
-            let request = HttpRequest {
-                url: format!("{}/editmessagetext", api_link),
-                method: HttpMethod::Post,
-                body: Some(to_string(&edit_message_obj).unwrap()),
-            };
-
-            match request.make_request() {
+            let response: Result<APIResponse<Message>, String> =
+                telegram_request("editmessagetext", &api_link, &edit_message_obj);
+            match response {
                 Ok(response) => {
-                    let response: APIResponse<Message> = from_str(&response).unwrap();
                     if !response.ok {
                         error!(
                             "Message {:?} couldn't edit {:?}",
@@ -193,15 +174,11 @@ impl BOT {
     }
 
     pub fn get_chat_member(&self, getchatmember: GetChatMember) -> Option<ChatMember> {
-        let request = HttpRequest {
-            url: format!("{}/getchatmember", self.api_request_link),
-            method: HttpMethod::Post,
-            body: Some(to_string(&getchatmember).unwrap()),
-        };
+        let response: Result<APIResponse<ChatMember>, String> =
+            telegram_request("getchatmember", &self.api_request_link, &getchatmember);
 
-        match request.make_request() {
+        match response {
             Ok(response) => {
-                let response: APIResponse<ChatMember> = from_str(&response).unwrap();
                 if response.ok {
                     response.body
                 } else {
@@ -218,15 +195,14 @@ impl BOT {
     }
 
     pub fn get_chat_members_count(&self, getchatmemberscount: GetChatMembersCount) -> Option<i32> {
-        let request = HttpRequest {
-            url: format!("{}/getchatmemberscount", self.api_request_link),
-            method: HttpMethod::Post,
-            body: Some(to_string(&getchatmemberscount).unwrap()),
-        };
+        let response: Result<APIResponse<i32>, String> = telegram_request(
+            "getchatmemberscount",
+            &self.api_request_link,
+            &getchatmemberscount,
+        );
 
-        match request.make_request() {
+        match response {
             Ok(response) => {
-                let response: APIResponse<i32> = from_str(&response).unwrap();
                 if response.ok {
                     response.body
                 } else {
@@ -243,15 +219,11 @@ impl BOT {
     }
 
     pub fn get_chat(&self, getchat: GetChat) -> Option<Chat> {
-        let request = HttpRequest {
-            url: format!("{}/getchat", self.api_request_link),
-            method: HttpMethod::Post,
-            body: Some(to_string(&getchat).unwrap()),
-        };
+        let response: Result<APIResponse<Chat>, String> =
+            telegram_request("getchat", &self.api_request_link, &getchat);
 
-        match request.make_request() {
+        match response {
             Ok(response) => {
-                let response: APIResponse<Chat> = from_str(&response).unwrap();
                 if response.ok {
                     response.body
                 } else {
@@ -265,5 +237,22 @@ impl BOT {
                 None
             }
         }
+    }
+}
+
+fn telegram_request<T: DeserializeOwned, B: Serialize>(
+    endpoint: &str,
+    api_link: &str,
+    body: B,
+) -> Result<APIResponse<T>, String> {
+    let request = HttpRequest {
+        url: format!("{}/{}", api_link, endpoint),
+        method: HttpMethod::Post,
+        body: Some(to_string(&body).unwrap()),
+    };
+
+    match request.make_request() {
+        Ok(response) => Ok(from_str(&response).unwrap()),
+        Err(err) => Err(err),
     }
 }
