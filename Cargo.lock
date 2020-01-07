@@ -590,7 +590,7 @@ dependencies = [
 
 [[package]]
 name = "tgconnector"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "encoding 0.2.33 (registry+https://github.com/rust-lang/crates.io-index)",
  "fern 0.5.8 (registry+https://github.com/rust-lang/crates.io-index)",
