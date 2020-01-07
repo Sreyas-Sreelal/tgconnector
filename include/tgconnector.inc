@@ -16,7 +16,8 @@ public _tgconnector_version = TGCONNECTOR_VERSION;
 
 enum TGParseMode {
 	HTML,
-	MARKDOWN
+	MARKDOWN,
+	MARKDOWN2
 };
 
 enum TGUserStatus {

@@ -147,3 +147,12 @@ pub fn create_bot(plugin: &mut super::TgConnector, mut api: BOT) -> AmxResult<i3
         Ok(-1)
     }
 }
+
+pub fn get_parse_mode(numerical_code: i32) -> Option<&'static str> {
+    match numerical_code {
+        0 => Some("HTML"),
+        1 => Some("markdown"),
+        2 => Some("MarkdownV2"),
+        _ => None,
+    }
+}

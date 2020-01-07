@@ -19,6 +19,8 @@ Test:TestInvalidToken() {
 Test:TestValidToken() {
 	printf("id is %d",_:g_bot);
 	TGSendMessage(g_bot,TGChatId:"@testsamp","`markdown text` ***bold*** _italic_ 123",.parse_mode=MARKDOWN,.callback="SendingMessage");
+	TGSendMessage(g_bot,TGChatId:"@testsamp","__underline__",.parse_mode=MARKDOWN2);
+	
 	ASSERT(g_bot != INVALID_BOT_ID);
 }
 Test:TGGetBotUserId() {
@@ -60,8 +62,8 @@ Test:TGGetUserNameFromId() {
 
 Test:TGGetDisplayNameFromId() {
 	new displayname[32];
-	TGGetDisplayNameFromId(g_bot,TGUser:562896556,TGChatId:"562896556",displayname);
-	new check = !strcmp("__SyS",displayname) && displayname[0] != '\0';
+	TGGetDisplayNameFromId(g_bot,TGUser:808616883,TGChatId:"808616883",displayname);
+	new check = !strcmp("_SyS_",displayname) && displayname[0] != '\0';
 	ASSERT(check == 1);
 }
 

@@ -1,6 +1,6 @@
 use crate::api::BOT;
 use crate::encode::encode_replace;
-use crate::internals::create_bot;
+use crate::internals::{create_bot, get_parse_mode};
 use crate::methods::*;
 use log::error;
 use samp::native;
@@ -57,12 +57,7 @@ impl super::TgConnector {
 
         let reply = if reply_id == -1 { None } else { Some(reply_id) };
         let callback = callback.to_string();
-
-        let parsemode: Option<&str> = match parse_mode {
-            0 => Some("HTML"),
-            1 => Some("markdown"),
-            _ => None,
-        };
+        let parsemode = get_parse_mode(parse_mode);
 
         let callback = if callback.is_empty() {
             None
@@ -113,11 +108,7 @@ impl super::TgConnector {
         text: AmxString,
         parse_mode: i32,
     ) -> AmxResult<i32> {
-        let parsemode: Option<&str> = match parse_mode {
-            0 => Some("HTML"),
-            1 => Some("markdown"),
-            _ => None,
-        };
+        let parsemode = get_parse_mode(parse_mode);
 
         if !self.bots.contains_key(&botid) {
             error!("Error Invalid bot id {} passed", botid);
