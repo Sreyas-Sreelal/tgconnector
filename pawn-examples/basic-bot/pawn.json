@@ -1,0 +1,11 @@
+{
+	"user": "SyS",
+	"repo": "basic-bot",
+	"entry": "main.pwn",
+	"output": "main.amx",
+	"dependencies": [
+		"sampctl/samp-stdlib",
+		"sreyas-sreelal/tgconnector",
+		"Southclaws/zcmd"
+	]
+}

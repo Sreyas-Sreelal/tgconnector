@@ -32,6 +32,7 @@ public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 	TGCacheGetChatName(chatname);
 
 	format(server_msg,128,"[%s] %s(%d): %s",chatname,username,_:fromid,message);
+	print(server_msg);
 	SendClientMessageToAll(-1,server_msg);
 
 	return 1;
@@ -50,6 +51,7 @@ public OnTGUserJoined(TGBot:bot,TGUser:userid) {
 	TGCacheGetChatName(chatname);
 
 	format(server_msg,128,"User %s(%d) joined %s(%s)",username,_:userid,chatname,_:chatid);
+	print(server_msg);
 	SendClientMessageToAll(-1,server_msg);
 	return 1;
 }
@@ -66,6 +68,7 @@ public OnTGUserLeft(TGBot:bot,TGUser:userid) {
 	TGCacheGetChatName(chatname);
 
 	format(server_msg,128,"User %s(%d) left %s(%s)",username,_:userid,chatname,_:chatid);
+	print(server_msg);
 	SendClientMessageToAll(-1,server_msg);
 	return 1;
 }
