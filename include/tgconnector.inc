@@ -30,8 +30,8 @@ enum TGUserStatus {
 };
 
 //basic
-native TGBot:TGConnect(const token[],thread_limit=3);
-native TGBot:TGConnectFromEnv(const variable[],thread_limit=3);
+native TGBot:TGConnect(const token[],thread_limit=3,proxy[]="");
+native TGBot:TGConnectFromEnv(const variable[],thread_limit=3,proxy[]="");
 native TGSendMessage(TGBot:bot,const TGChatId:chatid[],const text[],TGMessage:reply_id=INVALID_MESSAGE_ID,TGParseMode:parse_mode=TGParseMode:-1,callback[]="");
 native TGDeleteMessage(TGBot:bot,TGChatId:chatid[],TGMessage:messageid);
 native TGEditMessage(TGBot:bot,TGChatId:chatid[],TGMessage:messageid,text[],TGParseMode:parse_mode=TGParseMode:-1);
