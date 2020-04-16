@@ -12,8 +12,8 @@ impl super::TgConnector {
         &mut self,
         _amx: &Amx,
         token: AmxString,
-        thread_count: i32,
         proxy_url: AmxString,
+        thread_count: i32,
     ) -> AmxResult<i32> {
         let proxy_url = proxy_url.to_string();
         let proxy_url = if proxy_url.is_empty() {
