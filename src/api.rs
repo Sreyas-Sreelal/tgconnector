@@ -17,10 +17,11 @@ pub struct BOT {
     pub send_message_reciever: Option<Receiver<(Message, String)>>,
     pub send_message_sender: Option<Sender<(Message, String)>>,
     pub pool: ThreadPool,
+    pub proxy_url: Option<String>,
 }
 
 impl BOT {
-    pub fn new(bot_token: String, thread_count: i32) -> Self {
+    pub fn new(bot_token: String, thread_count: i32, proxy_url: Option<String>) -> Self {
         let (update_sender, update_reciever) = channel();
         let (send_message_sender, send_message_reciever) = channel();
 
@@ -32,14 +33,16 @@ impl BOT {
             send_message_reciever: Some(send_message_reciever),
             send_message_sender: Some(send_message_sender),
             pool: ThreadPool::new(thread_count as usize),
+            proxy_url,
         }
     }
 
-    pub fn connect(&mut self) -> bool {
+    pub fn connect(&mut self, proxy_url: Option<String>) -> bool {
         let request = HttpRequest {
             url: format!("{}/getme", self.api_request_link),
             method: HttpMethod::Get,
             body: None,
+            proxy_url,
         };
 
         match request.make_request() {
@@ -65,11 +68,12 @@ impl BOT {
     fn get_updates(&self) {
         let update_move = self.update_sender.clone();
         let api_link = self.api_request_link.clone();
+        let proxy_url = self.proxy_url.clone();
         let mut getupdate = GetUpdates { offset: -2 };
 
         self.pool.execute(move || loop {
             let update: Result<APIResponse<VecDeque<Update>>, String> =
-                telegram_request("getUpdates", &api_link, &getupdate);
+                telegram_request("getUpdates", &api_link, &getupdate, &proxy_url);
             match update {
                 Ok(update) => {
                     let mut check_result: VecDeque<Update> = match update.body {
@@ -104,10 +108,11 @@ impl BOT {
     pub fn send_message(&self, send_message_obj: SendMessage, callback: Option<String>) {
         let send_message_move = self.send_message_sender.clone();
         let api_link = self.api_request_link.clone();
+        let proxy_url = self.proxy_url.clone();
 
         self.pool.execute(move || {
             let response: Result<APIResponse<Message>, String> =
-                telegram_request("sendmessage", &api_link, &send_message_obj);
+                telegram_request("sendmessage", &api_link, &send_message_obj, &proxy_url);
             match response {
                 Ok(response) => {
                     if !response.ok {
@@ -128,10 +133,11 @@ impl BOT {
 
     pub fn delete_message(&self, delete_message_obj: DeleteMessage) {
         let api_link = self.api_request_link.clone();
+        let proxy_url = self.proxy_url.clone();
 
         self.pool.execute(move || {
             let response: Result<APIResponse<bool>, String> =
-                telegram_request("deletemessage", &api_link, &delete_message_obj);
+                telegram_request("deletemessage", &api_link, &delete_message_obj, &proxy_url);
 
             match response {
                 Ok(response) => {
@@ -152,10 +158,11 @@ impl BOT {
 
     pub fn edit_message(&self, edit_message_obj: EditMessageText) {
         let api_link = self.api_request_link.clone();
+        let proxy_url = self.proxy_url.clone();
 
         self.pool.execute(move || {
             let response: Result<APIResponse<Message>, String> =
-                telegram_request("editmessagetext", &api_link, &edit_message_obj);
+                telegram_request("editmessagetext", &api_link, &edit_message_obj, &proxy_url);
             match response {
                 Ok(response) => {
                     if !response.ok {
@@ -174,8 +181,12 @@ impl BOT {
     }
 
     pub fn get_chat_member(&self, getchatmember: GetChatMember) -> Option<ChatMember> {
-        let response: Result<APIResponse<ChatMember>, String> =
-            telegram_request("getchatmember", &self.api_request_link, &getchatmember);
+        let response: Result<APIResponse<ChatMember>, String> = telegram_request(
+            "getchatmember",
+            &self.api_request_link,
+            &getchatmember,
+            &self.proxy_url,
+        );
 
         match response {
             Ok(response) => {
@@ -199,6 +210,7 @@ impl BOT {
             "getchatmemberscount",
             &self.api_request_link,
             &getchatmemberscount,
+            &self.proxy_url,
         );
 
         match response {
@@ -220,7 +232,7 @@ impl BOT {
 
     pub fn get_chat(&self, getchat: GetChat) -> Option<Chat> {
         let response: Result<APIResponse<Chat>, String> =
-            telegram_request("getchat", &self.api_request_link, &getchat);
+            telegram_request("getchat", &self.api_request_link, &getchat, &self.proxy_url);
 
         match response {
             Ok(response) => {
@@ -244,11 +256,13 @@ fn telegram_request<T: DeserializeOwned, B: Serialize>(
     endpoint: &str,
     api_link: &str,
     body: B,
+    proxy_url: &Option<String>,
 ) -> Result<APIResponse<T>, String> {
     let request = HttpRequest {
         url: format!("{}/{}", api_link, endpoint),
         method: HttpMethod::Post,
         body: Some(to_string(&body).unwrap()),
+        proxy_url: proxy_url.clone(),
     };
 
     match request.make_request() {

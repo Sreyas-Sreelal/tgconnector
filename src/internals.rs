@@ -138,8 +138,12 @@ pub fn on_send_message_process(plugin: &mut super::TgConnector) {
     }
 }
 
-pub fn create_bot(plugin: &mut super::TgConnector, mut api: BOT) -> AmxResult<i32> {
-    if api.connect() {
+pub fn create_bot(
+    plugin: &mut super::TgConnector,
+    mut api: BOT,
+    proxy_url: Option<String>,
+) -> AmxResult<i32> {
+    if api.connect(proxy_url) {
         plugin.bots.insert(plugin.bot_context_id, api);
         plugin.bot_context_id += 1;
         Ok(plugin.bot_context_id as i32 - 1)

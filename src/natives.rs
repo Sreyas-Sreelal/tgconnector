@@ -12,10 +12,18 @@ impl super::TgConnector {
         &mut self,
         _amx: &Amx,
         token: AmxString,
+        proxy_url: AmxString,
         thread_count: i32,
     ) -> AmxResult<i32> {
-        let api = BOT::new(token.to_string(), thread_count);
-        create_bot(self, api)
+        let proxy_url = proxy_url.to_string();
+        let proxy_url = if proxy_url.is_empty() {
+            None
+        } else {
+            Some(proxy_url)
+        };
+
+        let api = BOT::new(token.to_string(), thread_count, proxy_url.clone());
+        create_bot(self, api, proxy_url)
     }
 
     #[native(name = "TGConnectFromEnv")]
@@ -23,10 +31,17 @@ impl super::TgConnector {
         &mut self,
         _amx: &Amx,
         variable: AmxString,
+        proxy_url: AmxString,
         thread_count: i32,
     ) -> AmxResult<i32> {
         let variable = variable.to_string();
         let token = std::env::var_os(&variable);
+        let proxy_url = proxy_url.to_string();
+        let proxy_url = if proxy_url.is_empty() {
+            None
+        } else {
+            Some(proxy_url)
+        };
 
         if token == None {
             error!("Environment variable {:?} is not set", variable);
@@ -34,9 +49,9 @@ impl super::TgConnector {
         }
 
         let token = token.unwrap().into_string().unwrap();
-        let api = BOT::new(token, thread_count);
+        let api = BOT::new(token, thread_count, proxy_url.clone());
 
-        create_bot(self, api)
+        create_bot(self, api, proxy_url)
     }
 
     #[native(name = "TGSendMessage")]
