@@ -62,8 +62,8 @@ Test:TGGetUserNameFromId() {
 
 Test:TGGetDisplayNameFromId() {
 	new displayname[32];
-	TGGetDisplayNameFromId(g_bot,TGUser:808616883,TGChatId:"808616883",displayname);
-	new check = !strcmp("_SyS_",displayname) && displayname[0] != '\0';
+	TGGetDisplayNameFromId(g_bot,TGUser:562896556,TGChatId:"562896556",displayname);
+	new check = !strcmp("Crow's Eye",displayname) && displayname[0] != '\0';
 	ASSERT(check == 1);
 }
 
