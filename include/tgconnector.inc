@@ -7,7 +7,7 @@
 #endif
 #define _tgconnector_included
 
-#define TGCONNECTOR_VERSION 30
+#define TGCONNECTOR_VERSION 31
 #define INVALID_MESSAGE_ID (TGMessage:-1)
 #define INVALID_BOT_ID (TGBot:-1)
 

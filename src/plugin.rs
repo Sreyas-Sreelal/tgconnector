@@ -25,7 +25,7 @@ impl SampPlugin for TgConnector {
             "
    ###############################################################
    #                      TGConnector                            #
-   #                        v0.3.0 Loaded!!                      #
+   #                        v0.3.1                               #
    #   Found any bugs? Report it here:                           #
    #       https://github.com/Sreyas-Sreelal/tgconnector/issues  #
    #                                                             #
@@ -34,8 +34,8 @@ impl SampPlugin for TgConnector {
         );
     }
 
-    fn on_unload(self: Box<TgConnector>) {
-        info!("**TGConnector v0.3.0 Unloaded!");
+    fn on_unload(self: &mut TgConnector) {
+        info!("**TGConnector v0.3.1!");
     }
 
     fn on_amx_load(&mut self, amx: &Amx) {
