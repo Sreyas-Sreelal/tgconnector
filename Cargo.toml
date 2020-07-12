@@ -1,6 +1,6 @@
 [package]
 name = "tgconnector"
-version = "0.3.1"
+version = "0.3.2"
 authors = ["Sreyas-Sreelal"]
 edition = "2018"
 

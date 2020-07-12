@@ -37,6 +37,7 @@ initialize_plugin!(
         TgConnector::get_chat_description
     ],
     {
+        samp::plugin::enable_process_tick();
         let samp_logger = samp::plugin::logger()
             .level(log::LevelFilter::Info);
 
@@ -48,7 +49,7 @@ initialize_plugin!(
             .apply();
 
         TgConnector {
-            plugin_version: 31,
+            plugin_version: 32,
             amx_list: Vec::new(),
             bots: HashMap::new(),
             bot_context_id: 0,
