@@ -7,7 +7,7 @@
 new TGBot:g_bot;
 
 main() {
-	g_bot = TGConnectFromEnv("SAMP_TG_BOT");
+	g_bot = TG_ConnectFromEnv("SAMP_TG_BOT");
 	if(g_bot != INVALID_BOT_ID) {
 		printf("bot connected successfully!");
 	} else {
@@ -15,7 +15,7 @@ main() {
 	}
 }
 
-public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
+public OnTGMessage(TGBot:bot,TGUser:fromid[],TGMessage:messageid) {
 
 	if(g_bot != bot){
 		return 1;
@@ -27,11 +27,11 @@ public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 		chatname[56],
 		server_msg[128];
 
-	TGCacheGetMessage(message);
-	TGCacheGetUserName(username);
-	TGCacheGetChatName(chatname);
+	TG_CacheGetMessage(message);
+	TG_CacheGetUserName(username);
+	TG_CacheGetChatName(chatname);
 
-	format(server_msg,128,"[%s] %s(%d): %s",chatname,username,_:fromid,message);
+	format(server_msg,128,"[%s] %s(%s): %s",chatname,username,_:fromid,message);
 	print(server_msg);
 	SendClientMessageToAll(-1,server_msg);
 
@@ -39,18 +39,18 @@ public OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid) {
 }
 
 
-public OnTGUserJoined(TGBot:bot,TGUser:userid) {
+public OnTGUserJoined(TGBot:bot,TGUser:userid[]) {
 	new
 		TGChatId:chatid[12],
 		username[24],
 		chatname[56],
 		server_msg[128];
 
-	TGCacheGetUserName(username);
-	TGCacheGetChatId(chatid);
-	TGCacheGetChatName(chatname);
+	TG_CacheGetUserName(username);
+	TG_CacheGetChatId(chatid);
+	TG_CacheGetChatName(chatname);
 
-	format(server_msg,128,"User %s(%d) joined %s(%s)",username,_:userid,chatname,_:chatid);
+	format(server_msg,128,"User %s(%s) joined %s(%s)",username,_:userid,chatname,_:chatid);
 	print(server_msg);
 	SendClientMessageToAll(-1,server_msg);
 	return 1;
@@ -63,17 +63,17 @@ public OnTGUserLeft(TGBot:bot,TGUser:userid) {
 		chatname[56],
 		server_msg[128];
 
-	TGCacheGetUserName(username);
-	TGCacheGetChatId(chatid);
-	TGCacheGetChatName(chatname);
+	TG_CacheGetUserName(username);
+	TG_CacheGetChatId(chatid);
+	TG_CacheGetChatName(chatname);
 
-	format(server_msg,128,"User %s(%d) left %s(%s)",username,_:userid,chatname,_:chatid);
+	format(server_msg,128,"User %s(%s) left %s(%s)",username,_:userid,chatname,_:chatid);
 	print(server_msg);
 	SendClientMessageToAll(-1,server_msg);
 	return 1;
 }
 
 CMD:sendtgmessage(playerid,params[]) {
-	TGSendMessage(g_bot,CHAT_ID,params);
+	TG_SendMessage(g_bot,CHAT_ID,params);
 	return 1;
 }
