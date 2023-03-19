@@ -2,7 +2,7 @@ use crate::api::Bot;
 use crate::encode::encode_replace;
 use crate::internals::{create_bot, get_parse_mode};
 use crate::methods::*;
-use log::{error,warn};
+use log::{error, warn};
 use samp::native;
 use samp::prelude::*;
 
