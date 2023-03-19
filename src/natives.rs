@@ -2,12 +2,12 @@ use crate::api::Bot;
 use crate::encode::encode_replace;
 use crate::internals::{create_bot, get_parse_mode};
 use crate::methods::*;
-use log::error;
+use log::{error,warn};
 use samp::native;
 use samp::prelude::*;
 
 impl super::TgConnector {
-    #[native(name = "TGConnect")]
+    #[native(name = "TG_Connect")]
     pub fn bot_connect(
         &mut self,
         _amx: &Amx,
@@ -26,7 +26,7 @@ impl super::TgConnector {
         create_bot(self, api, proxy_url)
     }
 
-    #[native(name = "TGConnectFromEnv")]
+    #[native(name = "TG_ConnectFromEnv")]
     pub fn bot_connect_from_env(
         &mut self,
         _amx: &Amx,
@@ -55,7 +55,7 @@ impl super::TgConnector {
     }
 
     #[allow(clippy::too_many_arguments)]
-    #[native(name = "TGSendMessage")]
+    #[native(name = "TG_SendMessage")]
     pub fn bot_send_message(
         &self,
         _amx: &Amx,
@@ -92,7 +92,7 @@ impl super::TgConnector {
         Ok(1)
     }
 
-    #[native(name = "TGDeleteMessage")]
+    #[native(name = "TG_DeleteMessage")]
     pub fn bot_delete_message(
         &self,
         _amx: &Amx,
@@ -114,7 +114,7 @@ impl super::TgConnector {
         Ok(1)
     }
 
-    #[native(name = "TGEditMessage")]
+    #[native(name = "TG_EditMessage")]
     pub fn bot_edit_message(
         &self,
         _amx: &Amx,
@@ -142,7 +142,7 @@ impl super::TgConnector {
         Ok(1)
     }
 
-    #[native(name = "TGGetBotUserId")]
+    #[native(name = "TG_GetBotUserID")]
     pub fn get_bot_user_id(
         &self,
         _amx: &Amx,
@@ -160,7 +160,7 @@ impl super::TgConnector {
         Ok(1)
     }
 
-    #[native(name = "TGCacheGetMessage")]
+    #[native(name = "TG_CacheGetMessage")]
     pub fn cache_get_message(
         &self,
         _amx: &Amx,
@@ -171,7 +171,7 @@ impl super::TgConnector {
         cache_get!(cache_list, dest, size)
     }
 
-    #[native(name = "TGCacheGetUserName")]
+    #[native(name = "TG_CacheGetUserName")]
     pub fn cache_get_username(
         &self,
         _amx: &Amx,
@@ -182,7 +182,7 @@ impl super::TgConnector {
         cache_get!(cache_list, dest, size)
     }
 
-    #[native(name = "TGCacheGetUserFirstName")]
+    #[native(name = "TG_CacheGetUserFirstName")]
     pub fn cache_get_user_first_name(
         &self,
         _amx: &Amx,
@@ -193,7 +193,7 @@ impl super::TgConnector {
         cache_get!(cache_list, dest, size)
     }
 
-    #[native(name = "TGCacheGetUserLastName")]
+    #[native(name = "TG_CacheGetUserLastName")]
     pub fn cache_get_user_last_name(
         &self,
         _amx: &Amx,
@@ -204,13 +204,13 @@ impl super::TgConnector {
         cache_get!(cache_list, dest, size)
     }
 
-    #[native(name = "TGCacheGetChatId")]
+    #[native(name = "TG_CacheGetChatID")]
     pub fn cache_get_chatid(&self, _amx: &Amx, dest: UnsizedBuffer, size: usize) -> AmxResult<i32> {
         let cache_list = &self.telegram_chatid;
         cache_get!(cache_list, dest, size)
     }
 
-    #[native(name = "TGCacheGetChatName")]
+    #[native(name = "TG_CacheGetChatName")]
     pub fn cache_get_chatname(
         &self,
         _amx: &Amx,
@@ -221,7 +221,7 @@ impl super::TgConnector {
         cache_get!(cache_list, dest, size)
     }
 
-    #[native(name = "TGCacheGetChatType")]
+    #[native(name = "TG_CacheGetChatType")]
     pub fn cache_get_chattype(
         &self,
         _amx: &Amx,
@@ -232,7 +232,7 @@ impl super::TgConnector {
         cache_get!(cache_list, dest, size)
     }
 
-    #[native(name = "TGGetUserChatStatus")]
+    #[native(name = "TG_GetUserChatStatus")]
     pub fn get_user_status(
         &self,
         _amx: &Amx,
@@ -267,7 +267,7 @@ impl super::TgConnector {
         }
     }
 
-    #[native(name = "TGGetUserNameFromId")]
+    #[native(name = "TG_GetUserNameFromID")]
     pub fn get_username_from_id(
         &self,
         _amx: &Amx,
@@ -315,7 +315,7 @@ impl super::TgConnector {
         }
     }
 
-    #[native(name = "TGGetDisplayNameFromId")]
+    #[native(name = "TG_GetDisplayNameFromID")]
     pub fn get_display_name_from_id(
         &self,
         _amx: &Amx,
@@ -362,7 +362,7 @@ impl super::TgConnector {
         }
     }
 
-    #[native(name = "TGGetChatMembersCount")]
+    #[native(name = "TG_GetChatMembersCount")]
     pub fn get_chat_members_count(
         &self,
         _amx: &Amx,
@@ -384,7 +384,7 @@ impl super::TgConnector {
         }
     }
 
-    #[native(name = "TGGetChatTitle")]
+    #[native(name = "TG_GetChatTitle")]
     pub fn get_chat_title(
         &self,
         _amx: &Amx,
@@ -428,7 +428,7 @@ impl super::TgConnector {
         }
     }
 
-    #[native(name = "TGGetChatDescription")]
+    #[native(name = "TG_GetChatDescription")]
     pub fn get_chat_description(
         &self,
         _amx: &Amx,
@@ -466,6 +466,151 @@ impl super::TgConnector {
                 error!(
                     "[get_chat_description] Failed encoding {:?} \n {:?}",
                     chat_description, err
+                );
+                Ok(0)
+            }
+        }
+    }
+
+    // Deprecated Natives
+    #[native(name = "TGGetBotUserId")]
+    pub fn get_bot_user_id_old(&self, _amx: &Amx, botid: usize) -> AmxResult<i32> {
+        warn!("TGGetBotUserId is deprecated use TG_GetBotUserID instead");
+
+        if !self.bots.contains_key(&botid) {
+            error!("Invalid bot id {} passed", botid);
+            return Ok(-1);
+        }
+        if let Ok(userid) = self.bots[&botid].user_id.parse() {
+            Ok(userid)
+        } else {
+            error!("Couldn't convert userid into int32, use TG_GetBotUserID instead of deprecated TGGetBotUserId");
+            Ok(-1)
+        }
+    }
+
+    #[native(name = "TGGetUserChatStatus")]
+    pub fn get_user_status_old(
+        &self,
+        _amx: &Amx,
+        botid: usize,
+        userid: i32,
+        chatid: AmxString,
+    ) -> AmxResult<i32> {
+        warn!("TGGetUserChatStatus is deprecated use TG_GetUserChatStatus instead");
+
+        if !self.bots.contains_key(&botid) {
+            error!("**[TGConnector] Error Invalid bot id {} passed", botid);
+            return Ok(0);
+        }
+
+        let getchatmember = GetChatMember {
+            user_id: userid.to_string(),
+            chat_id: chatid.to_string(),
+        };
+        let chatmember = self.bots[&botid].get_chat_member(getchatmember);
+        if chatmember.is_none() {
+            return Ok(0);
+        }
+        let chatmember = chatmember.unwrap();
+        match chatmember.status.as_ref() {
+            "creator" => Ok(1),
+            "adminstrator" => Ok(2),
+            "member" => Ok(3),
+            "restricted" => Ok(4),
+            "left" => Ok(5),
+            "kicked" => Ok(6),
+            _ => Ok(0),
+        }
+    }
+
+    #[native(name = "TGGetUserNameFromId")]
+    pub fn get_username_from_id_old(
+        &self,
+        _amx: &Amx,
+        botid: usize,
+        userid: i32,
+        chatid: AmxString,
+        dest: UnsizedBuffer,
+        size: usize,
+    ) -> AmxResult<i32> {
+        warn!("TGGetUserNameFromId is deprecated use TG_GetUserNameFromID instead");
+
+        if !self.bots.contains_key(&botid) {
+            error!("Invalid bot id {} passed", botid);
+            return Ok(0);
+        }
+
+        let getchatmember = GetChatMember {
+            user_id: userid.to_string(),
+            chat_id: chatid.to_string(),
+        };
+        let chatmember = self.bots[&botid].get_chat_member(getchatmember);
+        if chatmember.is_none() {
+            return Ok(0);
+        }
+        let chatmember = chatmember.unwrap();
+        let username = &chatmember.user.username;
+        if *username == None {
+            return Ok(0);
+        }
+        match encode_replace(username.as_ref().unwrap()) {
+            Ok(encoded) => {
+                let mut dest = dest.into_sized_buffer(size);
+                let _ = samp::cell::string::put_in_buffer(&mut dest, &encoded);
+                Ok(1)
+            }
+            Err(err) => {
+                error!(
+                    "[get_username_from_id] Failed encoding {:?} \n {:?}",
+                    username.as_ref().unwrap(),
+                    err
+                );
+                Ok(0)
+            }
+        }
+    }
+
+    #[native(name = "TGGetDisplayNameFromId")]
+    pub fn get_display_name_from_id_old(
+        &self,
+        _amx: &Amx,
+        botid: usize,
+        userid: i32,
+        chatid: AmxString,
+        dest: UnsizedBuffer,
+        size: usize,
+    ) -> AmxResult<i32> {
+        warn!("TGGetDisplayNameFromId is deprecated use TG_GetDisplayNameFromID instead");
+        if !self.bots.contains_key(&botid) {
+            error!("Invalid bot id {} passed", botid);
+            return Ok(0);
+        }
+
+        let getchatmember = GetChatMember {
+            user_id: userid.to_string(),
+            chat_id: chatid.to_string(),
+        };
+
+        let chatmember = self.bots[&botid].get_chat_member(getchatmember);
+        if chatmember.is_none() {
+            return Ok(0);
+        }
+        let chatmember = chatmember.unwrap();
+        let displayname = match &chatmember.user.last_name {
+            None => chatmember.user.first_name,
+            Some(lastname) => chatmember.user.first_name + " " + lastname,
+        };
+        match encode_replace(&displayname) {
+            Ok(encoded) => {
+                let mut dest = dest.into_sized_buffer(size);
+                let _ = samp::cell::string::put_in_buffer(&mut dest, &encoded);
+                Ok(1)
+            }
+            Err(err) => {
+                error!(
+                    "get_display_name_from_id] Failed encoding {:?} \n {:?}",
+                    displayname, err
                 );
                 Ok(0)
             }

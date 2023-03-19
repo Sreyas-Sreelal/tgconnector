@@ -34,7 +34,11 @@ initialize_plugin!(
         TgConnector::get_display_name_from_id,
         TgConnector::get_chat_members_count,
         TgConnector::get_chat_title,
-        TgConnector::get_chat_description
+        TgConnector::get_chat_description,
+        TgConnector::get_bot_user_id_old,
+        TgConnector::get_user_status_old,
+        TgConnector::get_username_from_id_old,
+        TgConnector::get_display_name_from_id_old
     ],
     {
         samp::plugin::enable_process_tick();
