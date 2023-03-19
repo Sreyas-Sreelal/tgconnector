@@ -33,6 +33,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
+        sudo dpkg --add-architecture i386
         sudo apt install gcc-multilib libssl-dev:i386 -y
       if: matrix.os == 'ubuntu-20.04'
 
