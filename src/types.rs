@@ -37,7 +37,8 @@ pub struct Message {
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct User {
-    pub id: i32,
+    #[serde(deserialize_with = "de_from_int")]
+    pub id: String,
     pub first_name: String,
     pub last_name: Option<String>,
     pub username: Option<String>,

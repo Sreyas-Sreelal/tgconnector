@@ -1,4 +1,4 @@
-use crate::api::BOT;
+use crate::api::Bot;
 use crate::callbacks;
 use crate::types::*;
 use samp::prelude::*;
@@ -140,7 +140,7 @@ pub fn on_send_message_process(plugin: &mut super::TgConnector) {
 
 pub fn create_bot(
     plugin: &mut super::TgConnector,
-    mut api: BOT,
+    mut api: Bot,
     proxy_url: Option<String>,
 ) -> AmxResult<i32> {
     if api.connect(proxy_url) {

@@ -32,22 +32,22 @@ enum TGUserStatus {
 //basic
 native TGBot:TGConnect(const token[],const proxy[]="",thread_limit=3);
 native TGBot:TGConnectFromEnv(const variable[],const proxy[]="",thread_limit=3);
-native TGSendMessage(TGBot:bot,const TGChatId:chatid[],const text[],TGMessage:reply_id=INVALID_MESSAGE_ID,TGParseMode:parse_mode=TGParseMode:-1,callback[]="");
+native TGSendMessage(TGBot:bot,const TGChatId:chatid[],const text[],TGMessage:reply_id=INVALID_MESSAGE_ID,TGParseMode:parse_mode=TGParseMode:-1,const callback[]="");
 native TGDeleteMessage(TGBot:bot,TGChatId:chatid[],TGMessage:messageid);
-native TGEditMessage(TGBot:bot,TGChatId:chatid[],TGMessage:messageid,text[],TGParseMode:parse_mode=TGParseMode:-1);
+native TGEditMessage(TGBot:bot,const TGChatId:chatid[],const TGMessage:messageid,const text[],TGParseMode:parse_mode=TGParseMode:-1);
 
 //bot
-native TGUser:TGGetBotUserId(TGBot:bot);
+native TGUser:TGGetBotUserId(TGBot:bot,TGUser:userid[],size = sizeof(userid));
 
 //user
-native TGUserStatus:TGGetUserChatStatus(TGBot:bot,TGUser:userid,TGChatId:chatid[]);
-native TGGetUserNameFromId(TGBot:bot,TGUser:userid,TGChatId:chatid[],username[],size=sizeof(username));
-native TGGetDisplayNameFromId(TGBot:bot,TGUser:userid,TGChatId:chatid[],displayname[],size=sizeof(displayname));
+native TGUserStatus:TGGetUserChatStatus(TGBot:bot,const TGUser:userid[],const TGChatId:chatid[]);
+native TGGetUserNameFromId(TGBot:bot,const TGUser:userid[],const TGChatId:chatid[],username[],size=sizeof(username));
+native TGGetDisplayNameFromId(TGBot:bot,const TGUser:userid[],const TGChatId:chatid[],displayname[],size=sizeof(displayname));
 
 //chat
-native TGGetChatMembersCount(TGBot:bot,TGChatId:chatid[]);
-native TGGetChatTitle(TGBot:bot,TGChatId:chatid[],title[],size=sizeof(title));
-native TGGetChatDescription(TGBot:bot,TGChatId:chatid[],description[],size=sizeof(description));
+native TGGetChatMembersCount(TGBot:bot,const TGChatId:chatid[]);
+native TGGetChatTitle(TGBot:bot,const TGChatId:chatid[],title[],size=sizeof(title));
+native TGGetChatDescription(TGBot:bot,const TGChatId:chatid[],description[],size=sizeof(description));
 
 //cache functions
 native TGCacheGetUserFirstName(str[],size=sizeof(str));
@@ -59,7 +59,7 @@ native TGCacheGetChatId(TGChatId:str[],size=sizeof(str));
 native TGCacheGetMessage(str[],size=sizeof(str));
 
 //callbacks
-forward OnTGMessage(TGBot:bot,TGUser:fromid,TGMessage:messageid);
+forward OnTGMessage(TGBot:bot,TGUser:fromid[],TGMessage:messageid);
 forward OnTGChannelPost(TGBot:bot,TGMessage:postid);
-forward OnTGUserJoined(TGBot:bot,TGUser:userid);
-forward OnTGUserLeft(TGBot:bot,TGUser:userid);
+forward OnTGUserJoined(TGBot:bot,TGUser:userid[]);
+forward OnTGUserLeft(TGBot:bot,TGUser:userid[]);

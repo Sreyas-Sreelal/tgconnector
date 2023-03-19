@@ -25,7 +25,7 @@ impl HttpRequest {
         let method = match self.method {
             HttpMethod::Get => {
                 if let Some(proxy_url) = &self.proxy_url {
-                    match requests_obj.proxy(&proxy_url) {
+                    match requests_obj.proxy(proxy_url) {
                         Ok(method) => method.get(),
                         Err(err) => {
                             return Err(format!("Error connecting to proxy server \n{:?}", err));
@@ -38,12 +38,12 @@ impl HttpRequest {
 
             HttpMethod::Post => {
                 let body = &self.body.clone().unwrap();
-                requests_obj.body_str(&body);
+                requests_obj.body_str(body);
                 let mut headers = HashMap::new();
                 headers.insert("Content-Type".to_string(), "application/json".to_string());
                 requests_obj.headers(headers);
                 if let Some(proxy_url) = &self.proxy_url {
-                    match requests_obj.proxy(&proxy_url) {
+                    match requests_obj.proxy(proxy_url) {
                         Ok(method) => method.post(),
                         Err(err) => {
                             return Err(format!("Error connecting to proxy server \n{:?}", err));

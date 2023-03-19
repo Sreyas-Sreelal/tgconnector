@@ -1,4 +1,4 @@
-use crate::api::BOT;
+use crate::api::Bot;
 use crate::encode::encode_replace;
 use crate::internals::{create_bot, get_parse_mode};
 use crate::methods::*;
@@ -22,7 +22,7 @@ impl super::TgConnector {
             Some(proxy_url)
         };
 
-        let api = BOT::new(token.to_string(), thread_count, proxy_url.clone());
+        let api = Bot::new(token.to_string(), thread_count, proxy_url.clone());
         create_bot(self, api, proxy_url)
     }
 
@@ -49,11 +49,12 @@ impl super::TgConnector {
         }
 
         let token = token.unwrap().into_string().unwrap();
-        let api = BOT::new(token, thread_count, proxy_url.clone());
+        let api = Bot::new(token, thread_count, proxy_url.clone());
 
         create_bot(self, api, proxy_url)
     }
 
+    #[allow(clippy::too_many_arguments)]
     #[native(name = "TGSendMessage")]
     pub fn bot_send_message(
         &self,
@@ -142,12 +143,21 @@ impl super::TgConnector {
     }
 
     #[native(name = "TGGetBotUserId")]
-    pub fn get_bot_user_id(&self, _amx: &Amx, botid: usize) -> AmxResult<i32> {
+    pub fn get_bot_user_id(
+        &self,
+        _amx: &Amx,
+        botid: usize,
+        dest: UnsizedBuffer,
+        size: usize,
+    ) -> AmxResult<i32> {
         if !self.bots.contains_key(&botid) {
             error!("Invalid bot id {} passed", botid);
-            return Ok(-1);
+            return Ok(0);
         }
-        Ok(self.bots[&botid].user_id)
+        let userid = self.bots.get(&botid).unwrap();
+        let mut dest = dest.into_sized_buffer(size);
+        let _ = samp::cell::string::put_in_buffer(&mut dest, &userid.user_id);
+        Ok(1)
     }
 
     #[native(name = "TGCacheGetMessage")]
@@ -227,7 +237,7 @@ impl super::TgConnector {
         &self,
         _amx: &Amx,
         botid: usize,
-        userid: i32,
+        userid: AmxString,
         chatid: AmxString,
     ) -> AmxResult<i32> {
         if !self.bots.contains_key(&botid) {
@@ -236,7 +246,7 @@ impl super::TgConnector {
         }
 
         let getchatmember = GetChatMember {
-            user_id: userid,
+            user_id: userid.to_string(),
             chat_id: chatid.to_string(),
         };
         let chatmember = self.bots[&botid].get_chat_member(getchatmember);
@@ -262,7 +272,7 @@ impl super::TgConnector {
         &self,
         _amx: &Amx,
         botid: usize,
-        userid: i32,
+        userid: AmxString,
         chatid: AmxString,
         dest: UnsizedBuffer,
         size: usize,
@@ -273,7 +283,7 @@ impl super::TgConnector {
         }
 
         let getchatmember = GetChatMember {
-            user_id: userid,
+            user_id: userid.to_string(),
             chat_id: chatid.to_string(),
         };
         let chatmember = self.bots[&botid].get_chat_member(getchatmember);
@@ -310,7 +320,7 @@ impl super::TgConnector {
         &self,
         _amx: &Amx,
         botid: usize,
-        userid: i32,
+        userid: AmxString,
         chatid: AmxString,
         dest: UnsizedBuffer,
         size: usize,
@@ -321,7 +331,7 @@ impl super::TgConnector {
         }
 
         let getchatmember = GetChatMember {
-            user_id: userid,
+            user_id: userid.to_string(),
             chat_id: chatid.to_string(),
         };
 

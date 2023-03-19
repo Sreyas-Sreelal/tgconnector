@@ -9,9 +9,9 @@ use std::collections::VecDeque;
 use std::sync::mpsc::{channel, Receiver, Sender};
 use threadpool::ThreadPool;
 
-pub struct BOT {
+pub struct Bot {
     pub api_request_link: String,
-    pub user_id: i32,
+    pub user_id: String,
     pub update_reciever: Option<Receiver<Update>>,
     pub update_sender: Option<Sender<Update>>,
     pub send_message_reciever: Option<Receiver<(Message, String)>>,
@@ -20,14 +20,14 @@ pub struct BOT {
     pub proxy_url: Option<String>,
 }
 
-impl BOT {
+impl Bot {
     pub fn new(bot_token: String, thread_count: i32, proxy_url: Option<String>) -> Self {
         let (update_sender, update_reciever) = channel();
         let (send_message_sender, send_message_reciever) = channel();
 
-        BOT {
+        Bot {
             api_request_link: String::from("https://api.telegram.org/bot") + &bot_token,
-            user_id: -1,
+            user_id: String::new(),
             update_reciever: Some(update_reciever),
             update_sender: Some(update_sender),
             send_message_reciever: Some(send_message_reciever),

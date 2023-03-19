@@ -1,4 +1,4 @@
-use crate::api::BOT;
+use crate::api::Bot;
 use crate::internals;
 use log::{error, info};
 use samp::amx::AmxIdent;
@@ -8,7 +8,7 @@ use std::collections::{HashMap, LinkedList};
 pub struct TgConnector {
     pub plugin_version: i32,
     pub amx_list: Vec<AmxIdent>,
-    pub bots: HashMap<usize, BOT>,
+    pub bots: HashMap<usize, Bot>,
     pub bot_context_id: usize,
     pub telegram_messages: LinkedList<String>,
     pub telegram_username: LinkedList<String>,

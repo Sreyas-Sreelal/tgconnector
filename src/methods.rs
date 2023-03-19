@@ -37,7 +37,7 @@ pub struct GetChat {
 #[derive(Serialize, Debug, Clone)]
 pub struct GetChatMember {
     pub chat_id: String,
-    pub user_id: i32,
+    pub user_id: String,
 }
 
 #[derive(Serialize, Debug, Clone)]
