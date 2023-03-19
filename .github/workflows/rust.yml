@@ -33,7 +33,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install gcc-multilib libssl-dev -y
+        sudo apt install gcc-multilib libssl-dev:i386 -y
       if: matrix.os == 'ubuntu-20.04'
 
     - name: Install Rust (rustup)
