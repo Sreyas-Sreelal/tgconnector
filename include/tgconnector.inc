@@ -50,7 +50,7 @@ native TGCacheGetMessage(str[],size=sizeof(str)) = TG_CacheGetMessage;
 //basic
 native TGBot:TG_Connect(const token[],const proxy[]="",thread_limit=3);
 native TGBot:TG_ConnectFromEnv(const variable[],const proxy[]="",thread_limit=3);
-native TG_SendMessage(TGBot:bot,const TGChatId:chatid[],const text[],TGMessage:reply_id=INVALID_MESSAGE_ID,TGParseMode:parse_mode=TGParseMode:-1,const callback[]="");
+native TG_SendMessage(TGBot:bot,const TGChatId:chatid[],const text[],TGMessage:reply_id=INVALID_MESSAGE_ID,TGParseMode:parse_mode=TGParseMode:-1,bool:disable_web_page_preview=false,const callback[]="");
 native TG_DeleteMessage(TGBot:bot,TGChatId:chatid[],TGMessage:messageid);
 native TG_EditMessage(TGBot:bot,const TGChatId:chatid[],const TGMessage:messageid,const text[],TGParseMode:parse_mode=TGParseMode:-1);
 native TG_BanChatMember(TGBot:bot,const TGChatId:chatid[],const TGUser:userid[],until_date=-1,bool:revoke_messages=true);
