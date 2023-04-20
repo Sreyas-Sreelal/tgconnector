@@ -33,6 +33,7 @@ pub struct Message {
     pub message_id: i32,
     pub new_chat_members: Option<VecDeque<User>>,
     pub left_chat_member: Option<User>,
+    pub message_thread_id: Option<i32>,
 }
 
 #[derive(Deserialize, Debug, Clone)]

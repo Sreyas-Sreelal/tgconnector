@@ -35,7 +35,13 @@ pub fn update_process(plugin: &mut super::TgConnector) {
                         plugin.telegram_chatname.push_front(chatname);
                     }
 
-                    callbacks::on_tg_message(&plugin.amx_list, *id, user.id, message.message_id);
+                    callbacks::on_tg_message(
+                        &plugin.amx_list,
+                        *id,
+                        user.id,
+                        message.message_id,
+                        message.message_thread_id.unwrap_or(-1),
+                    );
                 }
 
                 UpdateType::ChannelPost => {

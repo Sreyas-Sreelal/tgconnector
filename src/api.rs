@@ -250,6 +250,48 @@ impl Bot {
             }
         }
     }
+
+    pub fn ban_chat_member(&self, banchatmember: BanChatMember) {
+        let api_link = self.api_request_link.clone();
+        let proxy_url = self.proxy_url.clone();
+
+        self.pool.execute(move || {
+            let response: Result<APIResponse<bool>, String> =
+                telegram_request("banChatMember", &api_link, &banchatmember, &proxy_url);
+            match response {
+                Ok(response) => {
+                    if !response.ok {
+                        error!("ban_chat_member.{:?}", response);
+                    }
+                }
+
+                Err(err) => {
+                    error!("{:?}", err);
+                }
+            }
+        });
+    }
+
+    pub fn unban_chat_member(&self, unbanchatmember: UnbanChatMember) {
+        let api_link = self.api_request_link.clone();
+        let proxy_url = self.proxy_url.clone();
+
+        self.pool.execute(move || {
+            let response: Result<APIResponse<bool>, String> =
+                telegram_request("unbanChatMember", &api_link, &unbanchatmember, &proxy_url);
+            match response {
+                Ok(response) => {
+                    if !response.ok {
+                        error!("unban_chat_member.{:?}", response);
+                    }
+                }
+
+                Err(err) => {
+                    error!("{:?}", err);
+                }
+            }
+        });
+    }
 }
 
 fn telegram_request<T: DeserializeOwned, B: Serialize>(

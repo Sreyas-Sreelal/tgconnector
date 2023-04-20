@@ -44,3 +44,18 @@ pub struct GetChatMember {
 pub struct GetChatMembersCount {
     pub chat_id: String,
 }
+
+#[derive(Serialize, Debug, Clone)]
+pub struct BanChatMember {
+    pub chat_id: String,
+    pub user_id: String,
+    pub until_date: Option<i32>,
+    pub revoke_messages: bool,
+}
+
+#[derive(Serialize, Debug, Clone)]
+pub struct UnbanChatMember {
+    pub chat_id: String,
+    pub user_id: String,
+    pub only_if_banned: bool,
+}

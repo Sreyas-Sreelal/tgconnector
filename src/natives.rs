@@ -472,6 +472,49 @@ impl super::TgConnector {
         }
     }
 
+    #[native(name = "TG_BanChatMember")]
+    pub fn ban_chat_member(
+        &self,
+        _amx: &Amx,
+        botid: usize,
+        chatid: AmxString,
+        userid: AmxString,
+        until_date: i32,
+        revoke_messages: bool,
+    ) -> AmxResult<i32> {
+        let time = if until_date < 0 {
+            None
+        } else {
+            Some(until_date)
+        };
+        let banchatmember = BanChatMember {
+            chat_id: chatid.to_string(),
+            user_id: userid.to_string(),
+            until_date: time,
+            revoke_messages,
+        };
+        self.bots[&botid].ban_chat_member(banchatmember);
+        Ok(1)
+    }
+
+    #[native(name = "TG_UnbanChatMember")]
+    pub fn unban_chat_member(
+        &self,
+        _amx: &Amx,
+        botid: usize,
+        chatid: AmxString,
+        userid: AmxString,
+        only_if_banned: bool,
+    ) -> AmxResult<i32> {
+        let unbanchatmember = UnbanChatMember {
+            chat_id: chatid.to_string(),
+            user_id: userid.to_string(),
+            only_if_banned,
+        };
+        self.bots[&botid].unban_chat_member(unbanchatmember);
+        Ok(1)
+    }
+
     // Deprecated Natives
     #[native(name = "TGGetBotUserId")]
     pub fn get_bot_user_id_old(&self, _amx: &Amx, botid: usize) -> AmxResult<i32> {

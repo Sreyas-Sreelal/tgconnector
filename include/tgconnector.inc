@@ -10,6 +10,7 @@
 #define TGCONNECTOR_VERSION 100
 #define INVALID_MESSAGE_ID (TGMessage:-1)
 #define INVALID_BOT_ID (TGBot:-1)
+#define INVALID_TOPIC_ID (TGTopic:-1)
 
 public _tgconnector_version = TGCONNECTOR_VERSION;
 #pragma unused _tgconnector_version
@@ -52,6 +53,8 @@ native TGBot:TG_ConnectFromEnv(const variable[],const proxy[]="",thread_limit=3)
 native TG_SendMessage(TGBot:bot,const TGChatId:chatid[],const text[],TGMessage:reply_id=INVALID_MESSAGE_ID,TGParseMode:parse_mode=TGParseMode:-1,const callback[]="");
 native TG_DeleteMessage(TGBot:bot,TGChatId:chatid[],TGMessage:messageid);
 native TG_EditMessage(TGBot:bot,const TGChatId:chatid[],const TGMessage:messageid,const text[],TGParseMode:parse_mode=TGParseMode:-1);
+native TG_BanChatMember(TGBot:bot,const TGChatId:chatid[],const TGUser:userid[],until_date=-1,bool:revoke_messages=true);
+native TG_UnbanChatMember(TGBot:bot,const TGChatId:chatid[],const TGUser:userid[],only_if_banned=false);
 
 //bot
 native TGUser:TG_GetBotUserID(TGBot:bot,TGUser:userid[],size = sizeof(userid));
@@ -76,7 +79,7 @@ native TG_CacheGetChatID(TGChatId:str[],size=sizeof(str));
 native TG_CacheGetMessage(str[],size=sizeof(str));
 
 //callbacks
-forward OnTGMessage(TGBot:bot,TGUser:fromid[],TGMessage:messageid);
+forward OnTGMessage(TGBot:bot,TGUser:fromid[],TGMessage:messageid,TGTopic:messagethreadid);
 forward OnTGChannelPost(TGBot:bot,TGMessage:postid);
 forward OnTGUserJoined(TGBot:bot,TGUser:userid[]);
 forward OnTGUserLeft(TGBot:bot,TGUser:userid[]);
