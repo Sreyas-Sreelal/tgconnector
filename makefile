@@ -35,3 +35,8 @@ run:
 
 clean:
 	cargo clean
+
+dev:
+	cargo $(TOOLCHAIN) build
+	sampctl package build
+	sampctl package run
