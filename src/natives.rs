@@ -64,6 +64,7 @@ impl super::TgConnector {
         text: AmxString,
         reply_id: i32,
         parse_mode: i32,
+        disable_web_page_preview: bool,
         callback: AmxString,
     ) -> AmxResult<i32> {
         if !self.bots.contains_key(&botid) {
@@ -86,6 +87,7 @@ impl super::TgConnector {
             text: text.to_string(),
             reply_to_message_id: reply,
             parse_mode: parsemode,
+            disable_web_page_preview,
         };
 
         self.bots[&botid].send_message(send_message_obj, callback);

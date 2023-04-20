@@ -33,7 +33,7 @@ enum TGUserStatus {
 // old aliases
 native TGBot:TGConnect(const token[],const proxy[]="",thread_limit=3)=TG_Connect;
 native TGBot:TGConnectFromEnv(const variable[],const proxy[]="",thread_limit=3)=TG_ConnectFromEnv;
-native TGSendMessage(TGBot:bot,const TGChatId:chatid[],const text[],TGMessage:reply_id=INVALID_MESSAGE_ID,TGParseMode:parse_mode=TGParseMode:-1,const callback[]="") = TG_SendMessage;
+native TGSendMessage(TGBot:bot,const TGChatId:chatid[],const text[],TGMessage:reply_id=INVALID_MESSAGE_ID,TGParseMode:parse_mode=TGParseMode:-1,bool:disable_web_page_preview=false,const callback[]="") = TG_SendMessage;
 native TGDeleteMessage(TGBot:bot,TGChatId:chatid[],TGMessage:messageid)=TG_DeleteMessage;
 native TGEditMessage(TGBot:bot,const TGChatId:chatid[],const TGMessage:messageid,const text[],TGParseMode:parse_mode=TGParseMode:-1)=TG_EditMessage;
 native TGGetChatMembersCount(TGBot:bot,const TGChatId:chatid[])=TG_GetChatMembersCount;
