@@ -55,7 +55,7 @@ initialize_plugin!(
             .apply();
 
         TgConnector {
-            plugin_version: 100,
+            plugin_version: 110,
             amx_list: Vec::new(),
             bots: HashMap::new(),
             bot_context_id: 0,
