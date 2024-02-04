@@ -26,7 +26,7 @@ jobs:
           - build: windows
             os: windows-latest
             rust: stable-i686
-          - build: debian11
+          - build: ubuntu-latest
             os: ubuntu-latest
             rust: stable-i686
 
@@ -54,7 +54,7 @@ jobs:
       run: 7z a -ttar -so -an ./target/release/lib${{ env.RELEASE_BIN }}.so ${{ env.RELEASE_ADDS }} | 7z a -si ./artifacts/${{ env.RELEASE_BIN }}-linux-x86.tar.gz
       if: matrix.os == 'ubuntu-20.04'
     
-    - name: Create archive for Debian 11
+    - name: Create archive for Ubuntu Latest
       run: 7z a -ttar -so -an ./target/release/lib${{ env.RELEASE_BIN }}.so ${{ env.RELEASE_ADDS }} | 7z a -si ./artifacts/${{ env.RELEASE_BIN }}-ubuntu-latest-x86.tar.gz
       if: matrix.os == 'ubuntu-latest'
     
