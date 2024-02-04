@@ -26,6 +26,9 @@ jobs:
           - build: windows
             os: windows-latest
             rust: stable-i686
+          - build: debian11
+            os: debian-11
+            rust: stable-i686
 
     steps:
     - uses: actions/checkout@v1
@@ -35,7 +38,7 @@ jobs:
         sudo dpkg --add-architecture i386
         sudo apt update
         sudo apt install gcc-multilib libssl-dev:i386 -y
-      if: matrix.os == 'ubuntu-20.04'
+      if: matrix.os == 'ubuntu-20.04' || matrix.os == 'debian-11'
 
     - name: Install Rust (rustup)
       run: rustup update ${{ matrix.rust }} --no-self-update && rustup default ${{ matrix.rust }}
@@ -50,7 +53,11 @@ jobs:
     - name: Create archive for Linux
       run: 7z a -ttar -so -an ./target/release/lib${{ env.RELEASE_BIN }}.so ${{ env.RELEASE_ADDS }} | 7z a -si ./artifacts/${{ env.RELEASE_BIN }}-linux-x86.tar.gz
       if: matrix.os == 'ubuntu-20.04'
-
+    
+    - name: Create archive for Debian 11
+      run: 7z a -ttar -so -an ./target/release/lib${{ env.RELEASE_BIN }}.so ${{ env.RELEASE_ADDS }} | 7z a -si ./artifacts/${{ env.RELEASE_BIN }}-debian-x86.tar.gz
+      if: matrix.os == 'debian-11'
+    
     - name: Create archive for Windows
       run: 7z a -tzip ./artifacts/${{ env.RELEASE_BIN }}-windows-x86.zip ./target/release/${{ env.RELEASE_BIN }}.dll ${{ env.RELEASE_ADDS }}
       if: matrix.os == 'windows-latest'
